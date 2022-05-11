@@ -1,0 +1,308 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["orderByRelation", "orderByAggregateGroup", "selectRelationCount"]
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+  output   = "."
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id         Int        @id @default(autoincrement())
+  login_id   String     @unique(map: "UQ_admin_login_id") @db.VarChar(50)
+  password   String     @db.VarChar(60)
+  state      AdminState
+  created_at DateTime   @default(now()) @db.DateTime(0)
+  product    Product[]  @relation("productToadmin")
+
+  @@map("admin")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  code      String    @unique(map: "UQ_category_code") @db.VarChar(40)
+  c1        String    @db.VarChar(8)
+  c2        String    @db.VarChar(8)
+  c3        String    @db.VarChar(8)
+  c4        String    @db.VarChar(8)
+  c1_name   String    @db.VarChar(20)
+  c2_name   String    @db.VarChar(20)
+  c3_name   String    @db.VarChar(20)
+  c4_name   String    @db.VarChar(20)
+  siil_code String    @db.VarChar(3)
+  a077_code String    @unique(map: "UQ_category_final_code") @db.VarChar(8)
+  b378_code Int       @default(0)
+  a112_code Int
+  product   Product[] @relation("productTocategory")
+
+  @@map("category")
+}
+
+model OriginProduct {
+  id                 Int       @id @default(autoincrement())
+  taobao_num_iid     String    @db.VarChar(30)
+  name               String    @db.VarChar(200)
+  image_thumbnail    String    @db.Text
+  price              Float     @db.Float
+  brand              String    @db.Text
+  taobao_brand_id    String?   @db.VarChar(15)
+  taobao_category_id String    @db.VarChar(12)
+  original_data      String    @db.LongText
+  video_url          String?   @db.Text
+  translate_data     String?   @db.LongText
+  created_at         DateTime  @default(now()) @db.DateTime(0)
+  modified_at        DateTime  @default(now()) @db.DateTime(0)
+  product            Product[] @relation("productToorigin_product")
+
+  @@map("origin_product")
+}
+
+model Product {
+  id                   Int                 @id @default(autoincrement())
+  user_id              Int?
+  admin_id             Int?
+  taobao_product_id    Int
+  product_code         String              @db.VarChar(50)
+  state                ProductState        @default(COLLECTED)
+  name                 String              @db.VarChar(500)
+  price                Int
+  local_shipping_fee   Int
+  local_shipping_code  Int?                @default(0) @db.TinyInt
+  description          String              @db.MediumText
+  created_at           DateTime            @default(now()) @db.DateTime(0)
+  modified_at          DateTime            @default(now()) @db.DateTime(0)
+  stock_updated_at     DateTime            @default(now()) @db.DateTime(0)
+  category_code        String?             @db.VarChar(40)
+  siil_data            String?             @db.Text
+  siil_code            String?             @db.VarChar(3)
+  is_name_translated   Boolean             @default(false)
+  is_image_translated  Boolean             @default(false)
+  image_thumbnail_data String              @db.Text
+  margin_rate          Float               @default(0) @db.Float
+  cny_rate             Float               @default(170) @db.Float
+  shipping_fee         Int                 @default(0)
+  search_tags          String?             @db.VarChar(500)
+  category_a077        String?             @db.VarChar(40)
+  category_a077_name   String?             @db.VarChar(500)
+  category_b378        String?             @db.VarChar(40)
+  category_b378_name   String?             @db.VarChar(500)
+  category_a112        String?             @db.VarChar(40)
+  category_a112_name   String?             @db.VarChar(500)
+  category_a027        String?             @db.VarChar(40)
+  category_a027_name   String?             @db.VarChar(500)
+  category_a001        String?             @db.VarChar(40)
+  category_a001_name   String?             @db.VarChar(500)
+  category_a006        String?             @db.VarChar(40)
+  category_a006_name   String?             @db.VarChar(500)
+  category_a113        String?             @db.VarChar(40)
+  category_a113_name   String?             @db.VarChar(500)
+  category_b719        String?             @db.VarChar(40)
+  category_b719_name   String?             @db.VarChar(500)
+  category_a524        String?             @db.VarChar(40)
+  category_a524_name   String?             @db.VarChar(500)
+  category_a525        String?             @db.VarChar(40)
+  category_a525_name   String?             @db.VarChar(500)
+  category_b956        String?             @db.VarChar(40)
+  category_b956_name   String?             @db.VarChar(500)
+  category_esm         String?             @db.VarChar(40)
+  margin_unit_type     String?             @default("PERCENT") @db.VarChar(10)
+  admin                Admin?              @relation("productToadmin", fields: [admin_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_admin_id_admin_id")
+  category             Category?           @relation("productTocategory", fields: [category_code], references: [code], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_category_code_category_code")
+  origin_product       OriginProduct       @relation("productToorigin_product", fields: [taobao_product_id], references: [id], onUpdate: Restrict, map: "FK_product_origin_product")
+  user                 User?               @relation("productTouser", fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_user_id_user_id")
+  product_option       ProductOption[]
+  product_option_name  ProductOptionName[] @relation("productToproduct_option_name")
+
+  @@unique([user_id, taobao_product_id], map: "UQ_user_id_taobao_product_id")
+  @@index([admin_id], map: "FK_product_admin_id_admin_id")
+  @@index([category_code], map: "FK_product_category_code_category_code")
+  @@index([taobao_product_id], map: "FK_product_taobao_product_id_taobao_product_id")
+  @@map("product")
+}
+
+model ProductOption {
+  id               Int                 @id @default(autoincrement())
+  product_id       Int
+  option_value1_id Int
+  option_value2_id Int?
+  option_value3_id Int?
+  is_active        Boolean             @default(true)
+  taobao_sku_id    String              @db.VarChar(30)
+  price_cny        Float               @db.Float
+  price            Int
+  stock            Int?
+  option_string    String              @db.VarChar(10)
+  optionValue1     ProductOptionValue  @relation("product_option_option_value1_idToproduct_option_value", fields: [option_value1_id], references: [id], onUpdate: Restrict, map: "FK_product_option_option_value1_id_product_option_value_id")
+  optionValue2     ProductOptionValue? @relation("product_option_option_value2_idToproduct_option_value", fields: [option_value2_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_option_option_value2_id_product_option_value_id")
+  optionValue3     ProductOptionValue? @relation("product_option_option_value3_idToproduct_option_value", fields: [option_value3_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_option_option_value3_id_product_option_value_id")
+  product          Product             @relation(fields: [product_id], references: [id], onUpdate: Restrict, map: "FK_product_option_product_id_product_id")
+
+  @@unique([product_id, taobao_sku_id], map: "UQ_product_id_sku_id")
+  @@unique([option_value1_id, option_value2_id, option_value3_id], map: "UQ_product_option")
+  @@index([option_value2_id], map: "FK_product_option_option_value2_id_product_option_value_id")
+  @@index([option_value3_id], map: "FK_product_option_option_value3_id_product_option_value_id")
+  @@map("product_option")
+}
+
+model ProductOptionName {
+  id                   Int                  @id @default(autoincrement())
+  product_id           Int
+  order                Int                  @db.TinyInt
+  name                 String               @db.VarChar(200)
+  taobao_pid           String               @db.VarChar(20)
+  is_name_translated   Boolean              @default(false)
+  has_image            Boolean
+  product              Product              @relation("productToproduct_option_name", fields: [product_id], references: [id], onUpdate: Restrict, map: "FK_product_option_name_product_id_product_id")
+  product_option_value ProductOptionValue[]
+
+  @@index([product_id], map: "FK_product_option_name_product_id_product_id")
+  @@map("product_option_name")
+}
+
+model ProductOptionValue {
+  id                     Int               @id @default(autoincrement())
+  product_option_name_id Int
+  option_name_order      Int               @db.TinyInt
+  name                   String            @db.VarChar(200)
+  taobao_vid             String            @db.VarChar(20)
+  image                  String?           @db.VarChar(500)
+  number                 Int               @db.SmallInt
+  is_name_translated     Boolean           @default(false)
+  is_active              Boolean           @default(true)
+  productOptionName      ProductOptionName @relation(fields: [product_option_name_id], references: [id], onUpdate: Restrict, map: "FK_product_option_value_pon_id_product_option_name_id")
+  productOption1         ProductOption[]   @relation("product_option_option_value1_idToproduct_option_value")
+  productOption2         ProductOption[]   @relation("product_option_option_value2_idToproduct_option_value")
+  productOption3         ProductOption[]   @relation("product_option_option_value3_idToproduct_option_value")
+
+  @@index([product_option_name_id], map: "FK_product_option_value_pon_id_product_option_name_id")
+  @@map("product_option_value")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  email      String    @unique(map: "UQ_user_email") @db.VarChar(50)
+  password   String    @db.VarChar(60)
+  state      UserState
+  naver_id   String?   @unique(map: "UQ_user_naver_id") @db.VarChar(10)
+  kakao_id   String?   @unique(map: "UQ_user_kakao_id") @db.VarChar(12)
+  created_at DateTime  @default(now()) @db.DateTime(0)
+  product    Product[] @relation("productTouser")
+  user_info  UserInfo? @relation("userTouser_info")
+  user_log   UserLog[] @relation("user_logTouser")
+
+  @@map("user")
+}
+
+model UserInfo {
+  user_id                            Int     @unique(map: "UQ_user_info_1")
+  phone                              String? @db.VarChar(15)
+  margin_rate                        Float   @default(25) @db.Float
+  default_shipping_fee               Int     @default(6000)
+  fix_image_top                      String? @db.TinyText
+  fix_image_bottom                   String? @db.TinyText
+  cny_rate                           Float   @default(185) @db.Float
+  product_collect_count              Int     @default(0)
+  max_product_limit                  Int?
+  additional_shipping_fee_jeju       Int     @default(0)
+  as_tel                             String? @db.VarChar(20)
+  as_information                     String? @db.VarChar(1000)
+  refund_shipping_fee                Int     @default(0)
+  exchange_shipping_fee              Int     @default(0)
+  naver_origin_code                  String  @default("수입산") @db.VarChar(100)
+  naver_origin                       String  @default("0200037") @db.VarChar(100)
+  naver_store_url                    String  @db.VarChar(200)
+  naver_store_only                   String  @default("N") @db.VarChar(10)
+  naver_fee                          Float   @default(0) @db.Float
+  coupang_outbound_shipping_time_day Int     @default(12) @db.TinyInt
+  coupang_union_delivery_type        String  @default("N") @db.VarChar(10)
+  coupang_maximum_buy_for_person     Int     @default(0)
+  coupang_login_id                   String  @db.VarChar(200)
+  coupang_vendor_id                  String  @db.VarChar(30)
+  coupang_access_key                 String  @db.VarChar(200)
+  coupang_secret_key                 String  @db.VarChar(200)
+  coupang_image_opt                  String  @db.VarChar(10)
+  coupang_fee                        Float   @default(0) @db.Float
+  coupang_default_outbound           String  @db.VarChar(30)
+  coupang_default_inbound            String  @db.VarChar(30)
+  street_api_key                     String  @db.VarChar(200)
+  street_seller_type                 Int     @default(1) @db.TinyInt
+  street_fee                         Float   @default(0) @db.Float
+  street_default_outbound            String  @db.VarChar(30)
+  street_default_inbound             String  @db.VarChar(30)
+  street_normal_api_key              String  @db.VarChar(200)
+  street_normal_outbound             String? @db.VarChar(30)
+  street_normal_inbound              String? @db.VarChar(30)
+  street_normal_fee                  Float   @db.Float
+  interpark_cert_key                 String  @db.VarChar(200)
+  interpark_secret_key               String  @db.VarChar(200)
+  interpark_fee                      Float   @default(0) @db.Float
+  esmplus_master_id                  String  @db.VarChar(30)
+  esmplus_auction_id                 String  @db.VarChar(30)
+  esmplus_gmarket_id                 String  @db.VarChar(30)
+  gmarket_fee                        Float   @default(0) @db.Float
+  auction_fee                        Float   @default(0) @db.Float
+  lotteon_vendor_id                  String  @db.VarChar(200)
+  lotteon_api_key                    String  @db.VarChar(200)
+  lotteon_fee                        Float   @db.Float
+  lotteon_normal_fee                 Float   @db.Float
+  wemakeprice_id                     String  @db.VarChar(30)
+  wemakeprice_fee                    Float   @db.Float
+  tmon_id                            String? @db.VarChar(30)
+  tmon_fee                           Float   @db.Float
+  option_align_top                   String  @db.VarChar(10)
+  option_twoways                     String  @default("Y") @db.VarChar(10)
+  option_index_type                  Int     @default(1) @db.TinyInt
+  discount_amount                    Int?    @default(0)
+  discount_unit_type                 String? @default("WON") @db.VarChar(10)
+  description_show_title             String  @default("Y") @db.VarChar(10)
+  collect_timeout                    Int     @default(10)
+  collect_stock                      Int     @default(0)
+  margin_unit_type                   String? @default("PERCENT") @db.VarChar(10)
+  extra_shipping_fee                 Int     @default(0)
+  user                               User    @relation("userTouser_info", fields: [user_id], references: [id], onUpdate: Restrict, map: "FK_user_info_user")
+
+  @@map("user_info")
+}
+
+model UserLog {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  title        String   @default("") @db.Text
+  payload_data String   @db.Text
+  is_read      Boolean  @default(false)
+  created_at   DateTime @default(now()) @db.DateTime(0)
+  user         User     @relation("user_logTouser", fields: [user_id], references: [id], onUpdate: Restrict, map: "FK_user_log_user_id_user_id")
+
+  @@index([user_id], map: "FK_user_log_user_id_user_id")
+  @@map("user_log")
+}
+
+enum AdminState {
+  ACTIVE
+  DELETED
+
+  @@map("admin_state")
+}
+
+enum ProductState {
+  COLLECTED
+  ON_SALE
+  UPLOAD_WAITING
+  UPLOAD_FAILED
+  SELL_DONE
+
+  @@map("product_state")
+}
+
+enum UserState {
+  ACTIVE
+  DELETED
+
+  @@map("user_state")
+}

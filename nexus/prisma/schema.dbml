@@ -1,0 +1,293 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table admin {
+  id Int [pk, increment]
+  login_id String [unique, not null]
+  password String [not null]
+  state AdminState [not null]
+  created_at DateTime [default: `now()`, not null]
+  product Product [not null]
+}
+
+Table category {
+  id Int [pk, increment]
+  code String [unique, not null]
+  c1 String [not null]
+  c2 String [not null]
+  c3 String [not null]
+  c4 String [not null]
+  c1_name String [not null]
+  c2_name String [not null]
+  c3_name String [not null]
+  c4_name String [not null]
+  siil_code String [not null]
+  a077_code String [unique, not null]
+  b378_code Int [not null, default: 0]
+  a112_code Int [not null]
+  product Product [not null]
+}
+
+Table origin_product {
+  id Int [pk, increment]
+  taobao_num_iid String [not null]
+  name String [not null]
+  image_thumbnail String [not null]
+  price Float [not null]
+  brand String [not null]
+  taobao_brand_id String
+  taobao_category_id String [not null]
+  original_data String [not null]
+  video_url String
+  translate_data String
+  created_at DateTime [default: `now()`, not null]
+  modified_at DateTime [default: `now()`, not null]
+  product Product [not null]
+}
+
+Table product {
+  id Int [pk, increment]
+  user_id Int
+  admin_id Int
+  taobao_product_id Int [not null]
+  product_code String [not null]
+  state ProductState [not null, default: 'COLLECTED']
+  name String [not null]
+  price Int [not null]
+  local_shipping_fee Int [not null]
+  local_shipping_code Int [default: 0]
+  description String [not null]
+  created_at DateTime [default: `now()`, not null]
+  modified_at DateTime [default: `now()`, not null]
+  stock_updated_at DateTime [default: `now()`, not null]
+  category_code String
+  siil_data String
+  siil_code String
+  is_name_translated Boolean [not null, default: false]
+  is_image_translated Boolean [not null, default: false]
+  image_thumbnail_data String [not null]
+  margin_rate Float [not null, default: 0]
+  cny_rate Float [not null, default: 170]
+  shipping_fee Int [not null, default: 0]
+  search_tags String
+  category_a077 String
+  category_a077_name String
+  category_b378 String
+  category_b378_name String
+  category_a112 String
+  category_a112_name String
+  category_a027 String
+  category_a027_name String
+  category_a001 String
+  category_a001_name String
+  category_a006 String
+  category_a006_name String
+  category_a113 String
+  category_a113_name String
+  category_b719 String
+  category_b719_name String
+  category_a524 String
+  category_a524_name String
+  category_a525 String
+  category_a525_name String
+  category_b956 String
+  category_b956_name String
+  category_esm String
+  margin_unit_type String [default: 'PERCENT']
+  admin Admin
+  category Category
+  origin_product OriginProduct [not null]
+  user User
+  product_option ProductOption [not null]
+  product_option_name ProductOptionName [not null]
+
+  indexes {
+    (user_id, taobao_product_id) [unique]
+  }
+}
+
+Table product_option {
+  id Int [pk, increment]
+  product_id Int [not null]
+  option_value1_id Int [not null]
+  option_value2_id Int
+  option_value3_id Int
+  is_active Boolean [not null, default: true]
+  taobao_sku_id String [not null]
+  price_cny Float [not null]
+  price Int [not null]
+  stock Int
+  option_string String [not null]
+  optionValue1 ProductOptionValue [not null]
+  optionValue2 ProductOptionValue
+  optionValue3 ProductOptionValue
+  product Product [not null]
+
+  indexes {
+    (product_id, taobao_sku_id) [unique]
+    (option_value1_id, option_value2_id, option_value3_id) [unique]
+  }
+}
+
+Table product_option_name {
+  id Int [pk, increment]
+  product_id Int [not null]
+  order Int [not null]
+  name String [not null]
+  taobao_pid String [not null]
+  is_name_translated Boolean [not null, default: false]
+  has_image Boolean [not null]
+  product Product [not null]
+  product_option_value ProductOptionValue [not null]
+}
+
+Table product_option_value {
+  id Int [pk, increment]
+  product_option_name_id Int [not null]
+  option_name_order Int [not null]
+  name String [not null]
+  taobao_vid String [not null]
+  image String
+  number Int [not null]
+  is_name_translated Boolean [not null, default: false]
+  is_active Boolean [not null, default: true]
+  productOptionName ProductOptionName [not null]
+  productOption1 ProductOption [not null]
+  productOption2 ProductOption [not null]
+  productOption3 ProductOption [not null]
+}
+
+Table user {
+  id Int [pk, increment]
+  email String [unique, not null]
+  password String [not null]
+  state UserState [not null]
+  naver_id String [unique]
+  kakao_id String [unique]
+  created_at DateTime [default: `now()`, not null]
+  product Product [not null]
+  user_info UserInfo
+  user_log UserLog [not null]
+}
+
+Table user_info {
+  user_id Int [unique, not null]
+  phone String
+  margin_rate Float [not null, default: 25]
+  default_shipping_fee Int [not null, default: 6000]
+  fix_image_top String
+  fix_image_bottom String
+  cny_rate Float [not null, default: 185]
+  product_collect_count Int [not null, default: 0]
+  max_product_limit Int
+  additional_shipping_fee_jeju Int [not null, default: 0]
+  as_tel String
+  as_information String
+  refund_shipping_fee Int [not null, default: 0]
+  exchange_shipping_fee Int [not null, default: 0]
+  naver_origin_code String [not null, default: '수입산']
+  naver_origin String [not null, default: '0200037']
+  naver_store_url String [not null]
+  naver_store_only String [not null, default: 'N']
+  naver_fee Float [not null, default: 0]
+  coupang_outbound_shipping_time_day Int [not null, default: 12]
+  coupang_union_delivery_type String [not null, default: 'N']
+  coupang_maximum_buy_for_person Int [not null, default: 0]
+  coupang_login_id String [not null]
+  coupang_vendor_id String [not null]
+  coupang_access_key String [not null]
+  coupang_secret_key String [not null]
+  coupang_image_opt String [not null]
+  coupang_fee Float [not null, default: 0]
+  coupang_default_outbound String [not null]
+  coupang_default_inbound String [not null]
+  street_api_key String [not null]
+  street_seller_type Int [not null, default: 1]
+  street_fee Float [not null, default: 0]
+  street_default_outbound String [not null]
+  street_default_inbound String [not null]
+  street_normal_api_key String [not null]
+  street_normal_outbound String
+  street_normal_inbound String
+  street_normal_fee Float [not null]
+  interpark_cert_key String [not null]
+  interpark_secret_key String [not null]
+  interpark_fee Float [not null, default: 0]
+  esmplus_master_id String [not null]
+  esmplus_auction_id String [not null]
+  esmplus_gmarket_id String [not null]
+  gmarket_fee Float [not null, default: 0]
+  auction_fee Float [not null, default: 0]
+  lotteon_vendor_id String [not null]
+  lotteon_api_key String [not null]
+  lotteon_fee Float [not null]
+  lotteon_normal_fee Float [not null]
+  wemakeprice_id String [not null]
+  wemakeprice_fee Float [not null]
+  tmon_id String
+  tmon_fee Float [not null]
+  option_align_top String [not null]
+  option_twoways String [not null, default: 'Y']
+  option_index_type Int [not null, default: 1]
+  discount_amount Int [default: 0]
+  discount_unit_type String [default: 'WON']
+  description_show_title String [not null, default: 'Y']
+  collect_timeout Int [not null, default: 10]
+  collect_stock Int [not null, default: 0]
+  margin_unit_type String [default: 'PERCENT']
+  extra_shipping_fee Int [not null, default: 0]
+  user User [not null]
+}
+
+Table user_log {
+  id Int [pk, increment]
+  user_id Int [not null]
+  title String [not null, default: '']
+  payload_data String [not null]
+  is_read Boolean [not null, default: false]
+  created_at DateTime [default: `now()`, not null]
+  user User [not null]
+}
+
+Enum AdminState {
+  ACTIVE
+  DELETED
+}
+
+Enum ProductState {
+  COLLECTED
+  ON_SALE
+  UPLOAD_WAITING
+  UPLOAD_FAILED
+  SELL_DONE
+}
+
+Enum UserState {
+  ACTIVE
+  DELETED
+}
+
+Ref: Product.admin_id > Admin.id [delete: Restrict]
+
+Ref: Product.category_code > Category.code [delete: Restrict]
+
+Ref: Product.taobao_product_id > OriginProduct.id
+
+Ref: Product.user_id > User.id [delete: Restrict]
+
+Ref: ProductOption.option_value1_id > ProductOptionValue.id
+
+Ref: ProductOption.option_value2_id > ProductOptionValue.id
+
+Ref: ProductOption.option_value3_id > ProductOptionValue.id
+
+Ref: ProductOption.product_id > Product.id
+
+Ref: ProductOptionName.product_id > Product.id
+
+Ref: ProductOptionValue.product_option_name_id > ProductOptionName.id
+
+Ref: UserInfo.user_id - User.id
+
+Ref: UserLog.user_id > User.id
