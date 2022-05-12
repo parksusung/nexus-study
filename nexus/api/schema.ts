@@ -1,15 +1,27 @@
 import { makeSchema } from "nexus";
-import { join } from 'path'
-import * as types from './graphql'
+import { join } from "path";
+import { nexusPrisma } from 'nexus-plugin-prisma'
+import * as modelTypes from './graphql'
+
 
 export const schema = makeSchema({
-    types : types,
-    outputs : {
-        typegen : join(__dirname, '..','nexus-typegen.ts'),//스키마선언 아티팩트를 저장할위치
-        schema : join(__dirname,'..','schema.graphql'), // typescript 스키마 정의 아티팩트를 저장할 위치 
+    types: [modelTypes],
+    // sourceTypes: { //이부분은 좀더 공부가 필요함.. 뭔지 몰겠고 types.ts랑 typegen이 자동으로 생긴다는데 난안생김..
+    //     modules: [{ module: join(__dirname, 'types.ts'), alias: "upload" }],
+    //     headers: [
+    //         'import { FileUpload } from "./types"',
+    //     ],
+    // },
+    outputs: {
+        typegen: join(__dirname, 'typegen.ts'),
+        schema: join(__dirname, 'schema.graphql'),
     },
-    contextType : {
-        module : join(__dirname,'./context.ts'),
-        export : "Context",
-    }
+    contextType: { module: join(__dirname, 'types.ts'), export: "Context" },
+    plugins: [
+        nexusPrisma({
+            shouldGenerateArtifacts: true,
+            paginationStrategy: 'prisma',
+            experimentalCRUD: true,
+        })
+    ],
 })
