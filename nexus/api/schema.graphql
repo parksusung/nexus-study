@@ -85,6 +85,9 @@ input CategoryWhereInput {
   siil_code: StringFilter
 }
 
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
 scalar DateTime
 
 input DateTimeFilter {
@@ -154,7 +157,10 @@ input IntNullableFilter {
 
 type Mutation {
   changeMyPasswordByAdmin(currentPassword: String!, newPassword: String!): Boolean!
+  renewToken(accessToken: String!, refreshToken: String!): SignInType
+  requestPhoneVerificationByEveryone(phoneNumber: String!): Boolean!
   signUpAdminByAdmin(id: String!, password: String!): Boolean!
+  verifyPhoneByEveryone(phoneNumber: String!, verificationNumber: String!): Int!
 }
 
 input NestedBoolFilter {
@@ -253,6 +259,13 @@ input NestedStringNullableFilter {
   not: NestedStringNullableFilter
   notIn: [String!]
   startsWith: String
+}
+
+type PhoneVerification {
+  created_at: DateTime!
+  id: Int!
+  tel: String!
+  verification_number: String!
 }
 
 type Product {
@@ -512,6 +525,11 @@ type Query {
   ok: Boolean!
 }
 
+type SignInType {
+  accessToken: String!
+  refreshToken: String!
+}
+
 enum SortOrder {
   asc
   desc
@@ -543,6 +561,14 @@ input StringNullableFilter {
   not: NestedStringNullableFilter
   notIn: [String!]
   startsWith: String
+}
+
+enum TaobaoItemOrderBy {
+  """판매자 신용 순"""
+  CREDIT
+
+  """판매량순"""
+  SALE
 }
 
 input TaobaoProductOrderByWithRelationInput {
@@ -581,6 +607,9 @@ input TaobaoProductWhereInput {
   translate_data: StringNullableFilter
   video_url: StringNullableFilter
 }
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
 
 type User {
   created_at: DateTime!
@@ -801,6 +830,13 @@ input UserLogWhereUniqueInput {
   id: Int
 }
 
+enum UserLoginType {
+  ADMIN
+  EMAIL
+  KAKAO
+  NAVER
+}
+
 input UserOrderByWithRelationInput {
   created_at: SortOrder
   email: SortOrder
@@ -812,6 +848,12 @@ input UserOrderByWithRelationInput {
   state: SortOrder
   user_info: UserInfoOrderByWithRelationInput
   user_log: UserLogOrderByRelationAggregateInput
+}
+
+enum UserSocialType {
+  EMAIL
+  KAKAO
+  NAVER
 }
 
 enum UserState {

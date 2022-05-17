@@ -250,7 +250,7 @@ Table UserLog {
   user User [not null]
 }
 
-Table phone_verification {
+Table PhoneVerification {
   id Int [pk, increment]
   tel String [not null]
   verification_number String [not null]

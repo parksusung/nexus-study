@@ -296,7 +296,7 @@ enum AdminState {
   ACTIVE
   DELETED
 
-  @@map("admin_state")
+   @@map("admin_state")
 }
 
 enum ProductState {
@@ -306,12 +306,12 @@ enum ProductState {
   UPLOAD_FAILED
   SELL_DONE
 
-  @@map("product_state")
+   @@map("product_state")
 }
 
 enum UserState {
   ACTIVE
   DELETED
 
-  @@map("user_state")
+   @@map("user_state")
 }

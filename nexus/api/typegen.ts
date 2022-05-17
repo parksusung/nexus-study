@@ -5,8 +5,31 @@
 
 
 import type { Context } from "./types"
-
-
+import type { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * The `Upload` scalar type represents a file upload.
+     */
+    upload<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Upload";
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * The `Upload` scalar type represents a file upload.
+     */
+    upload<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Upload";
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+  }
+}
 declare global {
   interface NexusGenCustomOutputProperties<TypeName extends string> {
     crud: NexusPrisma<TypeName, 'crud'>
@@ -698,6 +721,9 @@ export interface NexusGenEnums {
   AdminState: "ACTIVE" | "DELETED"
   ProductState: "COLLECTED" | "ON_SALE" | "SELL_DONE" | "UPLOAD_FAILED" | "UPLOAD_WAITING"
   SortOrder: "asc" | "desc"
+  TaobaoItemOrderBy: "_credit" | "_sale"
+  UserLoginType: "ADMIN" | "EMAIL" | "KAKAO" | "NAVER"
+  UserSocialType: "EMAIL" | "KAKAO" | "NAVER"
   UserState: "ACTIVE" | "DELETED"
 }
 
@@ -707,7 +733,8 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
-  DateTime: any
+  DateTime: Date
+  Upload: FileUpload
 }
 
 export interface NexusGenObjects {
@@ -723,6 +750,12 @@ export interface NexusGenObjects {
     state: NexusGenEnums['AdminState']; // AdminState!
   }
   Mutation: {};
+  PhoneVerification: { // root type
+    created_at: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    tel: string; // String!
+    verification_number: string; // String!
+  }
   Product: { // root type
     admin_id?: number | null; // Int
     category_code?: string | null; // String
@@ -745,6 +778,10 @@ export interface NexusGenObjects {
     user_id?: number | null; // Int
   }
   Query: {};
+  SignInType: { // root type
+    accessToken: string; // String!
+    refreshToken: string; // String!
+  }
   User: { // root type
     created_at: NexusGenScalars['DateTime']; // DateTime!
     email: string; // String!
@@ -802,7 +839,16 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     changeMyPasswordByAdmin: boolean; // Boolean!
+    renewToken: NexusGenRootTypes['SignInType'] | null; // SignInType
+    requestPhoneVerificationByEveryone: boolean; // Boolean!
     signUpAdminByAdmin: boolean; // Boolean!
+    verifyPhoneByEveryone: number; // Int!
+  }
+  PhoneVerification: { // field return type
+    created_at: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    tel: string; // String!
+    verification_number: string; // String!
   }
   Product: { // field return type
     admin_id: number | null; // Int
@@ -829,6 +875,10 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     ok: boolean; // Boolean!
+  }
+  SignInType: { // field return type
+    accessToken: string; // String!
+    refreshToken: string; // String!
   }
   User: { // field return type
     created_at: NexusGenScalars['DateTime']; // DateTime!
@@ -883,7 +933,16 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     changeMyPasswordByAdmin: 'Boolean'
+    renewToken: 'SignInType'
+    requestPhoneVerificationByEveryone: 'Boolean'
     signUpAdminByAdmin: 'Boolean'
+    verifyPhoneByEveryone: 'Int'
+  }
+  PhoneVerification: { // field return type name
+    created_at: 'DateTime'
+    id: 'Int'
+    tel: 'String'
+    verification_number: 'String'
   }
   Product: { // field return type name
     admin_id: 'Int'
@@ -910,6 +969,10 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     ok: 'Boolean'
+  }
+  SignInType: { // field return type name
+    accessToken: 'String'
+    refreshToken: 'String'
   }
   User: { // field return type name
     created_at: 'DateTime'
@@ -956,9 +1019,20 @@ export interface NexusGenArgTypes {
       currentPassword: string; // String!
       newPassword: string; // String!
     }
+    renewToken: { // args
+      accessToken: string; // String!
+      refreshToken: string; // String!
+    }
+    requestPhoneVerificationByEveryone: { // args
+      phoneNumber: string; // String!
+    }
     signUpAdminByAdmin: { // args
       id: string; // String!
       password: string; // String!
+    }
+    verifyPhoneByEveryone: { // args
+      phoneNumber: string; // String!
+      verificationNumber: string; // String!
     }
   }
   User: {

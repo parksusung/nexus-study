@@ -1,12 +1,12 @@
 import { PrismaClient } from '@prisma/client'
 import { RedisPubSub } from 'graphql-redis-subscriptions';
 import { sign, verify } from 'jsonwebtoken'
-import { Context, Token } from '../types'
+import { Context, Token } from '../../types'
 import { APP_REFRESH_SECRET, APP_SECRET, REDIS_HOST, REDIS_PORT, REDIS_SECRET, tokens } from './constants'
 // import { PubSub } from 'apollo-server-express';
 import Redis, { RedisOptions } from 'ioredis' // redis 사용시 활성화
 import { Iamport } from 'iamport-rest-client-nodejs';
-import { getPurchaseInfo, PurchaseLogPlanInfoType } from '../graphql';
+import { getPurchaseInfo, PurchaseLogPlanInfoType } from '../../graphql';
 import * as CryptoJS from "crypto-js";
 import { shake256 } from 'js-sha3';
 import { throwError, errors } from './error';

@@ -1,5 +1,5 @@
 import { PrismaClient, ProductOptionName, ProductOptionValue } from "@prisma/client";
-import { getValidUploadImageUrl } from "../../../graphql";
+import { getValidUploadImageUrl } from "../../../../graphql";
 
 export async function getOptionHeaderHtmlByProductId(prisma: PrismaClient, id: number): Promise<string> {
     const optionValues = await prisma.productOptionValue.findMany({

@@ -1,7 +1,7 @@
 import { PrismaClient, UserLog } from "@prisma/client";
 import { RedisPubSub } from "graphql-redis-subscriptions";
-import { UserLogPayload } from "../../graphql";
-import { Context } from "../../types";
+import { UserLogPayload } from "../../../graphql";
+import { Context } from "../../../types";
 
 interface IPublishUserLogDataContext {
     prisma: PrismaClient
