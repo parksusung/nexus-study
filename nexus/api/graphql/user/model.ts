@@ -2,8 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import { objectType, nonNull } from 'nexus';
 
 
-
-
 export const t_User = objectType({
     name: "User",
     definition(t) {
