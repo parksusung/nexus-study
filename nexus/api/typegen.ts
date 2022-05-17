@@ -19,6 +19,14 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  AdminOrderByWithRelationInput: { // input type
+    created_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    login_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    password?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product?: NexusGenInputs['ProductOrderByRelationAggregateInput'] | null; // ProductOrderByRelationAggregateInput
+    state?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
   AdminWhereInput: { // input type
     AND?: NexusGenInputs['AdminWhereInput'][] | null; // [AdminWhereInput!]
     NOT?: NexusGenInputs['AdminWhereInput'][] | null; // [AdminWhereInput!]
@@ -33,6 +41,23 @@ export interface NexusGenInputs {
   BoolFilter: { // input type
     equals?: boolean | null; // Boolean
     not?: NexusGenInputs['NestedBoolFilter'] | null; // NestedBoolFilter
+  }
+  CategoryOrderByWithRelationInput: { // input type
+    a077_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    a112_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    b378_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    c1?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    c1_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    c2?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    c2_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    c3?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    c3_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    c4?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    c4_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    code?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product?: NexusGenInputs['ProductOrderByRelationAggregateInput'] | null; // ProductOrderByRelationAggregateInput
+    siil_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
   CategoryWhereInput: { // input type
     AND?: NexusGenInputs['CategoryWhereInput'][] | null; // [CategoryWhereInput!]
@@ -200,25 +225,6 @@ export interface NexusGenInputs {
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
   }
-  OriginProductWhereInput: { // input type
-    AND?: NexusGenInputs['OriginProductWhereInput'][] | null; // [OriginProductWhereInput!]
-    NOT?: NexusGenInputs['OriginProductWhereInput'][] | null; // [OriginProductWhereInput!]
-    OR?: NexusGenInputs['OriginProductWhereInput'][] | null; // [OriginProductWhereInput!]
-    brand?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    created_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
-    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    image_thumbnail?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    modified_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
-    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    original_data?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    price?: NexusGenInputs['FloatFilter'] | null; // FloatFilter
-    product?: NexusGenInputs['ProductListRelationFilter'] | null; // ProductListRelationFilter
-    taobao_brand_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
-    taobao_category_id?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    taobao_num_iid?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    translate_data?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
-    video_url?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
-  }
   ProductListRelationFilter: { // input type
     every?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
     none?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
@@ -234,6 +240,10 @@ export interface NexusGenInputs {
     none?: NexusGenInputs['ProductOptionNameWhereInput'] | null; // ProductOptionNameWhereInput
     some?: NexusGenInputs['ProductOptionNameWhereInput'] | null; // ProductOptionNameWhereInput
   }
+  ProductOptionNameOrderByRelationAggregateInput: { // input type
+    _count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
   ProductOptionNameWhereInput: { // input type
     AND?: NexusGenInputs['ProductOptionNameWhereInput'][] | null; // [ProductOptionNameWhereInput!]
     NOT?: NexusGenInputs['ProductOptionNameWhereInput'][] | null; // [ProductOptionNameWhereInput!]
@@ -247,6 +257,10 @@ export interface NexusGenInputs {
     product_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     product_option_value?: NexusGenInputs['ProductOptionValueListRelationFilter'] | null; // ProductOptionValueListRelationFilter
     taobao_pid?: NexusGenInputs['StringFilter'] | null; // StringFilter
+  }
+  ProductOptionOrderByRelationAggregateInput: { // input type
+    _count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    count?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
   ProductOptionValueListRelationFilter: { // input type
     every?: NexusGenInputs['ProductOptionValueWhereInput'] | null; // ProductOptionValueWhereInput
@@ -264,10 +278,10 @@ export interface NexusGenInputs {
     name?: NexusGenInputs['StringFilter'] | null; // StringFilter
     number?: NexusGenInputs['IntFilter'] | null; // IntFilter
     option_name_order?: NexusGenInputs['IntFilter'] | null; // IntFilter
-    productOption1?: NexusGenInputs['ProductOptionListRelationFilter'] | null; // ProductOptionListRelationFilter
-    productOption2?: NexusGenInputs['ProductOptionListRelationFilter'] | null; // ProductOptionListRelationFilter
-    productOption3?: NexusGenInputs['ProductOptionListRelationFilter'] | null; // ProductOptionListRelationFilter
-    productOptionName?: NexusGenInputs['ProductOptionNameWhereInput'] | null; // ProductOptionNameWhereInput
+    option_value1?: NexusGenInputs['ProductOptionListRelationFilter'] | null; // ProductOptionListRelationFilter
+    option_value2?: NexusGenInputs['ProductOptionListRelationFilter'] | null; // ProductOptionListRelationFilter
+    option_value3?: NexusGenInputs['ProductOptionListRelationFilter'] | null; // ProductOptionListRelationFilter
+    product_option_name?: NexusGenInputs['ProductOptionNameWhereInput'] | null; // ProductOptionNameWhereInput
     product_option_name_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     taobao_vid?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
@@ -277,9 +291,6 @@ export interface NexusGenInputs {
     OR?: NexusGenInputs['ProductOptionWhereInput'][] | null; // [ProductOptionWhereInput!]
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     is_active?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
-    optionValue1?: NexusGenInputs['ProductOptionValueWhereInput'] | null; // ProductOptionValueWhereInput
-    optionValue2?: NexusGenInputs['ProductOptionValueWhereInput'] | null; // ProductOptionValueWhereInput
-    optionValue3?: NexusGenInputs['ProductOptionValueWhereInput'] | null; // ProductOptionValueWhereInput
     option_string?: NexusGenInputs['StringFilter'] | null; // StringFilter
     option_value1_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     option_value2_id?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
@@ -288,11 +299,75 @@ export interface NexusGenInputs {
     price_cny?: NexusGenInputs['FloatFilter'] | null; // FloatFilter
     product?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
     product_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    product_option1?: NexusGenInputs['ProductOptionValueWhereInput'] | null; // ProductOptionValueWhereInput
+    product_option2?: NexusGenInputs['ProductOptionValueWhereInput'] | null; // ProductOptionValueWhereInput
+    product_option3?: NexusGenInputs['ProductOptionValueWhereInput'] | null; // ProductOptionValueWhereInput
     stock?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
     taobao_sku_id?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
   ProductOrderByRelationAggregateInput: { // input type
     _count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  ProductOrderByWithRelationInput: { // input type
+    admin?: NexusGenInputs['AdminOrderByWithRelationInput'] | null; // AdminOrderByWithRelationInput
+    admin_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category?: NexusGenInputs['CategoryOrderByWithRelationInput'] | null; // CategoryOrderByWithRelationInput
+    category_a001?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a001_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a006?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a006_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a027?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a027_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a077?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a077_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a112?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a112_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a113?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a113_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a524?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a524_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a525?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_a525_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_b378?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_b378_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_b719?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_b719_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_b956?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_b956_name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    category_esm?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    cny_rate?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    created_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    description?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    image_thumbnail_data?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    is_image_translated?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    is_name_translated?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    local_shipping_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    local_shipping_fee?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    margin_rate?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    margin_unit_type?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    modified_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    price?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product_option?: NexusGenInputs['ProductOptionOrderByRelationAggregateInput'] | null; // ProductOptionOrderByRelationAggregateInput
+    product_option_name?: NexusGenInputs['ProductOptionNameOrderByRelationAggregateInput'] | null; // ProductOptionNameOrderByRelationAggregateInput
+    search_tags?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    shipping_fee?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    siil_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    siil_data?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    state?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    stock_updated_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    taobao_product?: NexusGenInputs['TaobaoProductOrderByWithRelationInput'] | null; // TaobaoProductOrderByWithRelationInput
+    taobao_product_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    user?: NexusGenInputs['UserOrderByWithRelationInput'] | null; // UserOrderByWithRelationInput
+    user_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  ProductUQ_user_id_taobao_product_idCompoundUniqueInput: { // input type
+    taobao_product_id: number; // Int!
+    user_id: number; // Int!
   }
   ProductWhereInput: { // input type
     AND?: NexusGenInputs['ProductWhereInput'][] | null; // [ProductWhereInput!]
@@ -338,7 +413,6 @@ export interface NexusGenInputs {
     margin_unit_type?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     modified_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
     name?: NexusGenInputs['StringFilter'] | null; // StringFilter
-    origin_product?: NexusGenInputs['OriginProductWhereInput'] | null; // OriginProductWhereInput
     price?: NexusGenInputs['IntFilter'] | null; // IntFilter
     product_code?: NexusGenInputs['StringFilter'] | null; // StringFilter
     product_option?: NexusGenInputs['ProductOptionListRelationFilter'] | null; // ProductOptionListRelationFilter
@@ -349,9 +423,14 @@ export interface NexusGenInputs {
     siil_data?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     state?: NexusGenInputs['EnumProductStateFilter'] | null; // EnumProductStateFilter
     stock_updated_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    taobao_product?: NexusGenInputs['TaobaoProductWhereInput'] | null; // TaobaoProductWhereInput
     taobao_product_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     user_id?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
+  }
+  ProductWhereUniqueInput: { // input type
+    UQ_user_id_taobao_product_id?: NexusGenInputs['ProductUQ_user_id_taobao_product_idCompoundUniqueInput'] | null; // ProductUQ_user_id_taobao_product_idCompoundUniqueInput
+    id?: number | null; // Int
   }
   StringFilter: { // input type
     contains?: string | null; // String
@@ -378,6 +457,41 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedStringNullableFilter'] | null; // NestedStringNullableFilter
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
+  }
+  TaobaoProductOrderByWithRelationInput: { // input type
+    brand?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    created_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    image_thumbnail?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    modified_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    original_data?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    price?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product?: NexusGenInputs['ProductOrderByRelationAggregateInput'] | null; // ProductOrderByRelationAggregateInput
+    taobao_brand_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    taobao_category_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    taobao_num_iid?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    translate_data?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    video_url?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  TaobaoProductWhereInput: { // input type
+    AND?: NexusGenInputs['TaobaoProductWhereInput'][] | null; // [TaobaoProductWhereInput!]
+    NOT?: NexusGenInputs['TaobaoProductWhereInput'][] | null; // [TaobaoProductWhereInput!]
+    OR?: NexusGenInputs['TaobaoProductWhereInput'][] | null; // [TaobaoProductWhereInput!]
+    brand?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    created_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    image_thumbnail?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    modified_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    original_data?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    price?: NexusGenInputs['FloatFilter'] | null; // FloatFilter
+    product?: NexusGenInputs['ProductListRelationFilter'] | null; // ProductListRelationFilter
+    taobao_brand_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    taobao_category_id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    taobao_num_iid?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    translate_data?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    video_url?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
   }
   UserInfoOrderByWithRelationInput: { // input type
     additional_shipping_fee_jeju?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -525,6 +639,7 @@ export interface NexusGenInputs {
   }
   UserLogOrderByRelationAggregateInput: { // input type
     _count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    count?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
   UserLogOrderByWithRelationInput: { // input type
     created_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -601,6 +716,34 @@ export interface NexusGenObjects {
     accountNumber: string; // String!
     bankName: string; // String!
   }
+  Admin: { // root type
+    created_at: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    login_id: string; // String!
+    state: NexusGenEnums['AdminState']; // AdminState!
+  }
+  Mutation: {};
+  Product: { // root type
+    admin_id?: number | null; // Int
+    category_code?: string | null; // String
+    created_at: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: number; // Int!
+    image_thumbnail_data: string; // String!
+    is_image_translated: boolean; // Boolean!
+    is_name_translated: boolean; // Boolean!
+    local_shipping_fee: number; // Int!
+    modified_at: NexusGenScalars['DateTime']; // DateTime!
+    name: string; // String!
+    price: number; // Int!
+    product_code: string; // String!
+    siil_code?: string | null; // String
+    siil_data?: string | null; // String
+    state: NexusGenEnums['ProductState']; // ProductState!
+    stock_updated_at: NexusGenScalars['DateTime']; // DateTime!
+    taobao_product_id: number; // Int!
+    user_id?: number | null; // Int
+  }
   Query: {};
   User: { // root type
     created_at: NexusGenScalars['DateTime']; // DateTime!
@@ -651,6 +794,39 @@ export interface NexusGenFieldTypes {
     accountNumber: string; // String!
     bankName: string; // String!
   }
+  Admin: { // field return type
+    created_at: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    login_id: string; // String!
+    state: NexusGenEnums['AdminState']; // AdminState!
+  }
+  Mutation: { // field return type
+    changeMyPasswordByAdmin: boolean; // Boolean!
+    signUpAdminByAdmin: boolean; // Boolean!
+  }
+  Product: { // field return type
+    admin_id: number | null; // Int
+    category_code: string | null; // String
+    created_at: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: number; // Int!
+    imageThumbnail: string[]; // [String!]!
+    image_thumbnail_data: string; // String!
+    is_image_translated: boolean; // Boolean!
+    is_name_translated: boolean; // Boolean!
+    local_shipping_fee: number; // Int!
+    modified_at: NexusGenScalars['DateTime']; // DateTime!
+    name: string; // String!
+    price: number; // Int!
+    product_code: string; // String!
+    siil_code: string | null; // String
+    siil_data: string | null; // String
+    state: NexusGenEnums['ProductState']; // ProductState!
+    stock_updated_at: NexusGenScalars['DateTime']; // DateTime!
+    taobao_product_id: number; // Int!
+    user: NexusGenRootTypes['User'] | null; // User
+    user_id: number | null; // Int
+  }
   Query: { // field return type
     ok: boolean; // Boolean!
   }
@@ -661,6 +837,7 @@ export interface NexusGenFieldTypes {
     kakao_id: string | null; // String
     naver_id: string | null; // String
     password: string | null; // String
+    product: NexusGenRootTypes['Product'][]; // [Product!]!
     state: NexusGenEnums['UserState']; // UserState!
     user_info: NexusGenRootTypes['UserInfo'] | null; // UserInfo
     user_log: NexusGenRootTypes['UserLog'][]; // [UserLog!]!
@@ -677,7 +854,6 @@ export interface NexusGenFieldTypes {
     max_product_limit: number | null; // Int
     phone: string | null; // String
     product_collect_count: number; // Int!
-    refundAccountInfo: NexusGenRootTypes['AccountInfo'] | null; // AccountInfo
     refund_shipping_fee: number; // Int!
     user: NexusGenRootTypes['User']; // User!
     user_id: number; // Int!
@@ -699,6 +875,39 @@ export interface NexusGenFieldTypeNames {
     accountNumber: 'String'
     bankName: 'String'
   }
+  Admin: { // field return type name
+    created_at: 'DateTime'
+    id: 'Int'
+    login_id: 'String'
+    state: 'AdminState'
+  }
+  Mutation: { // field return type name
+    changeMyPasswordByAdmin: 'Boolean'
+    signUpAdminByAdmin: 'Boolean'
+  }
+  Product: { // field return type name
+    admin_id: 'Int'
+    category_code: 'String'
+    created_at: 'DateTime'
+    description: 'String'
+    id: 'Int'
+    imageThumbnail: 'String'
+    image_thumbnail_data: 'String'
+    is_image_translated: 'Boolean'
+    is_name_translated: 'Boolean'
+    local_shipping_fee: 'Int'
+    modified_at: 'DateTime'
+    name: 'String'
+    price: 'Int'
+    product_code: 'String'
+    siil_code: 'String'
+    siil_data: 'String'
+    state: 'ProductState'
+    stock_updated_at: 'DateTime'
+    taobao_product_id: 'Int'
+    user: 'User'
+    user_id: 'Int'
+  }
   Query: { // field return type name
     ok: 'Boolean'
   }
@@ -709,6 +918,7 @@ export interface NexusGenFieldTypeNames {
     kakao_id: 'String'
     naver_id: 'String'
     password: 'String'
+    product: 'Product'
     state: 'UserState'
     user_info: 'UserInfo'
     user_log: 'UserLog'
@@ -725,7 +935,6 @@ export interface NexusGenFieldTypeNames {
     max_product_limit: 'Int'
     phone: 'String'
     product_collect_count: 'Int'
-    refundAccountInfo: 'AccountInfo'
     refund_shipping_fee: 'Int'
     user: 'User'
     user_id: 'Int'
@@ -742,7 +951,24 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Mutation: {
+    changeMyPasswordByAdmin: { // args
+      currentPassword: string; // String!
+      newPassword: string; // String!
+    }
+    signUpAdminByAdmin: { // args
+      id: string; // String!
+      password: string; // String!
+    }
+  }
   User: {
+    product: { // args
+      cursor?: NexusGenInputs['ProductWhereUniqueInput'] | null; // ProductWhereUniqueInput
+      orderBy?: NexusGenInputs['ProductOrderByWithRelationInput'][] | null; // [ProductOrderByWithRelationInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
+    }
     user_log: { // args
       cursor?: NexusGenInputs['UserLogWhereUniqueInput'] | null; // UserLogWhereUniqueInput
       orderBy?: NexusGenInputs['UserLogOrderByWithRelationInput'][] | null; // [UserLogOrderByWithRelationInput!]

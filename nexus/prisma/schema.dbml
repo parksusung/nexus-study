@@ -2,7 +2,7 @@
 //// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 //// ------------------------------------------------------
 
-Table admin {
+Table Admin {
   id Int [pk, increment]
   login_id String [unique, not null]
   password String [not null]
@@ -11,7 +11,7 @@ Table admin {
   product Product [not null]
 }
 
-Table category {
+Table Category {
   id Int [pk, increment]
   code String [unique, not null]
   c1 String [not null]
@@ -29,24 +29,7 @@ Table category {
   product Product [not null]
 }
 
-Table origin_product {
-  id Int [pk, increment]
-  taobao_num_iid String [not null]
-  name String [not null]
-  image_thumbnail String [not null]
-  price Float [not null]
-  brand String [not null]
-  taobao_brand_id String
-  taobao_category_id String [not null]
-  original_data String [not null]
-  video_url String
-  translate_data String
-  created_at DateTime [default: `now()`, not null]
-  modified_at DateTime [default: `now()`, not null]
-  product Product [not null]
-}
-
-Table product {
+Table Product {
   id Int [pk, increment]
   user_id Int
   admin_id Int
@@ -97,7 +80,7 @@ Table product {
   margin_unit_type String [default: 'PERCENT']
   admin Admin
   category Category
-  origin_product OriginProduct [not null]
+  taobao_product TaobaoProduct [not null]
   user User
   product_option ProductOption [not null]
   product_option_name ProductOptionName [not null]
@@ -107,7 +90,7 @@ Table product {
   }
 }
 
-Table product_option {
+Table ProductOption {
   id Int [pk, increment]
   product_id Int [not null]
   option_value1_id Int [not null]
@@ -119,9 +102,9 @@ Table product_option {
   price Int [not null]
   stock Int
   option_string String [not null]
-  optionValue1 ProductOptionValue [not null]
-  optionValue2 ProductOptionValue
-  optionValue3 ProductOptionValue
+  product_option1 ProductOptionValue [not null]
+  product_option2 ProductOptionValue
+  product_option3 ProductOptionValue
   product Product [not null]
 
   indexes {
@@ -130,7 +113,7 @@ Table product_option {
   }
 }
 
-Table product_option_name {
+Table ProductOptionName {
   id Int [pk, increment]
   product_id Int [not null]
   order Int [not null]
@@ -142,7 +125,7 @@ Table product_option_name {
   product_option_value ProductOptionValue [not null]
 }
 
-Table product_option_value {
+Table ProductOptionValue {
   id Int [pk, increment]
   product_option_name_id Int [not null]
   option_name_order Int [not null]
@@ -152,13 +135,30 @@ Table product_option_value {
   number Int [not null]
   is_name_translated Boolean [not null, default: false]
   is_active Boolean [not null, default: true]
-  productOptionName ProductOptionName [not null]
-  productOption1 ProductOption [not null]
-  productOption2 ProductOption [not null]
-  productOption3 ProductOption [not null]
+  product_option_name ProductOptionName [not null]
+  option_value1 ProductOption [not null]
+  option_value2 ProductOption [not null]
+  option_value3 ProductOption [not null]
 }
 
-Table user {
+Table TaobaoProduct {
+  id Int [pk, increment]
+  taobao_num_iid String [not null]
+  name String [not null]
+  image_thumbnail String [not null]
+  price Float [not null]
+  brand String [not null]
+  taobao_brand_id String
+  taobao_category_id String [not null]
+  original_data String [not null]
+  video_url String
+  translate_data String
+  created_at DateTime [default: `now()`, not null]
+  modified_at DateTime [default: `now()`, not null]
+  product Product [not null]
+}
+
+Table User {
   id Int [pk, increment]
   email String [unique, not null]
   password String [not null]
@@ -171,7 +171,7 @@ Table user {
   user_log UserLog [not null]
 }
 
-Table user_info {
+Table UserInfo {
   user_id Int [unique, not null]
   phone String
   margin_rate Float [not null, default: 25]
@@ -240,14 +240,21 @@ Table user_info {
   user User [not null]
 }
 
-Table user_log {
+Table UserLog {
   id Int [pk, increment]
   user_id Int [not null]
-  title String [not null, default: '']
+  title String [not null]
   payload_data String [not null]
   is_read Boolean [not null, default: false]
   created_at DateTime [default: `now()`, not null]
   user User [not null]
+}
+
+Table phone_verification {
+  id Int [pk, increment]
+  tel String [not null]
+  verification_number String [not null]
+  created_at DateTime [default: `now()`, not null]
 }
 
 Enum AdminState {
@@ -268,13 +275,13 @@ Enum UserState {
   DELETED
 }
 
-Ref: Product.admin_id > Admin.id [delete: Restrict]
+Ref: Product.admin_id > Admin.id
 
-Ref: Product.category_code > Category.code [delete: Restrict]
+Ref: Product.category_code > Category.code
 
-Ref: Product.taobao_product_id > OriginProduct.id
+Ref: Product.taobao_product_id > TaobaoProduct.id
 
-Ref: Product.user_id > User.id [delete: Restrict]
+Ref: Product.user_id > User.id
 
 Ref: ProductOption.option_value1_id > ProductOptionValue.id
 

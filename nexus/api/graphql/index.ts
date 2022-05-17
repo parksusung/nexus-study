@@ -1,9 +1,30 @@
 import { arg, decorateType, extendType, nonNull, objectType } from 'nexus'
 import { GraphQLUpload } from 'graphql-upload'
+import { DateTimeResolver } from 'graphql-scalars'
 
 export * from './user'
+export * from './admin'
+export * from './product'
 
 
+export * from './auth'
+
+export const t_token = objectType({
+    name: "SignInType",
+    definition(t) {
+        t.nonNull.string("accessToken");
+        t.nonNull.string("refreshToken");
+    }
+})
+
+export const Upload = decorateType(GraphQLUpload, {
+    sourceType: "FileUpload",
+    asNexusMethod: "upload",
+});
+export const DateTime = decorateType(DateTimeResolver, {
+    sourceType: "Date",
+    asNexusMethod: "date",
+});
 
 
 // export const Upload = decorateType(GraphQLUpload, {
@@ -34,11 +55,3 @@ export * from './user'
 //         });
 //     }
 // });
-
-// export const t_token = objectType({
-//     name: "SignInType",
-//     definition(t) {
-//         t.nonNull.string("accessToken");
-//         t.nonNull.string("refreshToken");
-//     }
-// })

@@ -15,18 +15,18 @@ datasource db {
 
 model Admin {
   id         Int        @id @default(autoincrement())
-  login_id   String     @unique(map: "UQ_admin_login_id") @db.VarChar(50)
+  login_id   String     @unique @db.VarChar(50)
   password   String     @db.VarChar(60)
   state      AdminState
   created_at DateTime   @default(now()) @db.DateTime(0)
-  product    Product[]  @relation("productToadmin")
+  product    Product[]  @relation("adminToproduct")
 
   @@map("admin")
 }
 
 model Category {
   id        Int       @id @default(autoincrement())
-  code      String    @unique(map: "UQ_category_code") @db.VarChar(40)
+  code      String    @unique @db.VarChar(40)
   c1        String    @db.VarChar(8)
   c2        String    @db.VarChar(8)
   c3        String    @db.VarChar(8)
@@ -36,31 +36,12 @@ model Category {
   c3_name   String    @db.VarChar(20)
   c4_name   String    @db.VarChar(20)
   siil_code String    @db.VarChar(3)
-  a077_code String    @unique(map: "UQ_category_final_code") @db.VarChar(8)
+  a077_code String    @unique @db.VarChar(8)
   b378_code Int       @default(0)
   a112_code Int
-  product   Product[] @relation("productTocategory")
+  product   Product[] @relation("categoryToproduct")
 
   @@map("category")
-}
-
-model OriginProduct {
-  id                 Int       @id @default(autoincrement())
-  taobao_num_iid     String    @db.VarChar(30)
-  name               String    @db.VarChar(200)
-  image_thumbnail    String    @db.Text
-  price              Float     @db.Float
-  brand              String    @db.Text
-  taobao_brand_id    String?   @db.VarChar(15)
-  taobao_category_id String    @db.VarChar(12)
-  original_data      String    @db.LongText
-  video_url          String?   @db.Text
-  translate_data     String?   @db.LongText
-  created_at         DateTime  @default(now()) @db.DateTime(0)
-  modified_at        DateTime  @default(now()) @db.DateTime(0)
-  product            Product[] @relation("productToorigin_product")
-
-  @@map("origin_product")
 }
 
 model Product {
@@ -112,17 +93,17 @@ model Product {
   category_b956_name   String?             @db.VarChar(500)
   category_esm         String?             @db.VarChar(40)
   margin_unit_type     String?             @default("PERCENT") @db.VarChar(10)
-  admin                Admin?              @relation("productToadmin", fields: [admin_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_admin_id_admin_id")
-  category             Category?           @relation("productTocategory", fields: [category_code], references: [code], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_category_code_category_code")
-  origin_product       OriginProduct       @relation("productToorigin_product", fields: [taobao_product_id], references: [id], onUpdate: Restrict, map: "FK_product_origin_product")
-  user                 User?               @relation("productTouser", fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_user_id_user_id")
-  product_option       ProductOption[]
-  product_option_name  ProductOptionName[] @relation("productToproduct_option_name")
+  admin                Admin?              @relation("adminToproduct", fields: [admin_id], references: [id])
+  category             Category?           @relation("categoryToproduct", fields: [category_code], references: [code])
+  taobao_product       TaobaoProduct       @relation("taobaoToproduct", fields: [taobao_product_id], references: [id])
+  user                 User?               @relation("userToproduct", fields: [user_id], references: [id])
+  product_option       ProductOption[]     @relation("productToproductoption")
+  product_option_name  ProductOptionName[] @relation("productTooptionname")
 
-  @@unique([user_id, taobao_product_id], map: "UQ_user_id_taobao_product_id")
-  @@index([admin_id], map: "FK_product_admin_id_admin_id")
-  @@index([category_code], map: "FK_product_category_code_category_code")
-  @@index([taobao_product_id], map: "FK_product_taobao_product_id_taobao_product_id")
+  @@unique([user_id, taobao_product_id], name: "UQ_user_id_taobao_product_id")
+  @@index([admin_id], name: "FK_product_admin_id_admin_id")
+  @@index([category_code], name: "FK_product_category_code_category_code")
+  @@index([taobao_product_id], name: "FK_product_taobao_product_id_taobao_product_id")
   @@map("product")
 }
 
@@ -138,15 +119,15 @@ model ProductOption {
   price            Int
   stock            Int?
   option_string    String              @db.VarChar(10)
-  optionValue1     ProductOptionValue  @relation("product_option_option_value1_idToproduct_option_value", fields: [option_value1_id], references: [id], onUpdate: Restrict, map: "FK_product_option_option_value1_id_product_option_value_id")
-  optionValue2     ProductOptionValue? @relation("product_option_option_value2_idToproduct_option_value", fields: [option_value2_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_option_option_value2_id_product_option_value_id")
-  optionValue3     ProductOptionValue? @relation("product_option_option_value3_idToproduct_option_value", fields: [option_value3_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "FK_product_option_option_value3_id_product_option_value_id")
-  product          Product             @relation(fields: [product_id], references: [id], onUpdate: Restrict, map: "FK_product_option_product_id_product_id")
+  product_option1  ProductOptionValue  @relation("product_option_option_value1_idToproduct_option_value", fields: [option_value1_id], references: [id])
+  product_option2  ProductOptionValue? @relation("product_option_option_value2_idToproduct_option_value", fields: [option_value2_id], references: [id])
+  product_option3  ProductOptionValue? @relation("product_option_option_value3_idToproduct_option_value", fields: [option_value3_id], references: [id])
+  product          Product             @relation("productToproductoption", fields: [product_id], references: [id])
 
-  @@unique([product_id, taobao_sku_id], map: "UQ_product_id_sku_id")
-  @@unique([option_value1_id, option_value2_id, option_value3_id], map: "UQ_product_option")
-  @@index([option_value2_id], map: "FK_product_option_option_value2_id_product_option_value_id")
-  @@index([option_value3_id], map: "FK_product_option_option_value3_id_product_option_value_id")
+  @@unique([product_id, taobao_sku_id], name: "UQ_product_id_sku_id")
+  @@unique([option_value1_id, option_value2_id, option_value3_id], name: "UQ_product_option")
+  @@index([option_value2_id], name: "FK_product_option_option_value2_id_product_option_value_id")
+  @@index([option_value3_id], name: "FK_product_option_option_value3_id_product_option_value_id")
   @@map("product_option")
 }
 
@@ -158,10 +139,10 @@ model ProductOptionName {
   taobao_pid           String               @db.VarChar(20)
   is_name_translated   Boolean              @default(false)
   has_image            Boolean
-  product              Product              @relation("productToproduct_option_name", fields: [product_id], references: [id], onUpdate: Restrict, map: "FK_product_option_name_product_id_product_id")
-  product_option_value ProductOptionValue[]
+  product              Product              @relation("productTooptionname", fields: [product_id], references: [id])
+  product_option_value ProductOptionValue[] @relation("optionvalueTooptionname")
 
-  @@index([product_id], map: "FK_product_option_name_product_id_product_id")
+  @@index([product_id], name: "FK_product_option_name_product_id_product_id")
   @@map("product_option_name")
 }
 
@@ -175,32 +156,51 @@ model ProductOptionValue {
   number                 Int               @db.SmallInt
   is_name_translated     Boolean           @default(false)
   is_active              Boolean           @default(true)
-  productOptionName      ProductOptionName @relation(fields: [product_option_name_id], references: [id], onUpdate: Restrict, map: "FK_product_option_value_pon_id_product_option_name_id")
-  productOption1         ProductOption[]   @relation("product_option_option_value1_idToproduct_option_value")
-  productOption2         ProductOption[]   @relation("product_option_option_value2_idToproduct_option_value")
-  productOption3         ProductOption[]   @relation("product_option_option_value3_idToproduct_option_value")
+  product_option_name    ProductOptionName @relation("optionvalueTooptionname", fields: [product_option_name_id], references: [id])
+  option_value1          ProductOption[]   @relation("product_option_option_value1_idToproduct_option_value")
+  option_value2          ProductOption[]   @relation("product_option_option_value2_idToproduct_option_value")
+  option_value3          ProductOption[]   @relation("product_option_option_value3_idToproduct_option_value")
 
-  @@index([product_option_name_id], map: "FK_product_option_value_pon_id_product_option_name_id")
+  @@index([product_option_name_id], name: "FK_product_option_value_pon_id_product_option_name_id")
   @@map("product_option_value")
+}
+
+model TaobaoProduct {
+  id                 Int       @id @default(autoincrement())
+  taobao_num_iid     String    @db.VarChar(30)
+  name               String    @db.VarChar(200)
+  image_thumbnail    String    @db.Text
+  price              Float     @db.Float
+  brand              String    @db.Text
+  taobao_brand_id    String?   @db.VarChar(15)
+  taobao_category_id String    @db.VarChar(12)
+  original_data      String    @db.LongText
+  video_url          String?   @db.Text
+  translate_data     String?   @db.LongText
+  created_at         DateTime  @default(now()) @db.DateTime(0)
+  modified_at        DateTime  @default(now()) @db.DateTime(0)
+  product            Product[] @relation("taobaoToproduct")
+
+  @@map("taobao_product")
 }
 
 model User {
   id         Int       @id @default(autoincrement())
-  email      String    @unique(map: "UQ_user_email") @db.VarChar(50)
+  email      String    @unique @db.VarChar(50)
   password   String    @db.VarChar(60)
   state      UserState
-  naver_id   String?   @unique(map: "UQ_user_naver_id") @db.VarChar(10)
-  kakao_id   String?   @unique(map: "UQ_user_kakao_id") @db.VarChar(12)
+  naver_id   String?   @unique @db.VarChar(10)
+  kakao_id   String?   @unique @db.VarChar(12)
   created_at DateTime  @default(now()) @db.DateTime(0)
-  product    Product[] @relation("productTouser")
-  user_info  UserInfo? @relation("userTouser_info")
-  user_log   UserLog[] @relation("user_logTouser")
+  product    Product[] @relation("userToproduct")
+  user_info  UserInfo? @relation("userTouserinfo")
+  user_log   UserLog[] @relation("userTouserlog")
 
   @@map("user")
 }
 
 model UserInfo {
-  user_id                            Int     @unique(map: "UQ_user_info_1")
+  user_id                            Int     @unique
   phone                              String? @db.VarChar(15)
   margin_rate                        Float   @default(25) @db.Float
   default_shipping_fee               Int     @default(6000)
@@ -265,7 +265,7 @@ model UserInfo {
   collect_stock                      Int     @default(0)
   margin_unit_type                   String? @default("PERCENT") @db.VarChar(10)
   extra_shipping_fee                 Int     @default(0)
-  user                               User    @relation("userTouser_info", fields: [user_id], references: [id], onUpdate: Restrict, map: "FK_user_info_user")
+  user                               User    @relation("userTouserinfo", fields: [user_id], references: [id])
 
   @@map("user_info")
 }
@@ -273,14 +273,23 @@ model UserInfo {
 model UserLog {
   id           Int      @id @default(autoincrement())
   user_id      Int
-  title        String   @default("") @db.Text
+  title        String   @db.Text
   payload_data String   @db.Text
   is_read      Boolean  @default(false)
   created_at   DateTime @default(now()) @db.DateTime(0)
-  user         User     @relation("user_logTouser", fields: [user_id], references: [id], onUpdate: Restrict, map: "FK_user_log_user_id_user_id")
+  user         User     @relation("userTouserlog", fields: [user_id], references: [id])
 
-  @@index([user_id], map: "FK_user_log_user_id_user_id")
+  @@index([user_id], name: "FK_user_log_user_id_user_id")
   @@map("user_log")
+}
+
+model PhoneVerification {
+  id                  Int      @id @default(autoincrement())
+  tel                 String   @db.VarChar(15)
+  verification_number String   @db.Char(6)
+  created_at          DateTime @default(now()) @db.DateTime(0)
+
+  @@map("phone_verification")
 }
 
 enum AdminState {
