@@ -124,23 +124,23 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumProductStateFilter'] | null; // NestedEnumProductStateFilter
     notIn?: NexusGenEnums['ProductState'][] | null; // [ProductState!]
   }
+  EnumPurchaseLogStateFilter: { // input type
+    equals?: NexusGenEnums['PurchaseLogState'] | null; // PurchaseLogState
+    in?: NexusGenEnums['PurchaseLogState'][] | null; // [PurchaseLogState!]
+    not?: NexusGenInputs['NestedEnumPurchaseLogStateFilter'] | null; // NestedEnumPurchaseLogStateFilter
+    notIn?: NexusGenEnums['PurchaseLogState'][] | null; // [PurchaseLogState!]
+  }
+  EnumPurchaseLogTypeFilter: { // input type
+    equals?: NexusGenEnums['PurchaseLogType'] | null; // PurchaseLogType
+    in?: NexusGenEnums['PurchaseLogType'][] | null; // [PurchaseLogType!]
+    not?: NexusGenInputs['NestedEnumPurchaseLogTypeFilter'] | null; // NestedEnumPurchaseLogTypeFilter
+    notIn?: NexusGenEnums['PurchaseLogType'][] | null; // [PurchaseLogType!]
+  }
   EnumUserStateFilter: { // input type
     equals?: NexusGenEnums['UserState'] | null; // UserState
     in?: NexusGenEnums['UserState'][] | null; // [UserState!]
     not?: NexusGenInputs['NestedEnumUserStateFilter'] | null; // NestedEnumUserStateFilter
     notIn?: NexusGenEnums['UserState'][] | null; // [UserState!]
-  }
-  Enumpurchase_log_stateFilter: { // input type
-    equals?: NexusGenEnums['purchase_log_state'] | null; // purchase_log_state
-    in?: NexusGenEnums['purchase_log_state'][] | null; // [purchase_log_state!]
-    not?: NexusGenInputs['NestedEnumpurchase_log_stateFilter'] | null; // NestedEnumpurchase_log_stateFilter
-    notIn?: NexusGenEnums['purchase_log_state'][] | null; // [purchase_log_state!]
-  }
-  Enumpurchase_log_typeFilter: { // input type
-    equals?: NexusGenEnums['purchase_log_type'] | null; // purchase_log_type
-    in?: NexusGenEnums['purchase_log_type'][] | null; // [purchase_log_type!]
-    not?: NexusGenInputs['NestedEnumpurchase_log_typeFilter'] | null; // NestedEnumpurchase_log_typeFilter
-    notIn?: NexusGenEnums['purchase_log_type'][] | null; // [purchase_log_type!]
   }
   FloatFilter: { // input type
     equals?: number | null; // Float
@@ -198,23 +198,23 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumProductStateFilter'] | null; // NestedEnumProductStateFilter
     notIn?: NexusGenEnums['ProductState'][] | null; // [ProductState!]
   }
+  NestedEnumPurchaseLogStateFilter: { // input type
+    equals?: NexusGenEnums['PurchaseLogState'] | null; // PurchaseLogState
+    in?: NexusGenEnums['PurchaseLogState'][] | null; // [PurchaseLogState!]
+    not?: NexusGenInputs['NestedEnumPurchaseLogStateFilter'] | null; // NestedEnumPurchaseLogStateFilter
+    notIn?: NexusGenEnums['PurchaseLogState'][] | null; // [PurchaseLogState!]
+  }
+  NestedEnumPurchaseLogTypeFilter: { // input type
+    equals?: NexusGenEnums['PurchaseLogType'] | null; // PurchaseLogType
+    in?: NexusGenEnums['PurchaseLogType'][] | null; // [PurchaseLogType!]
+    not?: NexusGenInputs['NestedEnumPurchaseLogTypeFilter'] | null; // NestedEnumPurchaseLogTypeFilter
+    notIn?: NexusGenEnums['PurchaseLogType'][] | null; // [PurchaseLogType!]
+  }
   NestedEnumUserStateFilter: { // input type
     equals?: NexusGenEnums['UserState'] | null; // UserState
     in?: NexusGenEnums['UserState'][] | null; // [UserState!]
     not?: NexusGenInputs['NestedEnumUserStateFilter'] | null; // NestedEnumUserStateFilter
     notIn?: NexusGenEnums['UserState'][] | null; // [UserState!]
-  }
-  NestedEnumpurchase_log_stateFilter: { // input type
-    equals?: NexusGenEnums['purchase_log_state'] | null; // purchase_log_state
-    in?: NexusGenEnums['purchase_log_state'][] | null; // [purchase_log_state!]
-    not?: NexusGenInputs['NestedEnumpurchase_log_stateFilter'] | null; // NestedEnumpurchase_log_stateFilter
-    notIn?: NexusGenEnums['purchase_log_state'][] | null; // [purchase_log_state!]
-  }
-  NestedEnumpurchase_log_typeFilter: { // input type
-    equals?: NexusGenEnums['purchase_log_type'] | null; // purchase_log_type
-    in?: NexusGenEnums['purchase_log_type'][] | null; // [purchase_log_type!]
-    not?: NexusGenInputs['NestedEnumpurchase_log_typeFilter'] | null; // NestedEnumpurchase_log_typeFilter
-    notIn?: NexusGenEnums['purchase_log_type'][] | null; // [purchase_log_type!]
   }
   NestedFloatFilter: { // input type
     equals?: number | null; // Float
@@ -498,8 +498,8 @@ export interface NexusGenInputs {
     pay_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     plan_info?: NexusGenInputs['StringFilter'] | null; // StringFilter
     purchased_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
-    state?: NexusGenInputs['Enumpurchase_log_stateFilter'] | null; // Enumpurchase_log_stateFilter
-    type?: NexusGenInputs['Enumpurchase_log_typeFilter'] | null; // Enumpurchase_log_typeFilter
+    state?: NexusGenInputs['EnumPurchaseLogStateFilter'] | null; // EnumPurchaseLogStateFilter
+    type?: NexusGenInputs['EnumPurchaseLogTypeFilter'] | null; // EnumPurchaseLogTypeFilter
     user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     user_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
   }
@@ -770,6 +770,8 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   AdminState: "ACTIVE" | "DELETED"
   ProductState: "COLLECTED" | "ON_SALE" | "SELL_DONE" | "UPLOAD_FAILED" | "UPLOAD_WAITING"
+  PurchaseLogState: "ACTIVE" | "ENDED" | "REFUNDED" | "WAIT_DEPOSIT" | "WAIT_PAYMENT"
+  PurchaseLogType: "IMAGE_TRANSLATE" | "PLAN" | "STOCK"
   SortOrder: "asc" | "desc"
   TaobaoItemOrderBy: "_credit" | "_sale"
   TranslateEngineEnumType: "baidu" | "google" | "papago"
@@ -778,8 +780,6 @@ export interface NexusGenEnums {
   UserPurchaseAdditionalInfoEnumType: "IMAGE_TRANSLATE" | "STOCK"
   UserSocialType: "EMAIL" | "KAKAO" | "NAVER"
   UserState: "ACTIVE" | "DELETED"
-  purchase_log_state: "ACTIVE" | "ENDED" | "REFUNDED" | "WAIT_DEPOSIT" | "WAIT_PAYMENT"
-  purchase_log_type: "IMAGE_TRANSLATE" | "PLAN" | "STOCK"
 }
 
 export interface NexusGenScalars {
@@ -849,8 +849,8 @@ export interface NexusGenObjects {
     pay_id?: string | null; // String
     plan_info: string; // String!
     purchased_at: NexusGenScalars['DateTime']; // DateTime!
-    state: NexusGenEnums['purchase_log_state']; // purchase_log_state!
-    type: NexusGenEnums['purchase_log_type']; // purchase_log_type!
+    state: NexusGenEnums['PurchaseLogState']; // PurchaseLogState!
+    type: NexusGenEnums['PurchaseLogType']; // PurchaseLogType!
     user_id: number; // Int!
   }
   Query: {};
@@ -977,8 +977,8 @@ export interface NexusGenFieldTypes {
     pay_id: string | null; // String
     plan_info: string; // String!
     purchased_at: NexusGenScalars['DateTime']; // DateTime!
-    state: NexusGenEnums['purchase_log_state']; // purchase_log_state!
-    type: NexusGenEnums['purchase_log_type']; // purchase_log_type!
+    state: NexusGenEnums['PurchaseLogState']; // PurchaseLogState!
+    type: NexusGenEnums['PurchaseLogType']; // PurchaseLogType!
     user: NexusGenRootTypes['User']; // User!
     user_id: number; // Int!
   }
@@ -1107,8 +1107,8 @@ export interface NexusGenFieldTypeNames {
     pay_id: 'String'
     plan_info: 'String'
     purchased_at: 'DateTime'
-    state: 'purchase_log_state'
-    type: 'purchase_log_type'
+    state: 'PurchaseLogState'
+    type: 'PurchaseLogType'
     user: 'User'
     user_id: 'Int'
   }

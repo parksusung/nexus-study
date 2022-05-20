@@ -115,25 +115,25 @@ input EnumProductStateFilter {
   notIn: [ProductState!]
 }
 
+input EnumPurchaseLogStateFilter {
+  equals: PurchaseLogState
+  in: [PurchaseLogState!]
+  not: NestedEnumPurchaseLogStateFilter
+  notIn: [PurchaseLogState!]
+}
+
+input EnumPurchaseLogTypeFilter {
+  equals: PurchaseLogType
+  in: [PurchaseLogType!]
+  not: NestedEnumPurchaseLogTypeFilter
+  notIn: [PurchaseLogType!]
+}
+
 input EnumUserStateFilter {
   equals: UserState
   in: [UserState!]
   not: NestedEnumUserStateFilter
   notIn: [UserState!]
-}
-
-input Enumpurchase_log_stateFilter {
-  equals: purchase_log_state
-  in: [purchase_log_state!]
-  not: NestedEnumpurchase_log_stateFilter
-  notIn: [purchase_log_state!]
-}
-
-input Enumpurchase_log_typeFilter {
-  equals: purchase_log_type
-  in: [purchase_log_type!]
-  not: NestedEnumpurchase_log_typeFilter
-  notIn: [purchase_log_type!]
 }
 
 input FloatFilter {
@@ -209,25 +209,25 @@ input NestedEnumProductStateFilter {
   notIn: [ProductState!]
 }
 
+input NestedEnumPurchaseLogStateFilter {
+  equals: PurchaseLogState
+  in: [PurchaseLogState!]
+  not: NestedEnumPurchaseLogStateFilter
+  notIn: [PurchaseLogState!]
+}
+
+input NestedEnumPurchaseLogTypeFilter {
+  equals: PurchaseLogType
+  in: [PurchaseLogType!]
+  not: NestedEnumPurchaseLogTypeFilter
+  notIn: [PurchaseLogType!]
+}
+
 input NestedEnumUserStateFilter {
   equals: UserState
   in: [UserState!]
   not: NestedEnumUserStateFilter
   notIn: [UserState!]
-}
-
-input NestedEnumpurchase_log_stateFilter {
-  equals: purchase_log_state
-  in: [purchase_log_state!]
-  not: NestedEnumpurchase_log_stateFilter
-  notIn: [purchase_log_state!]
-}
-
-input NestedEnumpurchase_log_typeFilter {
-  equals: purchase_log_type
-  in: [purchase_log_type!]
-  not: NestedEnumpurchase_log_typeFilter
-  notIn: [purchase_log_type!]
 }
 
 input NestedFloatFilter {
@@ -569,8 +569,8 @@ type PurchaseLog {
   pay_id: String
   plan_info: String!
   purchased_at: DateTime!
-  state: purchase_log_state!
-  type: purchase_log_type!
+  state: PurchaseLogState!
+  type: PurchaseLogType!
   user: User!
   user_id: Int!
 }
@@ -586,6 +586,20 @@ input PurchaseLogOrderByRelationAggregateInput {
   count: SortOrder
 }
 
+enum PurchaseLogState {
+  ACTIVE
+  ENDED
+  REFUNDED
+  WAIT_DEPOSIT
+  WAIT_PAYMENT
+}
+
+enum PurchaseLogType {
+  IMAGE_TRANSLATE
+  PLAN
+  STOCK
+}
+
 input PurchaseLogWhereInput {
   AND: [PurchaseLogWhereInput!]
   NOT: [PurchaseLogWhereInput!]
@@ -596,8 +610,8 @@ input PurchaseLogWhereInput {
   pay_id: StringNullableFilter
   plan_info: StringFilter
   purchased_at: DateTimeFilter
-  state: Enumpurchase_log_stateFilter
-  type: Enumpurchase_log_typeFilter
+  state: EnumPurchaseLogStateFilter
+  type: EnumPurchaseLogTypeFilter
   user: UserWhereInput
   user_id: IntFilter
 }
@@ -1000,18 +1014,4 @@ input UserWhereInput {
   state: EnumUserStateFilter
   user_info: UserInfoWhereInput
   user_log: UserLogListRelationFilter
-}
-
-enum purchase_log_state {
-  ACTIVE
-  ENDED
-  REFUNDED
-  WAIT_DEPOSIT
-  WAIT_PAYMENT
-}
-
-enum purchase_log_type {
-  IMAGE_TRANSLATE
-  PLAN
-  STOCK
 }

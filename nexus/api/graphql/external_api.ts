@@ -62,61 +62,61 @@ export const query_external_api = extendType({
 
 const isNeedToTranslate = <T extends { name: string }>(object: T) => !/^[\x00-\x7F가-힣ㄱ-ㅎㅏ-ㅣ]+$/g.test(object.name);
 
-// const translateProduct = async (ctx: Context, type: NexusGenAllTypes["TranslateTargetEnumType"], id: number): Promise<string> => {
-//     let ids: number[] = [];
-//     let isTranslated = false;
-//     console.log("translate :", { type, id });
-//     //상품 이름 번역
-//     if (['PRODUCT_ALL', 'PRODUCT_NAME'].includes(type)) {
-//         const product = await ctx.prisma.product.findUnique({ where: { id: id }, include: { productOptionName: { select: { id: true } } } });
-//         if (!product) return throwError(errors.noSuchData, ctx);
-//         if (!product.isNameTranslated) {
-//             const name = isNeedToTranslate(product) ? await translateTextByPapagoAPI(product.name) : product.name;
-//             console.log(`translate: ${id} 상품이름 번역 완료`)
-//             isTranslated = isTranslated || isNeedToTranslate(product);
-//             await ctx.prisma.product.update({ where: { id: product.id }, data: { isNameTranslated: true, name } });
-//         }
-//         if (type === 'PRODUCT_ALL') {
-//             ids = ids.concat(product.productOptionName.map(v => v.id));
-//         }
-//     }
-//     if (['PRODUCT_OPTION_ALL', 'PRODUCT_OPTION_NAME'].includes(type)) {
-//         ids = [id];
-//     }
-//     if (ids.length > 0) {
-//         const valueIds = (await Promise.all(ids.map(async id => {
-//             const productOptionName = await ctx.prisma.productOptionName.findUnique({ where: { id }, include: { productOptionValue: { select: { id: true } } } });
-//             if (!productOptionName) return throwError(errors.noSuchData, ctx);
-//             if (!productOptionName.isNameTranslated) {
-//                 const name = isNeedToTranslate(productOptionName) ? await translateTextByPapagoAPI(productOptionName.name) : productOptionName.name;
-//                 console.log(`translate: ${id} 상품옵션 종류 번역 완료`)
-//                 isTranslated = isTranslated || isNeedToTranslate(productOptionName);
-//                 await ctx.prisma.productOptionName.update({ where: { id: productOptionName.id }, data: { isNameTranslated: true, name } });
-//             }
-//             if (['PRODUCT_ALL', 'PRODUCT_OPTION_ALL'].includes(type)) return productOptionName.productOptionValue.map(v => v.id)
-//             return null;
-//         }))).filter((v): v is number[] => v !== null).flat();
-//         ids = [...valueIds];
-//     }
-//     if (['PRODUCT_OPTION_VALUE'].includes(type)) {
-//         ids = [id];
-//     }
-//     if (ids.length > 0) {
-//         await Promise.all(ids.map(async id => {
-//             const productOptionValue = await ctx.prisma.productOptionValue.findUnique({ where: { id } });
-//             if (!productOptionValue) return throwError(errors.noSuchData, ctx);
-//             if (!productOptionValue.isNameTranslated) {
-//                 console.log(`translate: ${id} 상품옵션 이름 번역 완료`)
-//                 const name = isNeedToTranslate(productOptionValue) ? await translateTextByPapagoAPI(productOptionValue.name) : productOptionValue.name;
-//                 isTranslated = isTranslated || isNeedToTranslate(productOptionValue);
-//                 await ctx.prisma.productOptionValue.update({ where: { id: productOptionValue.id }, data: { isNameTranslated: true, name } });
-//             }
-//         }));
-//     }
-//     if (!isTranslated) return `이미 번역된 ${type === 'PRODUCT_ALL' ? '상품' : '항목'}입니다.`;
-//     return "번역되었습니다."
+const translateProduct = async (ctx: Context, type: NexusGenAllTypes["TranslateTargetEnumType"], id: number): Promise<string> => {
+    let ids: number[] = [];
+    let isTranslated = false;
+    console.log("translate :", { type, id });
+    //상품 이름 번역
+    if (['PRODUCT_ALL', 'PRODUCT_NAME'].includes(type)) {
+        const product = await ctx.prisma.product.findUnique({ where: { id: id }, include: { product_option_name: { select: { id: true } } } });
+        if (!product) return throwError(errors.noSuchData, ctx);
+        if (!product.is_name_translated) {
+            const name = isNeedToTranslate(product) ? await translateTextByPapagoAPI(product.name) : product.name;
+            console.log(`translate: ${id} 상품이름 번역 완료`)
+            isTranslated = isTranslated || isNeedToTranslate(product);
+            await ctx.prisma.product.update({ where: { id: product.id }, data: { is_name_translated: true, name } });
+        }
+        if (type === 'PRODUCT_ALL') {
+            ids = ids.concat(product.product_option_name.map(v => v.id));
+        }
+    }
+    if (['PRODUCT_OPTION_ALL', 'PRODUCT_OPTION_NAME'].includes(type)) {
+        ids = [id];
+    }
+    if (ids.length > 0) {
+        const valueIds = (await Promise.all(ids.map(async id => {
+            const productOptionName = await ctx.prisma.productOptionName.findUnique({ where: { id }, include: { product_option_value: { select: { id: true } } } });
+            if (!productOptionName) return throwError(errors.noSuchData, ctx);
+            if (!productOptionName.is_name_translated) {
+                const name = isNeedToTranslate(productOptionName) ? await translateTextByPapagoAPI(productOptionName.name) : productOptionName.name;
+                console.log(`translate: ${id} 상품옵션 종류 번역 완료`)
+                isTranslated = isTranslated || isNeedToTranslate(productOptionName);
+                await ctx.prisma.productOptionName.update({ where: { id: productOptionName.id }, data: { is_name_translated: true, name } });
+            }
+            if (['PRODUCT_ALL', 'PRODUCT_OPTION_ALL'].includes(type)) return productOptionName.product_option_value.map(v => v.id)
+            return null;
+        }))).filter((v): v is number[] => v !== null).flat();
+        ids = [...valueIds];
+    }
+    if (['PRODUCT_OPTION_VALUE'].includes(type)) {
+        ids = [id];
+    }
+    if (ids.length > 0) {
+        await Promise.all(ids.map(async id => {
+            const productOptionValue = await ctx.prisma.productOptionValue.findUnique({ where: { id } });
+            if (!productOptionValue) return throwError(errors.noSuchData, ctx);
+            if (!productOptionValue.is_name_translated) {
+                console.log(`translate: ${id} 상품옵션 이름 번역 완료`)
+                const name = isNeedToTranslate(productOptionValue) ? await translateTextByPapagoAPI(productOptionValue.name) : productOptionValue.name;
+                isTranslated = isTranslated || isNeedToTranslate(productOptionValue);
+                await ctx.prisma.productOptionValue.update({ where: { id: productOptionValue.id }, data: { is_name_translated: true, name } });
+            }
+        }));
+    }
+    if (!isTranslated) return `이미 번역된 ${type === 'PRODUCT_ALL' ? '상품' : '항목'}입니다.`;
+    return "번역되었습니다."
 
-// }
+}
 
 export const mutation_external_api = extendType({
     type: "Mutation",

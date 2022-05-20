@@ -274,9 +274,9 @@ Table PurchaseLog {
   user_id Int [not null]
   pay_amount Int [not null]
   pay_id String [unique]
-  state purchase_log_state [not null]
+  state PurchaseLogState [not null]
   plan_info String [not null]
-  type purchase_log_type [not null]
+  type PurchaseLogType [not null]
   purchased_at DateTime [default: `now()`, not null]
   expired_at DateTime [not null]
   user User [not null]
@@ -300,7 +300,7 @@ Enum UserState {
   DELETED
 }
 
-Enum purchase_log_state {
+Enum PurchaseLogState {
   WAIT_PAYMENT
   WAIT_DEPOSIT
   ACTIVE
@@ -308,7 +308,7 @@ Enum purchase_log_state {
   REFUNDED
 }
 
-Enum purchase_log_type {
+Enum PurchaseLogType {
   PLAN
   IMAGE_TRANSLATE
   STOCK
