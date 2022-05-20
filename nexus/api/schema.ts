@@ -6,7 +6,7 @@ import * as modelTypes from "./graphql";
 export const schema = makeSchema({
   types: [modelTypes],
   // 백업 유형 .
-  // sourceTypes: { //이부분은 좀더 공부가 필요함.. 뭔지 몰겠고 types.ts랑 typegen이 자동으로 생긴다는데 난안생김..
+  // sourceTypes: { //이부분은 좀더 공부가 필요함.. 뭔지 몰겠고
   //     modules: [{ module: join(__dirname, 'types.ts'), alias: "upload" }],
   //     headers: [
   //         'import { FileUpload } from "./types"',

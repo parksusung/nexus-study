@@ -167,6 +167,7 @@ Table User {
   kakao_id String [unique]
   created_at DateTime [default: `now()`, not null]
   product Product [not null]
+  purchase_log PurchaseLog [not null]
   user_info UserInfo
   user_log UserLog [not null]
 }
@@ -257,6 +258,30 @@ Table PhoneVerification {
   created_at DateTime [default: `now()`, not null]
 }
 
+Table PlanInfo {
+  id Int [pk, increment]
+  plan_level Int
+  name String [not null]
+  description String [not null]
+  month Int [not null]
+  price Int [not null]
+  external_feature_variable_id String
+  is_active Boolean [not null, default: true]
+}
+
+Table PurchaseLog {
+  id Int [pk, increment]
+  user_id Int [not null]
+  pay_amount Int [not null]
+  pay_id String [unique]
+  state PurchaseLogState [not null]
+  plan_info String [not null]
+  type PurchaseLogType [not null]
+  purchased_at DateTime [default: `now()`, not null]
+  expired_at DateTime [not null]
+  user User [not null]
+}
+
 Enum AdminState {
   ACTIVE
   DELETED
@@ -273,6 +298,20 @@ Enum ProductState {
 Enum UserState {
   ACTIVE
   DELETED
+}
+
+Enum PurchaseLogState {
+  WAIT_PAYMENT
+  WAIT_DEPOSIT
+  ACTIVE
+  ENDED
+  REFUNDED
+}
+
+Enum PurchaseLogType {
+  PLAN
+  IMAGE_TRANSLATE
+  STOCK
 }
 
 Ref: Product.admin_id > Admin.id
@@ -298,3 +337,5 @@ Ref: ProductOptionValue.product_option_name_id > ProductOptionName.id
 Ref: UserInfo.user_id - User.id
 
 Ref: UserLog.user_id > User.id
+
+Ref: PurchaseLog.user_id > User.id
