@@ -4,9 +4,9 @@ import { NexusGenAllTypes } from '../../typegen';
 import { throwError } from "../utils/error";
 import { PurchaseLogPlanInfoType } from '../purchase';
 
-export const getPurchaseInfo = async (prisma: PrismaClient, user_id: number): Promise<NexusGenAllTypes["UserPurchaseInfo"]> => {
-  if (!user_id) return { level: 0, levelExpiredAt: new Date(9990, 11, 31), additionalInfo: [] };
-  const purchaseInfos = await prisma.purchaseLog.findMany({ where: { user_id, state: "ACTIVE", expired_at: { gte: new Date() } } });
+export const getPurchaseInfo = async (prisma: PrismaClient, userId: number): Promise<NexusGenAllTypes["UserPurchaseInfo"]> => {
+  if (!userId) return { level: 0, levelExpiredAt: new Date(9990, 11, 31), additionalInfo: [] };
+  const purchaseInfos = await prisma.purchaseLog.findMany({ where: { user_id : userId, state: "ACTIVE", expired_at: { gte: new Date() } } });
   const processedInfos = purchaseInfos.map(v => ({ ...v, planInfo: JSON.parse(v.plan_info) as PurchaseLogPlanInfoType }))
       .sort((a, b) => (b.planInfo.planLevel ?? 0) - (a.planInfo.planLevel ?? 0));
   

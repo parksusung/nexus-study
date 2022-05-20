@@ -116,8 +116,8 @@ export const iamport = new Iamport({ apiKey: process.env.IAMPORT_API_KEY!, apiSe
 
 export const generateUserToken = async (prisma: PrismaClient, id: number) => {
     const purchaseInfo = await getPurchaseInfo(prisma, id);
-    const purchaseInfos = await prisma.purchaseLog.findMany({ where: { userId: id, state: "ACTIVE", expiredAt: { gte: new Date() } } });
-    const processedInfos = purchaseInfos.map(v => ({ ...v, planInfo: JSON.parse(v.planInfo) as PurchaseLogPlanInfoType }))
+    const purchaseInfos = await prisma.purchaseLog.findMany({ where: { user_id: id, state: "ACTIVE", expired_at: { gte: new Date() } } });
+    const processedInfos = purchaseInfos.map(v => ({ ...v, planInfo: JSON.parse(v.plan_info) as PurchaseLogPlanInfoType }))
         .sort((a, b) => (b.planInfo.planLevel ?? 0) - (a.planInfo.planLevel ?? 0))
     const levelInfo = processedInfos.find(v => v.planInfo.planLevel);
     const privateClaim: Omit<Token, "iat" | "exp"> = {}
