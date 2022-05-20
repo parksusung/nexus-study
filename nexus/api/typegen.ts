@@ -130,6 +130,18 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumUserStateFilter'] | null; // NestedEnumUserStateFilter
     notIn?: NexusGenEnums['UserState'][] | null; // [UserState!]
   }
+  Enumpurchase_log_stateFilter: { // input type
+    equals?: NexusGenEnums['purchase_log_state'] | null; // purchase_log_state
+    in?: NexusGenEnums['purchase_log_state'][] | null; // [purchase_log_state!]
+    not?: NexusGenInputs['NestedEnumpurchase_log_stateFilter'] | null; // NestedEnumpurchase_log_stateFilter
+    notIn?: NexusGenEnums['purchase_log_state'][] | null; // [purchase_log_state!]
+  }
+  Enumpurchase_log_typeFilter: { // input type
+    equals?: NexusGenEnums['purchase_log_type'] | null; // purchase_log_type
+    in?: NexusGenEnums['purchase_log_type'][] | null; // [purchase_log_type!]
+    not?: NexusGenInputs['NestedEnumpurchase_log_typeFilter'] | null; // NestedEnumpurchase_log_typeFilter
+    notIn?: NexusGenEnums['purchase_log_type'][] | null; // [purchase_log_type!]
+  }
   FloatFilter: { // input type
     equals?: number | null; // Float
     gt?: number | null; // Float
@@ -191,6 +203,18 @@ export interface NexusGenInputs {
     in?: NexusGenEnums['UserState'][] | null; // [UserState!]
     not?: NexusGenInputs['NestedEnumUserStateFilter'] | null; // NestedEnumUserStateFilter
     notIn?: NexusGenEnums['UserState'][] | null; // [UserState!]
+  }
+  NestedEnumpurchase_log_stateFilter: { // input type
+    equals?: NexusGenEnums['purchase_log_state'] | null; // purchase_log_state
+    in?: NexusGenEnums['purchase_log_state'][] | null; // [purchase_log_state!]
+    not?: NexusGenInputs['NestedEnumpurchase_log_stateFilter'] | null; // NestedEnumpurchase_log_stateFilter
+    notIn?: NexusGenEnums['purchase_log_state'][] | null; // [purchase_log_state!]
+  }
+  NestedEnumpurchase_log_typeFilter: { // input type
+    equals?: NexusGenEnums['purchase_log_type'] | null; // purchase_log_type
+    in?: NexusGenEnums['purchase_log_type'][] | null; // [purchase_log_type!]
+    not?: NexusGenInputs['NestedEnumpurchase_log_typeFilter'] | null; // NestedEnumpurchase_log_typeFilter
+    notIn?: NexusGenEnums['purchase_log_type'][] | null; // [purchase_log_type!]
   }
   NestedFloatFilter: { // input type
     equals?: number | null; // Float
@@ -455,6 +479,30 @@ export interface NexusGenInputs {
     UQ_user_id_taobao_product_id?: NexusGenInputs['ProductUQ_user_id_taobao_product_idCompoundUniqueInput'] | null; // ProductUQ_user_id_taobao_product_idCompoundUniqueInput
     id?: number | null; // Int
   }
+  PurchaseLogListRelationFilter: { // input type
+    every?: NexusGenInputs['PurchaseLogWhereInput'] | null; // PurchaseLogWhereInput
+    none?: NexusGenInputs['PurchaseLogWhereInput'] | null; // PurchaseLogWhereInput
+    some?: NexusGenInputs['PurchaseLogWhereInput'] | null; // PurchaseLogWhereInput
+  }
+  PurchaseLogOrderByRelationAggregateInput: { // input type
+    _count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  PurchaseLogWhereInput: { // input type
+    AND?: NexusGenInputs['PurchaseLogWhereInput'][] | null; // [PurchaseLogWhereInput!]
+    NOT?: NexusGenInputs['PurchaseLogWhereInput'][] | null; // [PurchaseLogWhereInput!]
+    OR?: NexusGenInputs['PurchaseLogWhereInput'][] | null; // [PurchaseLogWhereInput!]
+    expired_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    pay_amount?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    pay_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    plan_info?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    purchased_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    state?: NexusGenInputs['Enumpurchase_log_stateFilter'] | null; // Enumpurchase_log_stateFilter
+    type?: NexusGenInputs['Enumpurchase_log_typeFilter'] | null; // Enumpurchase_log_typeFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    user_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+  }
   StringFilter: { // input type
     contains?: string | null; // String
     endsWith?: string | null; // String
@@ -696,6 +744,7 @@ export interface NexusGenInputs {
     naver_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     password?: NexusGenEnums['SortOrder'] | null; // SortOrder
     product?: NexusGenInputs['ProductOrderByRelationAggregateInput'] | null; // ProductOrderByRelationAggregateInput
+    purchase_log?: NexusGenInputs['PurchaseLogOrderByRelationAggregateInput'] | null; // PurchaseLogOrderByRelationAggregateInput
     state?: NexusGenEnums['SortOrder'] | null; // SortOrder
     user_info?: NexusGenInputs['UserInfoOrderByWithRelationInput'] | null; // UserInfoOrderByWithRelationInput
     user_log?: NexusGenInputs['UserLogOrderByRelationAggregateInput'] | null; // UserLogOrderByRelationAggregateInput
@@ -711,6 +760,7 @@ export interface NexusGenInputs {
     naver_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     password?: NexusGenInputs['StringFilter'] | null; // StringFilter
     product?: NexusGenInputs['ProductListRelationFilter'] | null; // ProductListRelationFilter
+    purchase_log?: NexusGenInputs['PurchaseLogListRelationFilter'] | null; // PurchaseLogListRelationFilter
     state?: NexusGenInputs['EnumUserStateFilter'] | null; // EnumUserStateFilter
     user_info?: NexusGenInputs['UserInfoWhereInput'] | null; // UserInfoWhereInput
     user_log?: NexusGenInputs['UserLogListRelationFilter'] | null; // UserLogListRelationFilter
@@ -722,9 +772,14 @@ export interface NexusGenEnums {
   ProductState: "COLLECTED" | "ON_SALE" | "SELL_DONE" | "UPLOAD_FAILED" | "UPLOAD_WAITING"
   SortOrder: "asc" | "desc"
   TaobaoItemOrderBy: "_credit" | "_sale"
+  TranslateEngineEnumType: "baidu" | "google" | "papago"
+  TranslateTargetEnumType: "PRODUCT_ALL" | "PRODUCT_NAME" | "PRODUCT_OPTION_ALL" | "PRODUCT_OPTION_NAME" | "PRODUCT_OPTION_VALUE"
   UserLoginType: "ADMIN" | "EMAIL" | "KAKAO" | "NAVER"
+  UserPurchaseAdditionalInfoEnumType: "IMAGE_TRANSLATE" | "STOCK"
   UserSocialType: "EMAIL" | "KAKAO" | "NAVER"
   UserState: "ACTIVE" | "DELETED"
+  purchase_log_state: "ACTIVE" | "ENDED" | "REFUNDED" | "WAIT_DEPOSIT" | "WAIT_PAYMENT"
+  purchase_log_type: "IMAGE_TRANSLATE" | "PLAN" | "STOCK"
 }
 
 export interface NexusGenScalars {
@@ -756,6 +811,16 @@ export interface NexusGenObjects {
     tel: string; // String!
     verification_number: string; // String!
   }
+  PlanInfo: { // root type
+    description: string; // String!
+    external_feature_variable_id?: string | null; // String
+    id: number; // Int!
+    is_active: boolean; // Boolean!
+    month: number; // Int!
+    name: string; // String!
+    plan_level?: number | null; // Int
+    price: number; // Int!
+  }
   Product: { // root type
     admin_id?: number | null; // Int
     category_code?: string | null; // String
@@ -776,6 +841,17 @@ export interface NexusGenObjects {
     stock_updated_at: NexusGenScalars['DateTime']; // DateTime!
     taobao_product_id: number; // Int!
     user_id?: number | null; // Int
+  }
+  PurchaseLog: { // root type
+    expired_at: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    pay_amount: number; // Int!
+    pay_id?: string | null; // String
+    plan_info: string; // String!
+    purchased_at: NexusGenScalars['DateTime']; // DateTime!
+    state: NexusGenEnums['purchase_log_state']; // purchase_log_state!
+    type: NexusGenEnums['purchase_log_type']; // purchase_log_type!
+    user_id: number; // Int!
   }
   Query: {};
   SignInType: { // root type
@@ -813,6 +889,15 @@ export interface NexusGenObjects {
     title: string; // String!
     user_id: number; // Int!
   }
+  UserPurchaseAdditionalInfo: { // root type
+    expiredAt: NexusGenScalars['DateTime']; // DateTime!
+    type: NexusGenEnums['UserPurchaseAdditionalInfoEnumType']; // UserPurchaseAdditionalInfoEnumType!
+  }
+  UserPurchaseInfo: { // root type
+    additionalInfo: NexusGenRootTypes['UserPurchaseAdditionalInfo'][]; // [UserPurchaseAdditionalInfo!]!
+    level: number; // Int!
+    levelExpiredAt: NexusGenScalars['DateTime']; // DateTime!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -842,6 +927,8 @@ export interface NexusGenFieldTypes {
     renewToken: NexusGenRootTypes['SignInType'] | null; // SignInType
     requestPhoneVerificationByEveryone: boolean; // Boolean!
     signUpAdminByAdmin: boolean; // Boolean!
+    translateProductTextByUser: string; // String!
+    translateProductsTextByUser: string; // String!
     verifyPhoneByEveryone: number; // Int!
   }
   PhoneVerification: { // field return type
@@ -849,6 +936,16 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     tel: string; // String!
     verification_number: string; // String!
+  }
+  PlanInfo: { // field return type
+    description: string; // String!
+    external_feature_variable_id: string | null; // String
+    id: number; // Int!
+    is_active: boolean; // Boolean!
+    month: number; // Int!
+    name: string; // String!
+    plan_level: number | null; // Int
+    price: number; // Int!
   }
   Product: { // field return type
     admin_id: number | null; // Int
@@ -873,8 +970,21 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User'] | null; // User
     user_id: number | null; // Int
   }
+  PurchaseLog: { // field return type
+    expired_at: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    pay_amount: number; // Int!
+    pay_id: string | null; // String
+    plan_info: string; // String!
+    purchased_at: NexusGenScalars['DateTime']; // DateTime!
+    state: NexusGenEnums['purchase_log_state']; // purchase_log_state!
+    type: NexusGenEnums['purchase_log_type']; // purchase_log_type!
+    user: NexusGenRootTypes['User']; // User!
+    user_id: number; // Int!
+  }
   Query: { // field return type
-    ok: boolean; // Boolean!
+    translateText: string; // String!
+    whoami: string | null; // String
   }
   SignInType: { // field return type
     accessToken: string; // String!
@@ -888,6 +998,8 @@ export interface NexusGenFieldTypes {
     naver_id: string | null; // String
     password: string | null; // String
     product: NexusGenRootTypes['Product'][]; // [Product!]!
+    productCount: number; // Int!
+    purchaseInfo: NexusGenRootTypes['UserPurchaseInfo']; // UserPurchaseInfo!
     state: NexusGenEnums['UserState']; // UserState!
     user_info: NexusGenRootTypes['UserInfo'] | null; // UserInfo
     user_log: NexusGenRootTypes['UserLog'][]; // [UserLog!]!
@@ -917,6 +1029,15 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User']; // User!
     user_id: number; // Int!
   }
+  UserPurchaseAdditionalInfo: { // field return type
+    expiredAt: NexusGenScalars['DateTime']; // DateTime!
+    type: NexusGenEnums['UserPurchaseAdditionalInfoEnumType']; // UserPurchaseAdditionalInfoEnumType!
+  }
+  UserPurchaseInfo: { // field return type
+    additionalInfo: NexusGenRootTypes['UserPurchaseAdditionalInfo'][]; // [UserPurchaseAdditionalInfo!]!
+    level: number; // Int!
+    levelExpiredAt: NexusGenScalars['DateTime']; // DateTime!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -936,6 +1057,8 @@ export interface NexusGenFieldTypeNames {
     renewToken: 'SignInType'
     requestPhoneVerificationByEveryone: 'Boolean'
     signUpAdminByAdmin: 'Boolean'
+    translateProductTextByUser: 'String'
+    translateProductsTextByUser: 'String'
     verifyPhoneByEveryone: 'Int'
   }
   PhoneVerification: { // field return type name
@@ -943,6 +1066,16 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     tel: 'String'
     verification_number: 'String'
+  }
+  PlanInfo: { // field return type name
+    description: 'String'
+    external_feature_variable_id: 'String'
+    id: 'Int'
+    is_active: 'Boolean'
+    month: 'Int'
+    name: 'String'
+    plan_level: 'Int'
+    price: 'Int'
   }
   Product: { // field return type name
     admin_id: 'Int'
@@ -967,8 +1100,21 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     user_id: 'Int'
   }
+  PurchaseLog: { // field return type name
+    expired_at: 'DateTime'
+    id: 'Int'
+    pay_amount: 'Int'
+    pay_id: 'String'
+    plan_info: 'String'
+    purchased_at: 'DateTime'
+    state: 'purchase_log_state'
+    type: 'purchase_log_type'
+    user: 'User'
+    user_id: 'Int'
+  }
   Query: { // field return type name
-    ok: 'Boolean'
+    translateText: 'String'
+    whoami: 'String'
   }
   SignInType: { // field return type name
     accessToken: 'String'
@@ -982,6 +1128,8 @@ export interface NexusGenFieldTypeNames {
     naver_id: 'String'
     password: 'String'
     product: 'Product'
+    productCount: 'Int'
+    purchaseInfo: 'UserPurchaseInfo'
     state: 'UserState'
     user_info: 'UserInfo'
     user_log: 'UserLog'
@@ -1011,6 +1159,15 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
     user_id: 'Int'
   }
+  UserPurchaseAdditionalInfo: { // field return type name
+    expiredAt: 'DateTime'
+    type: 'UserPurchaseAdditionalInfoEnumType'
+  }
+  UserPurchaseInfo: { // field return type name
+    additionalInfo: 'UserPurchaseAdditionalInfo'
+    level: 'Int'
+    levelExpiredAt: 'DateTime'
+  }
 }
 
 export interface NexusGenArgTypes {
@@ -1030,9 +1187,23 @@ export interface NexusGenArgTypes {
       id: string; // String!
       password: string; // String!
     }
+    translateProductTextByUser: { // args
+      id: number; // Int!
+      type: NexusGenEnums['TranslateTargetEnumType']; // TranslateTargetEnumType!
+    }
+    translateProductsTextByUser: { // args
+      ids: number[]; // [Int!]!
+      type: NexusGenEnums['TranslateTargetEnumType']; // TranslateTargetEnumType!
+    }
     verifyPhoneByEveryone: { // args
       phoneNumber: string; // String!
       verificationNumber: string; // String!
+    }
+  }
+  Query: {
+    translateText: { // args
+      engine: NexusGenEnums['TranslateEngineEnumType']; // TranslateEngineEnumType!
+      text: string; // String!
     }
   }
   User: {

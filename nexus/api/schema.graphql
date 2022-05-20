@@ -122,6 +122,20 @@ input EnumUserStateFilter {
   notIn: [UserState!]
 }
 
+input Enumpurchase_log_stateFilter {
+  equals: purchase_log_state
+  in: [purchase_log_state!]
+  not: NestedEnumpurchase_log_stateFilter
+  notIn: [purchase_log_state!]
+}
+
+input Enumpurchase_log_typeFilter {
+  equals: purchase_log_type
+  in: [purchase_log_type!]
+  not: NestedEnumpurchase_log_typeFilter
+  notIn: [purchase_log_type!]
+}
+
 input FloatFilter {
   equals: Float
   gt: Float
@@ -160,6 +174,8 @@ type Mutation {
   renewToken(accessToken: String!, refreshToken: String!): SignInType
   requestPhoneVerificationByEveryone(phoneNumber: String!): Boolean!
   signUpAdminByAdmin(id: String!, password: String!): Boolean!
+  translateProductTextByUser(id: Int!, type: TranslateTargetEnumType!): String!
+  translateProductsTextByUser(ids: [Int!]!, type: TranslateTargetEnumType!): String!
   verifyPhoneByEveryone(phoneNumber: String!, verificationNumber: String!): Int!
 }
 
@@ -198,6 +214,20 @@ input NestedEnumUserStateFilter {
   in: [UserState!]
   not: NestedEnumUserStateFilter
   notIn: [UserState!]
+}
+
+input NestedEnumpurchase_log_stateFilter {
+  equals: purchase_log_state
+  in: [purchase_log_state!]
+  not: NestedEnumpurchase_log_stateFilter
+  notIn: [purchase_log_state!]
+}
+
+input NestedEnumpurchase_log_typeFilter {
+  equals: purchase_log_type
+  in: [purchase_log_type!]
+  not: NestedEnumpurchase_log_typeFilter
+  notIn: [purchase_log_type!]
 }
 
 input NestedFloatFilter {
@@ -266,6 +296,17 @@ type PhoneVerification {
   id: Int!
   tel: String!
   verification_number: String!
+}
+
+type PlanInfo {
+  description: String!
+  external_feature_variable_id: String
+  id: Int!
+  is_active: Boolean!
+  month: Int!
+  name: String!
+  plan_level: Int
+  price: Int!
 }
 
 type Product {
@@ -521,8 +562,49 @@ input ProductWhereUniqueInput {
   id: Int
 }
 
+type PurchaseLog {
+  expired_at: DateTime!
+  id: Int!
+  pay_amount: Int!
+  pay_id: String
+  plan_info: String!
+  purchased_at: DateTime!
+  state: purchase_log_state!
+  type: purchase_log_type!
+  user: User!
+  user_id: Int!
+}
+
+input PurchaseLogListRelationFilter {
+  every: PurchaseLogWhereInput
+  none: PurchaseLogWhereInput
+  some: PurchaseLogWhereInput
+}
+
+input PurchaseLogOrderByRelationAggregateInput {
+  _count: SortOrder
+  count: SortOrder
+}
+
+input PurchaseLogWhereInput {
+  AND: [PurchaseLogWhereInput!]
+  NOT: [PurchaseLogWhereInput!]
+  OR: [PurchaseLogWhereInput!]
+  expired_at: DateTimeFilter
+  id: IntFilter
+  pay_amount: IntFilter
+  pay_id: StringNullableFilter
+  plan_info: StringFilter
+  purchased_at: DateTimeFilter
+  state: Enumpurchase_log_stateFilter
+  type: Enumpurchase_log_typeFilter
+  user: UserWhereInput
+  user_id: IntFilter
+}
+
 type Query {
-  ok: Boolean!
+  translateText(engine: TranslateEngineEnumType! = PAPAGO, text: String!): String!
+  whoami: String
 }
 
 type SignInType {
@@ -608,6 +690,29 @@ input TaobaoProductWhereInput {
   video_url: StringNullableFilter
 }
 
+enum TranslateEngineEnumType {
+  BAIDU
+  GOOGLE
+  PAPAGO
+}
+
+enum TranslateTargetEnumType {
+  """상품 전체 일괄번역,id:Product"""
+  PRODUCT_ALL
+
+  """상품 이름 번역,id:Product"""
+  PRODUCT_NAME
+
+  """상품 옵션 일괄번역,id:ProductOptionName"""
+  PRODUCT_OPTION_ALL
+
+  """상품 옵션 이름 번역,id:ProductOptionName"""
+  PRODUCT_OPTION_NAME
+
+  """상품 옵션별 이름 번역,id:ProductOptionValue"""
+  PRODUCT_OPTION_VALUE
+}
+
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
@@ -619,6 +724,8 @@ type User {
   naver_id: String
   password: String
   product(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
+  productCount: Int!
+  purchaseInfo: UserPurchaseInfo!
   state: UserState!
   user_info: UserInfo
   user_log(cursor: UserLogWhereUniqueInput, orderBy: [UserLogOrderByWithRelationInput!], skip: Int, take: Int, where: UserLogWhereInput): [UserLog!]!
@@ -845,9 +952,26 @@ input UserOrderByWithRelationInput {
   naver_id: SortOrder
   password: SortOrder
   product: ProductOrderByRelationAggregateInput
+  purchase_log: PurchaseLogOrderByRelationAggregateInput
   state: SortOrder
   user_info: UserInfoOrderByWithRelationInput
   user_log: UserLogOrderByRelationAggregateInput
+}
+
+type UserPurchaseAdditionalInfo {
+  expiredAt: DateTime!
+  type: UserPurchaseAdditionalInfoEnumType!
+}
+
+enum UserPurchaseAdditionalInfoEnumType {
+  IMAGE_TRANSLATE
+  STOCK
+}
+
+type UserPurchaseInfo {
+  additionalInfo: [UserPurchaseAdditionalInfo!]!
+  level: Int!
+  levelExpiredAt: DateTime!
 }
 
 enum UserSocialType {
@@ -872,7 +996,22 @@ input UserWhereInput {
   naver_id: StringNullableFilter
   password: StringFilter
   product: ProductListRelationFilter
+  purchase_log: PurchaseLogListRelationFilter
   state: EnumUserStateFilter
   user_info: UserInfoWhereInput
   user_log: UserLogListRelationFilter
+}
+
+enum purchase_log_state {
+  ACTIVE
+  ENDED
+  REFUNDED
+  WAIT_DEPOSIT
+  WAIT_PAYMENT
+}
+
+enum purchase_log_type {
+  IMAGE_TRANSLATE
+  PLAN
+  STOCK
 }

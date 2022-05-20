@@ -1,5 +1,30 @@
 import { PrismaClient } from "@prisma/client";
-import { objectType, nonNull ,list} from "nexus";
+import { objectType, nonNull ,list,enumType} from "nexus";
+import { NexusGenAllTypes } from '../../typegen';
+import { throwError } from "../utils/error";
+import { PurchaseLogPlanInfoType } from '../purchase';
+
+export const getPurchaseInfo = async (prisma: PrismaClient, user_id: number): Promise<NexusGenAllTypes["UserPurchaseInfo"]> => {
+  if (!user_id) return { level: 0, levelExpiredAt: new Date(9990, 11, 31), additionalInfo: [] };
+  const purchaseInfos = await prisma.purchaseLog.findMany({ where: { user_id, state: "ACTIVE", expired_at: { gte: new Date() } } });
+  const processedInfos = purchaseInfos.map(v => ({ ...v, planInfo: JSON.parse(v.plan_info) as PurchaseLogPlanInfoType }))
+      .sort((a, b) => (b.planInfo.planLevel ?? 0) - (a.planInfo.planLevel ?? 0));
+  
+      
+  const additionalInfo: NexusGenAllTypes["UserPurchaseAdditionalInfo"][] = [];
+  const imageTranslate = processedInfos.find(v => v.planInfo.externalFeatureVariableId === 'IMAGE_TRANSLATE');
+  const stock = processedInfos.find(v => v.planInfo.externalFeatureVariableId === 'STOCK');
+  if (imageTranslate) {
+      additionalInfo.push({ type: "IMAGE_TRANSLATE", expiredAt: imageTranslate.expired_at });
+  }
+  if (stock) {
+      additionalInfo.push({ type: "STOCK", expiredAt: stock.expired_at });
+  }
+  //결제 플랜 계산
+  const levelInfo = processedInfos.find(v => v.planInfo.planLevel);
+  if (!levelInfo) return { level: 0, levelExpiredAt: new Date(9990, 11, 31), additionalInfo };
+  return { level: levelInfo.planInfo.planLevel!, levelExpiredAt: levelInfo.expired_at, additionalInfo };
+}
 
 export const t_User = objectType({
   name: "User",
@@ -25,27 +50,113 @@ export const t_User = objectType({
       ordering: true,
       pagination: true,
     });
-    // t.nonNull.field("purchaseInfo", {
-    //     type: nonNull("UserPurchaseInfo"),
-    //     resolve: async (src, args, ctx, info) => {
-    //         try {
-    //             return getPurchaseInfo(ctx.prisma, src.id);
-    //         } catch (e) {
-    //             return throwError(e, ctx);
-    //         }
-    //     }
-    // })
-    // t.nonNull.int("productCount", {
-    //     resolve: async (src, args, ctx, info) => {
-    //         try {
-    //             return ctx.prisma.product.count({ where: { userId: src.id } })
-    //         } catch (e) {
-    //             return throwError(e, ctx);
-    //         }
-    //     }
-    // })
+    t.nonNull.field("purchaseInfo", {
+        type: nonNull("UserPurchaseInfo"),
+        resolve: async (src, args, ctx, info) => {
+            try {
+                return getPurchaseInfo(ctx.prisma, src.id);
+            } catch (e) {
+                return throwError(e, ctx);
+            }
+        }
+    })
+    t.nonNull.int("productCount", {
+        resolve: async (src, args, ctx, info) => {
+            try {
+                return ctx.prisma.product.count({ where: { user_id: src.id } })
+            } catch (e) {
+                return throwError(e, ctx);
+            }
+        }
+    })
   },
 });
+
+
+// export const t_User = objectType({
+//   name: "User",
+//   definition(t) {
+//       t.model.id();
+//       t.model.email();
+//       t.field("password", {
+//           type: "String",
+//           resolve: () => ""
+//       })
+//       t.model.state();
+//       t.model.naver_id();
+//       t.model.kakao_id();
+//       t.model.created_at();
+//       t.model.product({
+//           filtering: true,
+//           ordering: true,
+//           pagination: true,
+//       });
+//       t.model.user_info();
+//       t.model.user_log({
+//           filtering: true,
+//           ordering: true,
+//           pagination: true,
+//       });
+//       t.nonNull.field("purchaseInfo", {
+//           type: nonNull("UserPurchaseInfo"),
+//           resolve: async (src, args, ctx, info) => {
+//               try {
+//                   return getPurchaseInfo(ctx.prisma, src.id);
+//               } catch (e) {
+//                   return throwError(e, ctx);
+//               }
+//           }
+//       })
+//       // t.nonNull.int("productCount", {
+//       //     resolve: async (src, args, ctx, info) => {
+//       //         try {
+//       //             return ctx.prisma.product.count({ where: { userId: src.id } })
+//       //         } catch (e) {
+//       //             return throwError(e, ctx);
+//       //         }
+//       //     }
+//       // })
+//   }
+// });
+
+export const enum_UserPurchaseAdditionalInfoEnum = enumType({
+  name: "UserPurchaseAdditionalInfoEnumType",
+  members: ["IMAGE_TRANSLATE", "STOCK"]
+})
+
+
+export const t_UserPurchaseAdditionalInfo = objectType({
+  name: "UserPurchaseAdditionalInfo",
+  definition(t) {
+      t.nonNull.field("type", { type: 'UserPurchaseAdditionalInfoEnumType' });
+      t.nonNull.date("expiredAt");
+  }
+});
+
+
+export const t_UserPurchaseInfo = objectType({
+  name: "UserPurchaseInfo",
+  definition(t) {
+      t.nonNull.int("level");
+      t.nonNull.date("levelExpiredAt");
+      t.nonNull.list.nonNull.field("additionalInfo", {
+          type: "UserPurchaseAdditionalInfo"
+      });
+  }
+});
+
+
+// export const t_UserPurchaseInfo = objectType({
+//   name: "UserPurchaseInfo",
+//   definition(t) {
+//       t.nonNull.int("level");
+//       t.nonNull.date("levelExpiredAt");
+//       t.nonNull.list.nonNull.field("additionalInfo", {
+//           type: "UserPurchaseAdditionalInfo"
+//       });
+//   }
+// });
+
 
 export const t_UserInfo = objectType({
   name: "UserInfo",

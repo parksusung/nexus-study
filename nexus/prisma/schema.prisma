@@ -185,16 +185,17 @@ model TaobaoProduct {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  email      String    @unique @db.VarChar(50)
-  password   String    @db.VarChar(60)
-  state      UserState
-  naver_id   String?   @unique @db.VarChar(10)
-  kakao_id   String?   @unique @db.VarChar(12)
-  created_at DateTime  @default(now()) @db.DateTime(0)
-  product    Product[] @relation("userToproduct")
-  user_info  UserInfo? @relation("userTouserinfo")
-  user_log   UserLog[] @relation("userTouserlog")
+  id           Int           @id @default(autoincrement())
+  email        String        @unique @db.VarChar(50)
+  password     String        @db.VarChar(60)
+  state        UserState
+  naver_id     String?       @unique @db.VarChar(10)
+  kakao_id     String?       @unique @db.VarChar(12)
+  created_at   DateTime      @default(now()) @db.DateTime(0)
+  product      Product[]     @relation("userToproduct")
+  purchase_log PurchaseLog[] @relation("purchase_logTouser")
+  user_info    UserInfo?     @relation("userTouserinfo")
+  user_log     UserLog[]     @relation("userTouserlog")
 
   @@map("user")
 }
@@ -292,6 +293,35 @@ model PhoneVerification {
   @@map("phone_verification")
 }
 
+model PlanInfo {
+  id                           Int     @id @default(autoincrement())
+  plan_level                   Int?    @db.TinyInt
+  name                         String  @db.VarChar(50)
+  description                  String  @db.Text
+  month                        Int     @db.TinyInt
+  price                        Int
+  external_feature_variable_id String? @db.VarChar(50)
+  is_active                    Boolean @default(true)
+
+  @@map("plan_info")
+}
+
+model PurchaseLog {
+  id           Int                @id @default(autoincrement())
+  user_id      Int
+  pay_amount   Int
+  pay_id       String?            @unique @db.VarChar(100)
+  state        purchase_log_state
+  plan_info    String             @db.LongText
+  type         purchase_log_type
+  purchased_at DateTime           @default(now()) @db.DateTime(0)
+  expired_at   DateTime           @db.DateTime(0)
+  user         User               @relation("purchase_logTouser", fields: [user_id], references: [id])
+
+  @@index([user_id], name: "FK_purchase_log_user_id_user_id")
+  @@map("purchase_log")
+}
+
 enum AdminState {
   ACTIVE
   DELETED
@@ -314,4 +344,18 @@ enum UserState {
   DELETED
 
    @@map("user_state")
+}
+
+enum purchase_log_state {
+  WAIT_PAYMENT
+  WAIT_DEPOSIT
+  ACTIVE
+  ENDED
+  REFUNDED
+}
+
+enum purchase_log_type {
+  PLAN
+  IMAGE_TRANSLATE
+  STOCK
 }
