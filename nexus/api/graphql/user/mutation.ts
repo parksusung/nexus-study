@@ -116,11 +116,12 @@ export const mutation_user = extendType({
                         },
                         data : {
                             token : refreshToken,
+                            created_token : new Date()
                         },
                     })
                     if(!token) return throwError(errors.etc("token 삽입에 실패하였습니다"),ctx)
                     
-                    const plan = await ctx.prisma.planInfo.findUnique({ where: { id: 1 } });
+                    const plan = await ctx.prisma.planInfo.findUnique({ where: { id: 1 } });//기본 체험판 단계로 로그인 생성 
                     if (!plan) return throwError(errors.noSuchData, ctx);
                     const { description, is_active, ...etcPlanData } = plan;
                     await ctx.prisma.purchaseLog.create({
@@ -135,7 +136,7 @@ export const mutation_user = extendType({
                             purchased_at: new Date(),
                         }
                     });
-                     return { accessToken: accessToken, refreshToken: refreshToken };
+                     return { accessToken: accessToken, refreshToken: refreshToken };//front에서 token을 local에 저장은 해두어야하므로 .
                 } catch (e) {
                     return throwError(e, ctx);
                 }

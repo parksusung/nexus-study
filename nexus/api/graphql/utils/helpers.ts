@@ -103,6 +103,7 @@ export const createContext = (ctx: any): Context => {
     }
 }
 
+//accessToken기준 
 export const getModifierString = (token: Token | null) => {
     if (token?.userId) return `User ${token.userId}`;
     else if (token?.adminId) return `Admin ${token.adminId}`;

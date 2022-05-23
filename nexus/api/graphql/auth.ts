@@ -45,9 +45,6 @@ export const mutation_auto = extendType({
                         if(!userInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
                         else {
                             if(accessTokenInfo.userId != userInfo.id) return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);//그냥 2개 decoded 해서 id같은지봄 
-                            const user = await ctx.prisma.user.findFirst({where : {id : userInfo.id}});
-                            // console.log("user",user);
-                            if(!user) return throwError(errors.notAuthenticated, ctx);//user가 없으면 에러발생 
                             accessToken = await generateUserToken(ctx.prisma, userInfo.id);//accessToken 재생성 
                             // refreshToken = generateToken(userInfo.id, "userId", true); 이건 만들필요없는거같은데 ? renewToken이 언제 프론트에서 호출하는지 보고 수정하자 
                         }
@@ -63,8 +60,6 @@ export const mutation_auto = extendType({
                         if(!adminInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
                         else{
                             if(accessTokenInfo.adminId != adminInfo.id) return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);
-                            const admin = await ctx.prisma.admin.findUnique({ where : { id : refreshTokenInfo.adminId}});
-                            if (!admin) return throwError(errors.notAuthenticated, ctx);
                             accessToken = generateToken(adminInfo.id, "adminId" , false);
                             // refreshToken = generateToken(adminInfo.id, "adminId" , true); 이건 만들필요없는거같은데 ? renewToken이 언제 프론트에서 호출하는지 보고 수정하자 
                         }
