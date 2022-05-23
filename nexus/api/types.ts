@@ -38,6 +38,7 @@ export interface Token {
     additionalPerm?: PermissionAdditionalInfo[];
     iat: number;
     exp: number;
+    type? : string;
     //aud: string;
 }
 

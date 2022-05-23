@@ -5,7 +5,7 @@ import { isBefore } from "date-fns";
 import { regexPattern } from "../utils/constants";
  import { throwError, errors } from "../utils/error";
  import { uploadToS3 } from "../utils/file_manage";
- import { generateToken, generateUserToken, validateStringLength } from "../utils/helpers";
+ import { generateToken, generateUserToken } from "../utils/helpers";
 
 import { arg, booleanArg, extendType, floatArg, intArg, nonNull, stringArg } from "nexus";
 
@@ -18,7 +18,7 @@ export const mutation_user = extendType({
                 email: nonNull(stringArg()),
                 password: nonNull(stringArg()),
                 phone: nonNull(stringArg()),
-                verificationId: nonNull(intArg({ default: 0 })),
+                verificationId: nonNull(intArg({ default: 0 })),//이제안씀 
             },
             resolve: async (src, args, ctx, info) => {
                 try {
@@ -38,7 +38,7 @@ export const mutation_user = extendType({
                             email: args.email,
                             password: hashSync(args.password),
                             state: "ACTIVE",
-                            user_info: {
+                            user_info: {//다른 model에 data 삽입도 이런식으로 가능 하네 ! 
                                 create: {
                                     phone: tel,
                                     margin_rate: 25,
@@ -108,7 +108,7 @@ export const mutation_user = extendType({
                     });
 
                     const accessToken = await generateUserToken(ctx.prisma, user.id);
-                    const refreshToken = await generateToken(user.id, "userId", true);
+                    const refreshToken = await generateToken(user.id, "userId", true); //추후 token 내부에 id받아오는거 없앨 예정 
                     //refresh token 생성 후 삽입 
                     const token = await ctx.prisma.user.update({
                         where : {
@@ -118,6 +118,8 @@ export const mutation_user = extendType({
                             token : refreshToken,
                         },
                     })
+                    if(!token) return throwError(errors.etc("token 삽입에 실패하였습니다"),ctx)
+                    
                     const plan = await ctx.prisma.planInfo.findUnique({ where: { id: 1 } });
                     if (!plan) return throwError(errors.noSuchData, ctx);
                     const { description, is_active, ...etcPlanData } = plan;

@@ -26,10 +26,10 @@ export const generateToken = (id: number, type: "userId" | "adminId", isRefresh:
     }
     else {
         const privateClaim: any = {}
-        privateClaim[type] = id;
+        privateClaim["type"] = type;
         privateClaim["isRefresh"] = true;
         return sign(
-            privateClaim,
+            privateClaim,//refresh token에는 id는 안넣는게 좋다 
             APP_REFRESH_SECRET,
             {
                 expiresIn: tokens.access.refreshExpiry,
@@ -116,7 +116,7 @@ export const wait = (amount = 0) => new Promise(resolve => setTimeout(resolve, a
 export const iamport = new Iamport({ apiKey: process.env.IAMPORT_API_KEY!, apiSecret: process.env.IAMPORT_API_SECRET! });
 
 export const generateUserToken = async (prisma: PrismaClient, id: number) => {
-    const purchaseInfo = await getPurchaseInfo(prisma, id);
+    const purchaseInfo = await getPurchaseInfo(prisma, id);//level
     const purchaseInfos = await prisma.purchaseLog.findMany({ where: { user_id: id, state: "ACTIVE", expired_at: { gte: new Date() } } });
     const processedInfos = purchaseInfos.map(v => ({ ...v, planInfo: JSON.parse(v.plan_info) as PurchaseLogPlanInfoType }))
         .sort((a, b) => (b.planInfo.planLevel ?? 0) - (a.planInfo.planLevel ?? 0))

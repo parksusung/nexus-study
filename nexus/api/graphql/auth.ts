@@ -22,7 +22,7 @@ export const mutation_auto = extendType({
     type : "Mutation",
     definition(t) {
         t.field("renewToken", {
-            type : "SignInType",
+            type : "SignInType",//SignIntype은 return값이 accesstoken , refresh token string임 
             args : {
                 accessToken : nonNull(stringArg()),
                 refreshToken : nonNull(stringArg()),
@@ -30,31 +30,51 @@ export const mutation_auto = extendType({
             resolve : async (src, args, ctx , info ) => {
                 try {
                     let accessToken = "";
-                    let refreshToken = ""; 
+                    // let refreshToken = ""; 
                     try{
                         const accessTokenInfo = verify(args.accessToken, APP_SECRET, {ignoreExpiration : true}) as Token;//인증결과는 decoded된 게 나옴 
                         const now = Date.now() / 1000;
-                        const refreshTokenInfo = verify(args.refreshToken, APP_REFRESH_SECRET, { algorithms: ["HS512"]  })  as Token;
-                        if ( refreshTokenInfo.userId){
-                            if(accessTokenInfo.userId != refreshTokenInfo.userId) return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);//그냥 2개 decoded 해서 id같은지봄 
-                            const user = await ctx.prisma.admin.findUnique({where : {id : refreshTokenInfo.userId}});
-                            if(!user) return throwError(errors.notAuthenticated, ctx);
-                            accessToken = await generateUserToken(ctx.prisma, refreshTokenInfo.userId);
-                            refreshToken = generateToken(refreshTokenInfo.userId, "userId", true);
+                        const refreshTokenInfo = verify(args.refreshToken, APP_REFRESH_SECRET, { algorithms: ["HS512"]  })  as Token; // 이건 이제 id가아니라 어떤 Token인지
+
+                        if(refreshTokenInfo.type == "userId"){ //return 값 userId or adminId 
+                        const userInfo = await ctx.prisma.user.findFirst({
+                            where : {
+                                token : args.refreshToken,
+                            }
+                        })
+                        if(!userInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
+                        else {
+                            if(accessTokenInfo.userId != userInfo.id) return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);//그냥 2개 decoded 해서 id같은지봄 
+                            const user = await ctx.prisma.user.findFirst({where : {id : userInfo.id}});
+                            // console.log("user",user);
+                            if(!user) return throwError(errors.notAuthenticated, ctx);//user가 없으면 에러발생 
+                            accessToken = await generateUserToken(ctx.prisma, userInfo.id);//accessToken 재생성 
+                            // refreshToken = generateToken(userInfo.id, "userId", true); 이건 만들필요없는거같은데 ? renewToken이 언제 프론트에서 호출하는지 보고 수정하자 
                         }
-                        else if(refreshTokenInfo.adminId) {
-                            if(accessTokenInfo.adminId != refreshTokenInfo.adminId) return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);
+                    }else if (refreshTokenInfo.type == "adminId")// admin 계정일 경우 
+                    {
+                        const adminInfo = await ctx.prisma.admin.findFirst({
+                            where : {
+                                token : args.refreshToken,
+                            }
+                        })
+                        // console.log("adminInfo",adminInfo.id);
+                        // console.log("accessTokenInfo",accessTokenInfo.userId);
+                        if(!adminInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
+                        else{
+                            if(accessTokenInfo.adminId != adminInfo.id) return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);
                             const admin = await ctx.prisma.admin.findUnique({ where : { id : refreshTokenInfo.adminId}});
                             if (!admin) return throwError(errors.notAuthenticated, ctx);
-                            accessToken = generateToken(refreshTokenInfo.adminId, "adminId" , false);
-                            refreshToken = generateToken(refreshTokenInfo.adminId, "adminId" , true);
+                            accessToken = generateToken(adminInfo.id, "adminId" , false);
+                            // refreshToken = generateToken(adminInfo.id, "adminId" , true); 이건 만들필요없는거같은데 ? renewToken이 언제 프론트에서 호출하는지 보고 수정하자 
                         }
+                    }
                     }
                     catch(e){
                         console.log(e);
                         return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);
                     }
-                    return { accessToken,refreshToken};
+                    return { accessToken,refreshToken :args.refreshToken};
                 
                 }catch (error) {
                     return throwError(error,ctx);
