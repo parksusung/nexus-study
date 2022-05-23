@@ -2,12 +2,13 @@ import { hashSync, compareSync } from "bcryptjs";
 import { PrismaClient } from '@prisma/client'
 import { isBefore } from "date-fns";
  import { getPurchaseInfo } from ".";
-import { regexPattern } from "../utils/constants";
+import { APP_REFRESH_SECRET, APP_SECRET, regexPattern } from "../utils/constants";
  import { throwError, errors } from "../utils/error";
  import { uploadToS3 } from "../utils/file_manage";
  import { generateToken, generateUserToken } from "../utils/helpers";
-
+import { verify } from 'jsonwebtoken';
 import { arg, booleanArg, extendType, floatArg, intArg, nonNull, stringArg } from "nexus";
+import { Token } from '../../types';
 
 export const mutation_user = extendType({
     type: "Mutation",
@@ -139,6 +140,53 @@ export const mutation_user = extendType({
                      return { accessToken: accessToken, refreshToken: refreshToken };//front에서 token을 local에 저장은 해두어야하므로 .
                 } catch (e) {
                     return throwError(e, ctx);
+                }
+            }
+        });
+        t.field("logOut",{
+            type: nonNull("String"),
+            args : {
+                refreshToken : nonNull(stringArg()),
+            },
+            resolve : async (src, args, ctx , info ) => {
+                try {
+                    let status = "";
+                    try{
+                        const refreshTokenInfo = verify(args.refreshToken, APP_REFRESH_SECRET, { algorithms: ["HS512"]  })  as Token; // 이건 이제 id가아니라 어떤 Token인지
+                        if(refreshTokenInfo.type == "userId"){ //return 값 userId or adminId 
+                        const userInfo = await ctx.prisma.user.update({
+                            where : {
+                                token : args.refreshToken,
+                            },
+                            data : {
+                                token : "",
+                                created_token : ""
+                            }
+                        })
+                        if(!userInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
+                        else{status = "success";}
+                    }else if (refreshTokenInfo.type == "adminId")// admin 계정일 경우 
+                    {
+                        const adminInfo = await ctx.prisma.admin.update({
+                            where : {
+                                token : args.refreshToken,
+                            },
+                            data : {
+                                token : "",
+                                created_token : ""
+                            }
+                        })
+                        if(!adminInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
+                        else{status = "success";}
+                    }
+                    }catch(e){
+                        console.log(e);
+                        return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);
+                    }
+                    return status ;
+                
+                }catch (error) {
+                    return throwError(error,ctx);
                 }
             }
         });
