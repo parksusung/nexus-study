@@ -38,72 +38,72 @@ export const mutation_user = extendType({
                             email: args.email,
                             password: hashSync(args.password),
                             state: "ACTIVE",
-                            // user_info: {
-                            //     create: {
-                            //         phone: tel,
-                            //         margin_rate: 25,
-                            //         default_shipping_fee: 6000,
-                            //         cny_rate: 185.0,
-                            //         product_collect_count: 0,
-                            //         max_product_limit: 100,
-                            //         additional_shipping_fee_jeju: 5000,
-                            //         as_tel: "000-000-0000",
-                            //         as_information: "해외구매대행 상품은 국내에서 A/S가 불가능합니다.",
-                            //         refund_shipping_fee: 25000,
-                            //         exchange_shipping_fee: 50000,
-                            //         naver_origin_code: "0200037",
-                            //         naver_origin: "수입산",
-                            //         naver_store_url: "",
-                            //         naver_store_only: "N",
-                            //         naver_fee: 0,
-                            //         coupang_outbound_shipping_time_day: 12,
-                            //         coupang_union_delivery_type: "N",
-                            //         coupang_maximum_buy_for_person: 0,
-                            //         coupang_login_id: "",
-                            //         coupang_vendor_id: "",
-                            //         coupang_access_key: "",
-                            //         coupang_secret_key: "",
-                            //         coupang_image_opt: "Y",
-                            //         coupang_fee: 0,
-                            //         coupang_default_outbound: "",
-                            //         coupang_default_inbound: "",
-                            //         street_api_key: "",
-                            //         street_seller_type: 1,
-                            //         street_fee: 0,
-                            //         street_normal_api_key: "",
-                            //         street_default_outbound: "",
-                            //         street_default_inbound: "",
-                            //         street_normal_outbound: "",
-                            //         street_normal_inbound: "",
-                            //         street_normal_fee: 0,
-                            //         interpark_cert_key: "",
-                            //         interpark_secret_key: "",
-                            //         interpark_fee: 0,
-                            //         esmplus_master_id: "",
-                            //         esmplus_auction_id: "",
-                            //         esmplus_gmarket_id: "",
-                            //         gmarket_fee: 0,
-                            //         auction_fee: 0,
-                            //         lotteon_vendor_id: "",
-                            //         lotteon_api_key: "",
-                            //         lotteon_fee: 0,
-                            //         lotteon_normal_fee: 0,
-                            //         wemakeprice_id: "",
-                            //         wemakeprice_fee: 0,
-                            //         tmon_id: "",
-                            //         tmon_fee: 0,
-                            //         option_align_top: "Y",
-                            //         option_twoways: "Y",
-                            //         option_index_type: 1,
-                            //         discount_amount: 0,
-                            //         discount_unit_type: "WON",
-                            //         description_show_title: "Y",
-                            //         collect_timeout: 10,
-                            //         collect_stock: 0,
-                            //         margin_unit_type: "PERCENT",
-                            //         extra_shipping_fee: 0,
-                            //     }
-                            // }
+                            user_info: {
+                                create: {
+                                    phone: tel,
+                                    margin_rate: 25,
+                                    default_shipping_fee: 6000,
+                                    cny_rate: 185.0,
+                                    product_collect_count: 0,
+                                    max_product_limit: 100,
+                                    additional_shipping_fee_jeju: 5000,
+                                    as_tel: "000-000-0000",
+                                    as_information: "해외구매대행 상품은 국내에서 A/S가 불가능합니다.",
+                                    refund_shipping_fee: 25000,
+                                    exchange_shipping_fee: 50000,
+                                    naver_origin_code: "0200037",
+                                    naver_origin: "수입산",
+                                    naver_store_url: "",
+                                    naver_store_only: "N",
+                                    naver_fee: 0,
+                                    coupang_outbound_shipping_time_day: 12,
+                                    coupang_union_delivery_type: "N",
+                                    coupang_maximum_buy_for_person: 0,
+                                    coupang_login_id: "",
+                                    coupang_vendor_id: "",
+                                    coupang_access_key: "",
+                                    coupang_secret_key: "",
+                                    coupang_image_opt: "Y",
+                                    coupang_fee: 0,
+                                    coupang_default_outbound: "",
+                                    coupang_default_inbound: "",
+                                    street_api_key: "",
+                                    street_seller_type: 1,
+                                    street_fee: 0,
+                                    street_normal_api_key: "",
+                                    street_default_outbound: "",
+                                    street_default_inbound: "",
+                                    street_normal_outbound: "",
+                                    street_normal_inbound: "",
+                                    street_normal_fee: 0,
+                                    interpark_cert_key: "",
+                                    interpark_secret_key: "",
+                                    interpark_fee: 0,
+                                    esmplus_master_id: "",
+                                    esmplus_auction_id: "",
+                                    esmplus_gmarket_id: "",
+                                    gmarket_fee: 0,
+                                    auction_fee: 0,
+                                    lotteon_vendor_id: "",
+                                    lotteon_api_key: "",
+                                    lotteon_fee: 0,
+                                    lotteon_normal_fee: 0,
+                                    wemakeprice_id: "",
+                                    wemakeprice_fee: 0,
+                                    tmon_id: "",
+                                    tmon_fee: 0,
+                                    option_align_top: "Y",
+                                    option_twoways: "Y",
+                                    option_index_type: 1,
+                                    discount_amount: 0,
+                                    discount_unit_type: "WON",
+                                    description_show_title: "Y",
+                                    collect_timeout: 10,
+                                    collect_stock: 0,
+                                    margin_unit_type: "PERCENT",
+                                    extra_shipping_fee: 0,
+                                }
+                            }
                         }
                     });
 
@@ -118,21 +118,21 @@ export const mutation_user = extendType({
                             token : refreshToken,
                         },
                     })
-                    // const plan = await ctx.prisma.planInfo.findUnique({ where: { id: 1 } });
-                    // if (!plan) return throwError(errors.noSuchData, ctx);
-                    // const { description, is_active, ...etcPlanData } = plan;
-                    // await ctx.prisma.purchaseLog.create({
-                    //     data: {
-                    //         type: "PLAN",
-                    //         plan_info: JSON.stringify(etcPlanData),
-                    //         pay_amount: plan.price,
-                    //         state: "ACTIVE",
-                    //         pay_id: null,
-                    //         user_id: user.id,
-                    //         expired_at: new Date('9999-12-31'),
-                    //         purchased_at: new Date(),
-                    //     }
-                    // });
+                    const plan = await ctx.prisma.planInfo.findUnique({ where: { id: 1 } });
+                    if (!plan) return throwError(errors.noSuchData, ctx);
+                    const { description, is_active, ...etcPlanData } = plan;
+                    await ctx.prisma.purchaseLog.create({
+                        data: {
+                            type: "PLAN",
+                            plan_info: JSON.stringify(etcPlanData),
+                            pay_amount: plan.price,
+                            state: "ACTIVE",
+                            pay_id: null,
+                            user_id: user.id,
+                            expired_at: new Date('9999-12-31'),
+                            purchased_at: new Date(),
+                        }
+                    });
                      return { accessToken: accessToken, refreshToken: refreshToken };
                 } catch (e) {
                     return throwError(e, ctx);
@@ -140,7 +140,7 @@ export const mutation_user = extendType({
             }
         });
         t.field("signInUserForImageProgramByEveryone", {
-            type: nonNull("String"),
+            type: nonNull("String"),//return type 
             args: {
                 userType: nonNull(arg({ type: "UserLoginType" })),
                 email: nonNull(stringArg()),
@@ -174,7 +174,7 @@ export const mutation_user = extendType({
             }
         });
         t.field("connectSocialIdByUser", {
-            type: nonNull("User"),
+            type: nonNull("User"),//return 타입 
             args: {
                 userType: nonNull(arg({ type: "UserSocialType" })),
                 socialId: nonNull(stringArg()),
