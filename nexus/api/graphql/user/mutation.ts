@@ -116,7 +116,7 @@ export const mutation_user = extendType({
                         },
                         data : {
                             token : refreshToken,
-                            created_token : new Date()
+                            created_token : new Date(),
                         },
                     })
                     if(!token) return throwError(errors.etc("token 삽입에 실패하였습니다"),ctx)

@@ -17,6 +17,7 @@ type Admin {
 
 input AdminOrderByWithRelationInput {
   created_at: SortOrder
+  created_token: SortOrder
   id: SortOrder
   login_id: SortOrder
   password: SortOrder
@@ -35,6 +36,7 @@ input AdminWhereInput {
   NOT: [AdminWhereInput!]
   OR: [AdminWhereInput!]
   created_at: DateTimeFilter
+  created_token: DateTimeNullableFilter
   id: IntFilter
   login_id: StringFilter
   password: StringFilter
@@ -100,6 +102,17 @@ input DateTimeFilter {
   lt: DateTime
   lte: DateTime
   not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input DateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeNullableFilter
   notIn: [DateTime!]
 }
 
@@ -210,6 +223,17 @@ input NestedDateTimeFilter {
   lt: DateTime
   lte: DateTime
   not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input NestedDateTimeNullableFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeNullableFilter
   notIn: [DateTime!]
 }
 
@@ -753,6 +777,7 @@ scalar Upload
 
 type User {
   created_at: DateTime!
+  created_token: DateTime
   email: String!
   id: Int!
   kakao_id: String
@@ -1033,6 +1058,7 @@ enum UserLoginType {
 
 input UserOrderByWithRelationInput {
   created_at: SortOrder
+  created_token: SortOrder
   email: SortOrder
   id: SortOrder
   kakao_id: SortOrder
@@ -1078,6 +1104,7 @@ input UserWhereInput {
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
   created_at: DateTimeFilter
+  created_token: DateTimeNullableFilter
   email: StringFilter
   id: IntFilter
   kakao_id: StringNullableFilter

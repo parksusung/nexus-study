@@ -9,6 +9,7 @@ Table Admin {
   state AdminState [not null]
   created_at DateTime [default: `now()`, not null]
   token String
+  created_token DateTime
   product Product [not null]
 }
 
@@ -168,6 +169,7 @@ Table User {
   kakao_id String [unique]
   created_at DateTime [default: `now()`, not null]
   token String
+  created_token DateTime
   product Product [not null]
   purchase_log PurchaseLog [not null]
   user_info UserInfo

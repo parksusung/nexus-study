@@ -44,6 +44,7 @@ declare global {
 export interface NexusGenInputs {
   AdminOrderByWithRelationInput: { // input type
     created_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    created_token?: NexusGenEnums['SortOrder'] | null; // SortOrder
     id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     login_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     password?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -56,6 +57,7 @@ export interface NexusGenInputs {
     NOT?: NexusGenInputs['AdminWhereInput'][] | null; // [AdminWhereInput!]
     OR?: NexusGenInputs['AdminWhereInput'][] | null; // [AdminWhereInput!]
     created_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    created_token?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     login_id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     password?: NexusGenInputs['StringFilter'] | null; // StringFilter
@@ -112,6 +114,16 @@ export interface NexusGenInputs {
     lt?: NexusGenScalars['DateTime'] | null; // DateTime
     lte?: NexusGenScalars['DateTime'] | null; // DateTime
     not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
+    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
+  DateTimeNullableFilter: { // input type
+    equals?: NexusGenScalars['DateTime'] | null; // DateTime
+    gt?: NexusGenScalars['DateTime'] | null; // DateTime
+    gte?: NexusGenScalars['DateTime'] | null; // DateTime
+    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+    lt?: NexusGenScalars['DateTime'] | null; // DateTime
+    lte?: NexusGenScalars['DateTime'] | null; // DateTime
+    not?: NexusGenInputs['NestedDateTimeNullableFilter'] | null; // NestedDateTimeNullableFilter
     notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
   }
   EnumAdminStateFilter: { // input type
@@ -186,6 +198,16 @@ export interface NexusGenInputs {
     lt?: NexusGenScalars['DateTime'] | null; // DateTime
     lte?: NexusGenScalars['DateTime'] | null; // DateTime
     not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
+    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
+  NestedDateTimeNullableFilter: { // input type
+    equals?: NexusGenScalars['DateTime'] | null; // DateTime
+    gt?: NexusGenScalars['DateTime'] | null; // DateTime
+    gte?: NexusGenScalars['DateTime'] | null; // DateTime
+    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+    lt?: NexusGenScalars['DateTime'] | null; // DateTime
+    lte?: NexusGenScalars['DateTime'] | null; // DateTime
+    not?: NexusGenInputs['NestedDateTimeNullableFilter'] | null; // NestedDateTimeNullableFilter
     notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
   }
   NestedEnumAdminStateFilter: { // input type
@@ -740,6 +762,7 @@ export interface NexusGenInputs {
   }
   UserOrderByWithRelationInput: { // input type
     created_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    created_token?: NexusGenEnums['SortOrder'] | null; // SortOrder
     email?: NexusGenEnums['SortOrder'] | null; // SortOrder
     id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     kakao_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -757,6 +780,7 @@ export interface NexusGenInputs {
     NOT?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     OR?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     created_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    created_token?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     kakao_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
@@ -870,6 +894,7 @@ export interface NexusGenObjects {
   }
   User: { // root type
     created_at: NexusGenScalars['DateTime']; // DateTime!
+    created_token?: NexusGenScalars['DateTime'] | null; // DateTime
     email: string; // String!
     id: number; // Int!
     kakao_id?: string | null; // String
@@ -1063,6 +1088,7 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     created_at: NexusGenScalars['DateTime']; // DateTime!
+    created_token: NexusGenScalars['DateTime'] | null; // DateTime
     email: string; // String!
     id: number; // Int!
     kakao_id: string | null; // String
@@ -1254,6 +1280,7 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     created_at: 'DateTime'
+    created_token: 'DateTime'
     email: 'String'
     id: 'Int'
     kakao_id: 'String'

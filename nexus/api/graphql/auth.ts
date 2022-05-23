@@ -35,7 +35,6 @@ export const mutation_auto = extendType({
                         const accessTokenInfo = verify(args.accessToken, APP_SECRET, {ignoreExpiration : true}) as Token;//인증결과는 decoded된 게 나옴 
                         const now = Date.now() / 1000;
                         const refreshTokenInfo = verify(args.refreshToken, APP_REFRESH_SECRET, { algorithms: ["HS512"]  })  as Token; // 이건 이제 id가아니라 어떤 Token인지
-
                         if(refreshTokenInfo.type == "userId"){ //return 값 userId or adminId 
                         const userInfo = await ctx.prisma.user.findFirst({
                             where : {
@@ -55,8 +54,6 @@ export const mutation_auto = extendType({
                                 token : args.refreshToken,
                             }
                         })
-                        // console.log("adminInfo",adminInfo.id);
-                        // console.log("accessTokenInfo",accessTokenInfo.userId);
                         if(!adminInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
                         else{
                             if(accessTokenInfo.adminId != adminInfo.id) return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);

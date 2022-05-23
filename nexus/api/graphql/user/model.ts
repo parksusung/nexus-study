@@ -39,6 +39,7 @@ export const t_User = objectType({
     t.model.naver_id();
     t.model.kakao_id();
     t.model.created_at();
+    t.model.created_token();
     t.model.product({
       filtering: true,
       ordering: true,
