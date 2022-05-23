@@ -11,6 +11,7 @@ import * as CryptoJS from "crypto-js";
 import { shake256 } from 'js-sha3';
 import { throwError, errors } from './error';
 
+// 원본 token 생성 
 export const generateToken = (id: number, type: "userId" | "adminId", isRefresh: boolean) => {
     if (!isRefresh) {
         const privateClaim: any = {}

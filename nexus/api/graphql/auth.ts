@@ -32,11 +32,11 @@ export const mutation_auto = extendType({
                     let accessToken = "";
                     let refreshToken = ""; 
                     try{
-                        const accessTokenInfo = verify(args.accessToken, APP_SECRET, {ignoreExpiration : true}) as Token;
+                        const accessTokenInfo = verify(args.accessToken, APP_SECRET, {ignoreExpiration : true}) as Token;//인증결과는 decoded된 게 나옴 
                         const now = Date.now() / 1000;
                         const refreshTokenInfo = verify(args.refreshToken, APP_REFRESH_SECRET, { algorithms: ["HS512"]  })  as Token;
                         if ( refreshTokenInfo.userId){
-                            if(accessTokenInfo.userId != refreshTokenInfo.userId) return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);
+                            if(accessTokenInfo.userId != refreshTokenInfo.userId) return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);//그냥 2개 decoded 해서 id같은지봄 
                             const user = await ctx.prisma.admin.findUnique({where : {id : refreshTokenInfo.userId}});
                             if(!user) return throwError(errors.notAuthenticated, ctx);
                             accessToken = await generateUserToken(ctx.prisma, refreshTokenInfo.userId);

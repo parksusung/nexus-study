@@ -22,6 +22,7 @@ input AdminOrderByWithRelationInput {
   password: SortOrder
   product: ProductOrderByRelationAggregateInput
   state: SortOrder
+  token: SortOrder
 }
 
 enum AdminState {
@@ -39,6 +40,7 @@ input AdminWhereInput {
   password: StringFilter
   product: ProductListRelationFilter
   state: EnumAdminStateFilter
+  token: StringNullableFilter
 }
 
 input BoolFilter {
@@ -171,11 +173,27 @@ input IntNullableFilter {
 
 type Mutation {
   changeMyPasswordByAdmin(currentPassword: String!, newPassword: String!): Boolean!
+  changePasswordByUser(currentPassword: String!, newPassword: String!): Boolean!
+  connectSocialIdByUser(socialId: String!, userType: UserSocialType!): User!
   renewToken(accessToken: String!, refreshToken: String!): SignInType
   requestPhoneVerificationByEveryone(phoneNumber: String!): Boolean!
+  setMaxProductLimitByAdmin(
+    """미설정시 무제한"""
+    productLimit: Int
+    userId: Int!
+  ): Boolean!
+  signInUserForImageProgramByEveryone(
+    email: String!
+
+    """소셜의 경우 그냥 빈 문자열"""
+    password: String!
+    userType: UserLoginType!
+  ): String!
   signUpAdminByAdmin(id: String!, password: String!): Boolean!
+  signUpUserByEveryone(email: String!, password: String!, phone: String!, verificationId: Int! = 0): SignInType!
   translateProductTextByUser(id: Int!, type: TranslateTargetEnumType!): String!
   translateProductsTextByUser(ids: [Int!]!, type: TranslateTargetEnumType!): String!
+  updatePhoneByUser(phone: String!, verificationId: Int!): Boolean!
   verifyPhoneByEveryone(phoneNumber: String!, verificationNumber: String!): Int!
 }
 
@@ -617,6 +635,9 @@ input PurchaseLogWhereInput {
 }
 
 type Query {
+  selectMyInfoByUser: User!
+  selectUsersByAdmin(cursor: UserWhereUniqueInput, orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
+  selectUsersCountByAdmin(where: UserWhereInput): Int!
   translateText(engine: TranslateEngineEnumType! = PAPAGO, text: String!): String!
   whoami: String
 }
@@ -746,20 +767,72 @@ type User {
 }
 
 type UserInfo {
+  additional_shipping_fee_jeju: Int!
   as_information: String
   as_tel: String
+  auction_fee: Float!
   cny_rate: Float!
+  collect_stock: Int!
+  collect_timeout: Int!
+  coupang_access_key: String!
+  coupang_default_inbound: String!
+  coupang_default_outbound: String!
+  coupang_fee: Float!
+  coupang_image_opt: String!
+  coupang_login_id: String!
+  coupang_maximum_buy_for_person: Int!
+  coupang_outbound_shipping_time_day: Int!
+  coupang_secret_key: String!
+  coupang_union_delivery_type: String!
+  coupang_vendor_id: String!
   default_shipping_fee: Int!
+  description_show_title: String!
+  discount_amount: Int
+  discount_unit_type: String
+  esmplus_auction_id: String!
+  esmplus_gmarket_id: String!
+  esmplus_master_id: String!
   exchange_shipping_fee: Int!
+  extra_shipping_fee: Int!
   fix_image_bottom: String
   fix_image_top: String
+  gmarket_fee: Float!
+  interpark_cert_key: String!
+  interpark_fee: Float!
+  interpark_secret_key: String!
+  lotteon_api_key: String!
+  lotteon_fee: Float!
+  lotteon_normal_fee: Float!
+  lotteon_vendor_id: String!
   margin_rate: Float!
+  margin_unit_type: String
   max_product_limit: Int
+  naver_fee: Float!
+  naver_origin: String!
+  naver_origin_code: String!
+  naver_store_only: String!
+  naver_store_url: String!
+  option_align_top: String!
+  option_index_type: Int!
+  option_twoways: String!
   phone: String
   product_collect_count: Int!
   refund_shipping_fee: Int!
+  street_api_key: String!
+  street_default_inbound: String!
+  street_default_outbound: String!
+  street_fee: Float!
+  street_normal_api_key: String!
+  street_normal_fee: Float!
+  street_normal_inbound: String
+  street_normal_outbound: String
+  street_seller_type: Int!
+  tmon_fee: Float!
+  tmon_id: String
   user: User!
   user_id: Int!
+  wemakeprice_fee: Float!
+  wemakeprice_id: String!
 }
 
 input UserInfoOrderByWithRelationInput {
@@ -968,6 +1041,7 @@ input UserOrderByWithRelationInput {
   product: ProductOrderByRelationAggregateInput
   purchase_log: PurchaseLogOrderByRelationAggregateInput
   state: SortOrder
+  token: SortOrder
   user_info: UserInfoOrderByWithRelationInput
   user_log: UserLogOrderByRelationAggregateInput
 }
@@ -1012,6 +1086,14 @@ input UserWhereInput {
   product: ProductListRelationFilter
   purchase_log: PurchaseLogListRelationFilter
   state: EnumUserStateFilter
+  token: StringNullableFilter
   user_info: UserInfoWhereInput
   user_log: UserLogListRelationFilter
+}
+
+input UserWhereUniqueInput {
+  email: String
+  id: Int
+  kakao_id: String
+  naver_id: String
 }
