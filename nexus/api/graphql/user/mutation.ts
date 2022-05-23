@@ -196,40 +196,61 @@ export const mutation_user = extendType({
                 }
             }
         });
-        t.field("signInUserForImageProgramByEveryone", {
-            type: nonNull("String"),//return type 
+        t.field("signInUserByEveryone", {//todo
+            type: nonNull("SignInType"),
             args: {
-                userType: nonNull(arg({ type: "UserLoginType" })),
+                userType: nonNull(arg({ type: "UserSocialType" })),
                 email: nonNull(stringArg()),
                 password: nonNull(stringArg({ description: "소셜의 경우 그냥 빈 문자열" })),
             },
             resolve: async (src, args, ctx, info) => {
                 try {
-                    if (args.userType === 'ADMIN') {
-                        if (!regexPattern.email.test(args.email)) return throwError(errors.etc("이메일 형식이 잘못되었습니다."), ctx);
-                        const admin = await ctx.prisma.admin.findUnique({ where: { login_id: args.email } });
-                        if (!admin) return throwError(errors.invalidUser, ctx);
-                        if (!compareSync(args.password, admin.password)) return throwError(errors.invalidUser, ctx);
-                        return generateToken(admin.id, "adminId", false);
-                    }
-                    else {
-                        if (args.userType === "EMAIL" && !regexPattern.email.test(args.email)) return throwError(errors.etc("이메일 형식이 잘못되었습니다."), ctx);
-                        const where = args.userType === "EMAIL" ? { email: args.email } : args.userType === "NAVER" ? { naverId: args.email } : args.userType === "KAKAO" ? { kakaoId: args.email } : {}
-                        const user = await ctx.prisma.user.findUnique({ where });
-                        if (!user) return throwError(errors.invalidUser, ctx);
-                        if (user.state !== 'ACTIVE') return throwError(errors.invalidUser, ctx);
-                        if (args.userType === "EMAIL" && !compareSync(args.password, user.password)) return throwError(errors.invalidUser, ctx);
-                        const purchaseInfo = await getPurchaseInfo(ctx.prisma, user.id);
-                        const d = purchaseInfo.additionalInfo.find(v => v.type === 'IMAGE_TRANSLATE');
-                        if (!d) return throwError(errors.additionalPermissionRequired, ctx);
-                        if (isBefore(d.expiredAt, new Date())) throw errors.additionalPermissionRequired;
-                        return await generateUserToken(ctx.prisma, user.id);
-                    }
+                    if (args.userType === "EMAIL" && !regexPattern.email.test(args.email)) return throwError(errors.etc("이메일 형식이 잘못되었습니다."), ctx);
+                    const where = args.userType === "EMAIL" ? { email: args.email } : args.userType === "NAVER" ? { naverId: args.email } : args.userType === "KAKAO" ? { kakaoId: args.email } : {}
+                    const user = await ctx.prisma.user.findUnique({ where });
+                    if (!user) return throwError(errors.invalidUser, ctx);
+                    if (user.state !== 'ACTIVE') return throwError(errors.invalidUser, ctx);
+                    if (args.userType === "EMAIL" && !compareSync(args.password, user.password)) return throwError(errors.invalidUser, ctx);
+                    return { accessToken: await generateUserToken(ctx.prisma, user.id), refreshToken: generateToken(user.id, "userId", true) };
                 } catch (e) {
                     return throwError(e, ctx);
                 }
             }
         });
+        // t.field("signInUserForImageProgramByEveryone", {//이거 안씀 
+        //     type: nonNull("String"),//return type 
+        //     args: {
+        //         userType: nonNull(arg({ type: "UserLoginType" })),
+        //         email: nonNull(stringArg()),
+        //         password: nonNull(stringArg({ description: "소셜의 경우 그냥 빈 문자열" })),
+        //     },
+        //     resolve: async (src, args, ctx, info) => {
+        //         try {
+        //             if (args.userType === 'ADMIN') {
+        //                 if (!regexPattern.email.test(args.email)) return throwError(errors.etc("이메일 형식이 잘못되었습니다."), ctx);
+        //                 const admin = await ctx.prisma.admin.findUnique({ where: { login_id: args.email } });
+        //                 if (!admin) return throwError(errors.invalidUser, ctx);
+        //                 if (!compareSync(args.password, admin.password)) return throwError(errors.invalidUser, ctx);
+        //                 return generateToken(admin.id, "adminId", false);
+        //             }
+        //             else {
+        //                 if (args.userType === "EMAIL" && !regexPattern.email.test(args.email)) return throwError(errors.etc("이메일 형식이 잘못되었습니다."), ctx);
+        //                 const where = args.userType === "EMAIL" ? { email: args.email } : args.userType === "NAVER" ? { naverId: args.email } : args.userType === "KAKAO" ? { kakaoId: args.email } : {}
+        //                 const user = await ctx.prisma.user.findUnique({ where });
+        //                 if (!user) return throwError(errors.invalidUser, ctx);
+        //                 if (user.state !== 'ACTIVE') return throwError(errors.invalidUser, ctx);
+        //                 if (args.userType === "EMAIL" && !compareSync(args.password, user.password)) return throwError(errors.invalidUser, ctx);
+        //                 const purchaseInfo = await getPurchaseInfo(ctx.prisma, user.id);
+        //                 const d = purchaseInfo.additionalInfo.find(v => v.type === 'IMAGE_TRANSLATE');
+        //                 if (!d) return throwError(errors.additionalPermissionRequired, ctx);
+        //                 if (isBefore(d.expiredAt, new Date())) throw errors.additionalPermissionRequired;
+        //                 return await generateUserToken(ctx.prisma, user.id);
+        //             }
+        //         } catch (e) {
+        //             return throwError(e, ctx);
+        //         }
+        //     }
+        // });
         t.field("connectSocialIdByUser", {
             type: nonNull("User"),//return 타입 
             args: {

@@ -195,13 +195,13 @@ type Mutation {
     productLimit: Int
     userId: Int!
   ): Boolean!
-  signInUserForImageProgramByEveryone(
+  signInUserByEveryone(
     email: String!
 
     """소셜의 경우 그냥 빈 문자열"""
     password: String!
-    userType: UserLoginType!
-  ): String!
+    userType: UserSocialType!
+  ): SignInType!
   signOutUserByEveryone(accessToken: String!): String!
   signUpAdminByAdmin(id: String!, password: String!): Boolean!
   signUpUserByEveryone(email: String!, password: String!, phone: String!, verificationId: Int! = 0): SignInType!
