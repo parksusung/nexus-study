@@ -143,45 +143,51 @@ export const mutation_user = extendType({
                 }
             }
         });
-        t.field("logOut",{//수성 임시 작성 refreshToken logout시 제거 
+        t.field("signOutUserByEveryone",{//수성 임시 작성 refreshToken logout시 제거 
             type: nonNull("String"),
             args : {
-                refreshToken : nonNull(stringArg()),
+                // userType: nonNull(arg({ type: "UserLoginType" })),
+                // email: nonNull(stringArg()),
+                accessToken : nonNull(stringArg()),
             },
             resolve : async (src, args, ctx , info ) => {
                 try {
+
+                    const accessTokenInfo = verify(args.accessToken, APP_SECRET, {ignoreExpiration : true}) as Token;//인증결과는 decoded된 게 나옴 
                     let status = "";
+
                     try{
-                        const refreshTokenInfo = verify(args.refreshToken, APP_REFRESH_SECRET, { algorithms: ["HS512"]  })  as Token; // 이건 이제 id가아니라 어떤 Token인지
-                        if(refreshTokenInfo.type == "userId"){ //return 값 userId or adminId 
+                        if(accessTokenInfo.userId){ //return 값 userId or adminId 
                         const userInfo = await ctx.prisma.user.update({
                             where : {
-                                token : args.refreshToken,
+                                id : accessTokenInfo.userId,
                             },
                             data : {
                                 token : "",
                                 created_token : ""
                             }
                         })
-                        if(!userInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
+                        if(!userInfo) {return throwError(errors.etc("로그아웃 실패"),ctx)}
                         else{status = "success";}
-                    }else if (refreshTokenInfo.type == "adminId")// admin 계정일 경우 
+                    }
+                    
+                    else if (accessTokenInfo.adminId)// admin 계정일 경우 
                     {
                         const adminInfo = await ctx.prisma.admin.update({
                             where : {
-                                token : args.refreshToken,
+                                id : accessTokenInfo.adminId,
                             },
                             data : {
                                 token : "",
                                 created_token : ""
                             }
                         })
-                        if(!adminInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
+                        if(!adminInfo) {return throwError(errors.etc("로그아웃 실패"),ctx)}
                         else{status = "success";}
                     }
                     }catch(e){
                         console.log(e);
-                        return throwError(errors.etc("유효한 토큰이 아닙니다."),ctx);
+                        return throwError(errors.etc("로그아웃 실패"),ctx);
                     }
                     return status ;
                 

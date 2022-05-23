@@ -188,7 +188,6 @@ type Mutation {
   changeMyPasswordByAdmin(currentPassword: String!, newPassword: String!): Boolean!
   changePasswordByUser(currentPassword: String!, newPassword: String!): Boolean!
   connectSocialIdByUser(socialId: String!, userType: UserSocialType!): User!
-  logOut(refreshToken: String!): String!
   renewToken(accessToken: String!, refreshToken: String!): SignInType
   requestPhoneVerificationByEveryone(phoneNumber: String!): Boolean!
   setMaxProductLimitByAdmin(
@@ -203,6 +202,7 @@ type Mutation {
     password: String!
     userType: UserLoginType!
   ): String!
+  signOutUserByEveryone(accessToken: String!): String!
   signUpAdminByAdmin(id: String!, password: String!): Boolean!
   signUpUserByEveryone(email: String!, password: String!, phone: String!, verificationId: Int! = 0): SignInType!
   translateProductTextByUser(id: Int!, type: TranslateTargetEnumType!): String!

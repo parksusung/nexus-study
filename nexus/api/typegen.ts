@@ -1013,11 +1013,11 @@ export interface NexusGenFieldTypes {
     changeMyPasswordByAdmin: boolean; // Boolean!
     changePasswordByUser: boolean; // Boolean!
     connectSocialIdByUser: NexusGenRootTypes['User']; // User!
-    logOut: string; // String!
     renewToken: NexusGenRootTypes['SignInType'] | null; // SignInType
     requestPhoneVerificationByEveryone: boolean; // Boolean!
     setMaxProductLimitByAdmin: boolean; // Boolean!
     signInUserForImageProgramByEveryone: string; // String!
+    signOutUserByEveryone: string; // String!
     signUpAdminByAdmin: boolean; // Boolean!
     signUpUserByEveryone: NexusGenRootTypes['SignInType']; // SignInType!
     translateProductTextByUser: string; // String!
@@ -1206,11 +1206,11 @@ export interface NexusGenFieldTypeNames {
     changeMyPasswordByAdmin: 'Boolean'
     changePasswordByUser: 'Boolean'
     connectSocialIdByUser: 'User'
-    logOut: 'String'
     renewToken: 'SignInType'
     requestPhoneVerificationByEveryone: 'Boolean'
     setMaxProductLimitByAdmin: 'Boolean'
     signInUserForImageProgramByEveryone: 'String'
+    signOutUserByEveryone: 'String'
     signUpAdminByAdmin: 'Boolean'
     signUpUserByEveryone: 'SignInType'
     translateProductTextByUser: 'String'
@@ -1397,9 +1397,6 @@ export interface NexusGenArgTypes {
       socialId: string; // String!
       userType: NexusGenEnums['UserSocialType']; // UserSocialType!
     }
-    logOut: { // args
-      refreshToken: string; // String!
-    }
     renewToken: { // args
       accessToken: string; // String!
       refreshToken: string; // String!
@@ -1415,6 +1412,9 @@ export interface NexusGenArgTypes {
       email: string; // String!
       password: string; // String!
       userType: NexusGenEnums['UserLoginType']; // UserLoginType!
+    }
+    signOutUserByEveryone: { // args
+      accessToken: string; // String!
     }
     signUpAdminByAdmin: { // args
       id: string; // String!

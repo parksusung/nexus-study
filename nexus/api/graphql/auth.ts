@@ -33,7 +33,7 @@ export const mutation_auto = extendType({
                     // let refreshToken = ""; 
                     try{
                         const accessTokenInfo = verify(args.accessToken, APP_SECRET, {ignoreExpiration : true}) as Token;//인증결과는 decoded된 게 나옴 
-                        // const now = Date.now() / 1000;
+                        const now = Date.now() / 1000;
                         const refreshTokenInfo = verify(args.refreshToken, APP_REFRESH_SECRET, { algorithms: ["HS512"]  })  as Token; // 이건 이제 id가아니라 어떤 Token인지
                         if(refreshTokenInfo.type == "userId"){ //return 값 userId or adminId 
                         const userInfo = await ctx.prisma.user.findFirst({
