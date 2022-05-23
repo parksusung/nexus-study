@@ -143,7 +143,7 @@ export const mutation_user = extendType({
                 }
             }
         });
-        t.field("logOut",{
+        t.field("logOut",{//수성 임시 작성 refreshToken logout시 제거 
             type: nonNull("String"),
             args : {
                 refreshToken : nonNull(stringArg()),
