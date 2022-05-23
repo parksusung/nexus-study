@@ -12,7 +12,7 @@ import { arg, booleanArg, extendType, floatArg, intArg, nonNull, stringArg } fro
 export const mutation_user = extendType({
     type: "Mutation",
     definition(t) {
-        t.field("signUpUserByEveryone", {
+        t.field("signUpUserByEveryone", {//수성완료 
             type: nonNull("SignInType"),
             args: {
                 email: nonNull(stringArg()),

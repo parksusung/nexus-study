@@ -13,7 +13,7 @@ import { throwError, errors } from './error';
 
 // 원본 token 생성 
 export const generateToken = (id: number, type: "userId" | "adminId", isRefresh: boolean) => {
-    if (!isRefresh) {
+    if (!isRefresh) {//accessToken
         const privateClaim: any = {}
         privateClaim[type] = id;
         return sign(
@@ -24,7 +24,7 @@ export const generateToken = (id: number, type: "userId" | "adminId", isRefresh:
             }
         )
     }
-    else {
+    else {//refreshToken
         const privateClaim: any = {}
         privateClaim["type"] = type;
         privateClaim["isRefresh"] = true;
@@ -103,7 +103,7 @@ export const createContext = (ctx: any): Context => {
     }
 }
 
-//accessToken기준 
+//accessToken기준 refresh Token으로하면 에러남 양식바꿔서 
 export const getModifierString = (token: Token | null) => {
     if (token?.userId) return `User ${token.userId}`;
     else if (token?.adminId) return `Admin ${token.adminId}`;
