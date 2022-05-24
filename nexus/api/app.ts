@@ -1,7 +1,10 @@
 import { ApolloServer } from 'apollo-server'
 import {schema} from './schema'
-
-export const server = new ApolloServer({schema})
+import { createContext } from './graphql/utils/helpers';
+// import { permissions } from './graphql/utils/rules'
+// import { applyMiddleware } from 'graphql-middleware'
+export const server = new ApolloServer({schema,
+context : createContext})
 // const apollo = new ApolloServer({schema})
 
 

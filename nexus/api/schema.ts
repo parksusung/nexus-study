@@ -2,7 +2,6 @@ import { makeSchema } from "nexus";
 import { join } from "path";
 import { nexusPrisma } from "nexus-plugin-prisma";
 import * as modelTypes from "./graphql";
-
 export const schema = makeSchema({
   types: [modelTypes],
   // 백업 유형 .
@@ -16,7 +15,7 @@ export const schema = makeSchema({
     typegen: join(__dirname, "typegen.ts"),
     schema: join(__dirname, "schema.graphql"),
   },
-  contextType: { module: join(__dirname, "types.ts"), export: "Context" },
+  contextType: { module: join(__dirname, "types.ts"), export: "test" },
   plugins: [
     nexusPrisma({
       shouldGenerateArtifacts: true,
