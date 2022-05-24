@@ -29,7 +29,7 @@ interface PermissionAdditionalInfo {
     type: 'IMAGE_TRANSLATE' | 'STOCK';
     exp: number;
 }
-
+//Token 인증시 return해서 받아올 값 정의 ,, 즉 Token생성시 payload값들 
 export interface Token {
     userId?: number;
     adminId?: number;

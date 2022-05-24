@@ -155,7 +155,7 @@ export const mutation_user = extendType({
 
                     const accessTokenInfo = verify(args.accessToken, APP_SECRET, {ignoreExpiration : true}) as Token;//인증결과는 decoded된 게 나옴 
                     let status = "";
-
+                    console.log("accessTokenInfo",accessTokenInfo)
                     try{
                         if(accessTokenInfo.userId){ //return 값 userId or adminId 
                         const userInfo = await ctx.prisma.user.update({
@@ -163,8 +163,8 @@ export const mutation_user = extendType({
                                 id : accessTokenInfo.userId,
                             },
                             data : {
-                                token : "",
-                                created_token : ""
+                                token : null,
+                                created_token : null
                             }
                         })
                         if(!userInfo) {return throwError(errors.etc("로그아웃 실패"),ctx)}
@@ -178,8 +178,8 @@ export const mutation_user = extendType({
                                 id : accessTokenInfo.adminId,
                             },
                             data : {
-                                token : "",
-                                created_token : ""
+                                token : null,
+                                created_token : null
                             }
                         })
                         if(!adminInfo) {return throwError(errors.etc("로그아웃 실패"),ctx)}
