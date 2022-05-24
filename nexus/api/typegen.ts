@@ -1013,13 +1013,13 @@ export interface NexusGenFieldTypes {
     changeMyPasswordByAdmin: boolean; // Boolean!
     changePasswordByUser: boolean; // Boolean!
     connectSocialIdByUser: NexusGenRootTypes['User']; // User!
-    renewToken: NexusGenRootTypes['SignInType'] | null; // SignInType
     requestPhoneVerificationByEveryone: boolean; // Boolean!
     setMaxProductLimitByAdmin: boolean; // Boolean!
     signInUserByEveryone: NexusGenRootTypes['SignInType']; // SignInType!
     signOutUserByEveryone: string; // String!
     signUpAdminByAdmin: boolean; // Boolean!
     signUpUserByEveryone: NexusGenRootTypes['SignInType']; // SignInType!
+    silentRefreshToken: NexusGenRootTypes['SignInType'] | null; // SignInType
     translateProductTextByUser: string; // String!
     translateProductsTextByUser: string; // String!
     updatePhoneByUser: boolean; // Boolean!
@@ -1206,13 +1206,13 @@ export interface NexusGenFieldTypeNames {
     changeMyPasswordByAdmin: 'Boolean'
     changePasswordByUser: 'Boolean'
     connectSocialIdByUser: 'User'
-    renewToken: 'SignInType'
     requestPhoneVerificationByEveryone: 'Boolean'
     setMaxProductLimitByAdmin: 'Boolean'
     signInUserByEveryone: 'SignInType'
     signOutUserByEveryone: 'String'
     signUpAdminByAdmin: 'Boolean'
     signUpUserByEveryone: 'SignInType'
+    silentRefreshToken: 'SignInType'
     translateProductTextByUser: 'String'
     translateProductsTextByUser: 'String'
     updatePhoneByUser: 'Boolean'
@@ -1397,10 +1397,6 @@ export interface NexusGenArgTypes {
       socialId: string; // String!
       userType: NexusGenEnums['UserSocialType']; // UserSocialType!
     }
-    renewToken: { // args
-      accessToken: string; // String!
-      refreshToken: string; // String!
-    }
     requestPhoneVerificationByEveryone: { // args
       phoneNumber: string; // String!
     }
@@ -1425,6 +1421,10 @@ export interface NexusGenArgTypes {
       password: string; // String!
       phone: string; // String!
       verificationId: number; // Int!
+    }
+    silentRefreshToken: { // args
+      accessToken: string; // String!
+      refreshToken: string; // String!
     }
     translateProductTextByUser: { // args
       id: number; // Int!

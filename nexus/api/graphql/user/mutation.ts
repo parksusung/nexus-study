@@ -1,5 +1,5 @@
 import { hashSync, compareSync } from "bcryptjs";
-import { PrismaClient } from '@prisma/client'
+import { prisma, PrismaClient } from '@prisma/client'
 import { isBefore } from "date-fns";
  import { getPurchaseInfo } from ".";
 import { APP_REFRESH_SECRET, APP_SECRET, regexPattern } from "../utils/constants";
@@ -13,7 +13,7 @@ import { Token } from '../../types';
 export const mutation_user = extendType({
     type: "Mutation",
     definition(t) {
-        t.field("signUpUserByEveryone", {//수성완료 
+        t.field("signUpUserByEveryone", {//수성완료  회원가입 
             type: nonNull("SignInType"),
             args: {
                 email: nonNull(stringArg()),
@@ -143,7 +143,7 @@ export const mutation_user = extendType({
                 }
             }
         });
-        t.field("signOutUserByEveryone",{//수성 임시 작성 refreshToken logout시 제거 
+        t.field("signOutUserByEveryone",{//수성 임시 작성 refreshToken logout시 제거  로그아웃 
             type: nonNull("String"),
             args : {
                 // userType: nonNull(arg({ type: "UserLoginType" })),
@@ -196,7 +196,7 @@ export const mutation_user = extendType({
                 }
             }
         });
-        t.field("signInUserByEveryone", {//todo
+        t.field("signInUserByEveryone", {//todo 로그인
             type: nonNull("SignInType"),
             args: {
                 userType: nonNull(arg({ type: "UserSocialType" })),
@@ -211,7 +211,20 @@ export const mutation_user = extendType({
                     if (!user) return throwError(errors.invalidUser, ctx);
                     if (user.state !== 'ACTIVE') return throwError(errors.invalidUser, ctx);
                     if (args.userType === "EMAIL" && !compareSync(args.password, user.password)) return throwError(errors.invalidUser, ctx);
-                    return { accessToken: await generateUserToken(ctx.prisma, user.id), refreshToken: generateToken(user.id, "userId", true) };
+                   
+                    const accessToken = await generateUserToken(ctx.prisma, user.id)
+                    const refreshToken = generateToken(user.id, "userId", true)
+                    const db = await ctx.prisma.user.update({
+                        where : {
+                            id : user.id
+                        },
+                        data : {
+                            token : refreshToken,
+                            created_token : new Date()
+                        }
+                    })
+                    if(!db) return throwError(errors.etc("토큰 저장에 실패하였습니다."),ctx);
+                    return { accessToken: accessToken, refreshToken: refreshToken };
                 } catch (e) {
                     return throwError(e, ctx);
                 }

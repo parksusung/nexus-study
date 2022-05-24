@@ -21,7 +21,7 @@ export const t_PhoneVerification = objectType({
 export const mutation_auto = extendType({
     type : "Mutation",
     definition(t) {
-        t.field("renewToken", { // 수성완료 
+        t.field("silentRefreshToken", { // 수성완료 silent refresh 
             type : "SignInType",//SignIntype은 return값이 accesstoken , refresh token string임 
             args : {
                 accessToken : nonNull(stringArg()),
