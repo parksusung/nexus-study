@@ -4,7 +4,7 @@
  */
 
 
-import type { Context } from "./types"
+import type { test } from "./types"
 import type { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
@@ -44,22 +44,26 @@ declare global {
 export interface NexusGenInputs {
   AdminOrderByWithRelationInput: { // input type
     created_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    created_token?: NexusGenEnums['SortOrder'] | null; // SortOrder
     id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     login_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     password?: NexusGenEnums['SortOrder'] | null; // SortOrder
     product?: NexusGenInputs['ProductOrderByRelationAggregateInput'] | null; // ProductOrderByRelationAggregateInput
     state?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    token?: NexusGenEnums['SortOrder'] | null; // SortOrder
   }
   AdminWhereInput: { // input type
     AND?: NexusGenInputs['AdminWhereInput'][] | null; // [AdminWhereInput!]
     NOT?: NexusGenInputs['AdminWhereInput'][] | null; // [AdminWhereInput!]
     OR?: NexusGenInputs['AdminWhereInput'][] | null; // [AdminWhereInput!]
     created_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    created_token?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     login_id?: NexusGenInputs['StringFilter'] | null; // StringFilter
     password?: NexusGenInputs['StringFilter'] | null; // StringFilter
     product?: NexusGenInputs['ProductListRelationFilter'] | null; // ProductListRelationFilter
     state?: NexusGenInputs['EnumAdminStateFilter'] | null; // EnumAdminStateFilter
+    token?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
   }
   BoolFilter: { // input type
     equals?: boolean | null; // Boolean
@@ -110,6 +114,16 @@ export interface NexusGenInputs {
     lt?: NexusGenScalars['DateTime'] | null; // DateTime
     lte?: NexusGenScalars['DateTime'] | null; // DateTime
     not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
+    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
+  DateTimeNullableFilter: { // input type
+    equals?: NexusGenScalars['DateTime'] | null; // DateTime
+    gt?: NexusGenScalars['DateTime'] | null; // DateTime
+    gte?: NexusGenScalars['DateTime'] | null; // DateTime
+    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+    lt?: NexusGenScalars['DateTime'] | null; // DateTime
+    lte?: NexusGenScalars['DateTime'] | null; // DateTime
+    not?: NexusGenInputs['NestedDateTimeNullableFilter'] | null; // NestedDateTimeNullableFilter
     notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
   }
   EnumAdminStateFilter: { // input type
@@ -184,6 +198,16 @@ export interface NexusGenInputs {
     lt?: NexusGenScalars['DateTime'] | null; // DateTime
     lte?: NexusGenScalars['DateTime'] | null; // DateTime
     not?: NexusGenInputs['NestedDateTimeFilter'] | null; // NestedDateTimeFilter
+    notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+  }
+  NestedDateTimeNullableFilter: { // input type
+    equals?: NexusGenScalars['DateTime'] | null; // DateTime
+    gt?: NexusGenScalars['DateTime'] | null; // DateTime
+    gte?: NexusGenScalars['DateTime'] | null; // DateTime
+    in?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
+    lt?: NexusGenScalars['DateTime'] | null; // DateTime
+    lte?: NexusGenScalars['DateTime'] | null; // DateTime
+    not?: NexusGenInputs['NestedDateTimeNullableFilter'] | null; // NestedDateTimeNullableFilter
     notIn?: NexusGenScalars['DateTime'][] | null; // [DateTime!]
   }
   NestedEnumAdminStateFilter: { // input type
@@ -738,6 +762,7 @@ export interface NexusGenInputs {
   }
   UserOrderByWithRelationInput: { // input type
     created_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    created_token?: NexusGenEnums['SortOrder'] | null; // SortOrder
     email?: NexusGenEnums['SortOrder'] | null; // SortOrder
     id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     kakao_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -746,6 +771,7 @@ export interface NexusGenInputs {
     product?: NexusGenInputs['ProductOrderByRelationAggregateInput'] | null; // ProductOrderByRelationAggregateInput
     purchase_log?: NexusGenInputs['PurchaseLogOrderByRelationAggregateInput'] | null; // PurchaseLogOrderByRelationAggregateInput
     state?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    token?: NexusGenEnums['SortOrder'] | null; // SortOrder
     user_info?: NexusGenInputs['UserInfoOrderByWithRelationInput'] | null; // UserInfoOrderByWithRelationInput
     user_log?: NexusGenInputs['UserLogOrderByRelationAggregateInput'] | null; // UserLogOrderByRelationAggregateInput
   }
@@ -754,6 +780,7 @@ export interface NexusGenInputs {
     NOT?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     OR?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
     created_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    created_token?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
     email?: NexusGenInputs['StringFilter'] | null; // StringFilter
     id?: NexusGenInputs['IntFilter'] | null; // IntFilter
     kakao_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
@@ -762,8 +789,15 @@ export interface NexusGenInputs {
     product?: NexusGenInputs['ProductListRelationFilter'] | null; // ProductListRelationFilter
     purchase_log?: NexusGenInputs['PurchaseLogListRelationFilter'] | null; // PurchaseLogListRelationFilter
     state?: NexusGenInputs['EnumUserStateFilter'] | null; // EnumUserStateFilter
+    token?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     user_info?: NexusGenInputs['UserInfoWhereInput'] | null; // UserInfoWhereInput
     user_log?: NexusGenInputs['UserLogListRelationFilter'] | null; // UserLogListRelationFilter
+  }
+  UserWhereUniqueInput: { // input type
+    email?: string | null; // String
+    id?: number | null; // Int
+    kakao_id?: string | null; // String
+    naver_id?: string | null; // String
   }
 }
 
@@ -860,6 +894,7 @@ export interface NexusGenObjects {
   }
   User: { // root type
     created_at: NexusGenScalars['DateTime']; // DateTime!
+    created_token?: NexusGenScalars['DateTime'] | null; // DateTime
     email: string; // String!
     id: number; // Int!
     kakao_id?: string | null; // String
@@ -867,19 +902,71 @@ export interface NexusGenObjects {
     state: NexusGenEnums['UserState']; // UserState!
   }
   UserInfo: { // root type
+    additional_shipping_fee_jeju: number; // Int!
     as_information?: string | null; // String
     as_tel?: string | null; // String
+    auction_fee: number; // Float!
     cny_rate: number; // Float!
+    collect_stock: number; // Int!
+    collect_timeout: number; // Int!
+    coupang_access_key: string; // String!
+    coupang_default_inbound: string; // String!
+    coupang_default_outbound: string; // String!
+    coupang_fee: number; // Float!
+    coupang_image_opt: string; // String!
+    coupang_login_id: string; // String!
+    coupang_maximum_buy_for_person: number; // Int!
+    coupang_outbound_shipping_time_day: number; // Int!
+    coupang_secret_key: string; // String!
+    coupang_union_delivery_type: string; // String!
+    coupang_vendor_id: string; // String!
     default_shipping_fee: number; // Int!
+    description_show_title: string; // String!
+    discount_amount?: number | null; // Int
+    discount_unit_type?: string | null; // String
+    esmplus_auction_id: string; // String!
+    esmplus_gmarket_id: string; // String!
+    esmplus_master_id: string; // String!
     exchange_shipping_fee: number; // Int!
+    extra_shipping_fee: number; // Int!
     fix_image_bottom?: string | null; // String
     fix_image_top?: string | null; // String
+    gmarket_fee: number; // Float!
+    interpark_cert_key: string; // String!
+    interpark_fee: number; // Float!
+    interpark_secret_key: string; // String!
+    lotteon_api_key: string; // String!
+    lotteon_fee: number; // Float!
+    lotteon_normal_fee: number; // Float!
+    lotteon_vendor_id: string; // String!
     margin_rate: number; // Float!
+    margin_unit_type?: string | null; // String
     max_product_limit?: number | null; // Int
+    naver_fee: number; // Float!
+    naver_origin: string; // String!
+    naver_origin_code: string; // String!
+    naver_store_only: string; // String!
+    naver_store_url: string; // String!
+    option_align_top: string; // String!
+    option_index_type: number; // Int!
+    option_twoways: string; // String!
     phone?: string | null; // String
     product_collect_count: number; // Int!
     refund_shipping_fee: number; // Int!
+    street_api_key: string; // String!
+    street_default_inbound: string; // String!
+    street_default_outbound: string; // String!
+    street_fee: number; // Float!
+    street_normal_api_key: string; // String!
+    street_normal_fee: number; // Float!
+    street_normal_inbound?: string | null; // String
+    street_normal_outbound?: string | null; // String
+    street_seller_type: number; // Int!
+    tmon_fee: number; // Float!
+    tmon_id?: string | null; // String
     user_id: number; // Int!
+    wemakeprice_fee: number; // Float!
+    wemakeprice_id: string; // String!
   }
   UserLog: { // root type
     created_at: NexusGenScalars['DateTime']; // DateTime!
@@ -924,11 +1011,18 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     changeMyPasswordByAdmin: boolean; // Boolean!
-    renewToken: NexusGenRootTypes['SignInType'] | null; // SignInType
+    changePasswordByUser: boolean; // Boolean!
+    connectSocialIdByUser: NexusGenRootTypes['User']; // User!
     requestPhoneVerificationByEveryone: boolean; // Boolean!
+    setMaxProductLimitByAdmin: boolean; // Boolean!
+    signInUserByEveryone: NexusGenRootTypes['SignInType']; // SignInType!
+    signOutUserByEveryone: string; // String!
     signUpAdminByAdmin: boolean; // Boolean!
+    signUpUserByEveryone: NexusGenRootTypes['SignInType']; // SignInType!
+    silentRefreshToken: NexusGenRootTypes['SignInType'] | null; // SignInType
     translateProductTextByUser: string; // String!
     translateProductsTextByUser: string; // String!
+    updatePhoneByUser: boolean; // Boolean!
     verifyPhoneByEveryone: number; // Int!
   }
   PhoneVerification: { // field return type
@@ -983,6 +1077,9 @@ export interface NexusGenFieldTypes {
     user_id: number; // Int!
   }
   Query: { // field return type
+    selectMyInfoByUser: NexusGenRootTypes['User']; // User!
+    selectUsersByAdmin: NexusGenRootTypes['User'][]; // [User!]!
+    selectUsersCountByAdmin: number; // Int!
     translateText: string; // String!
     whoami: string | null; // String
   }
@@ -992,6 +1089,7 @@ export interface NexusGenFieldTypes {
   }
   User: { // field return type
     created_at: NexusGenScalars['DateTime']; // DateTime!
+    created_token: NexusGenScalars['DateTime'] | null; // DateTime
     email: string; // String!
     id: number; // Int!
     kakao_id: string | null; // String
@@ -1005,20 +1103,72 @@ export interface NexusGenFieldTypes {
     user_log: NexusGenRootTypes['UserLog'][]; // [UserLog!]!
   }
   UserInfo: { // field return type
+    additional_shipping_fee_jeju: number; // Int!
     as_information: string | null; // String
     as_tel: string | null; // String
+    auction_fee: number; // Float!
     cny_rate: number; // Float!
+    collect_stock: number; // Int!
+    collect_timeout: number; // Int!
+    coupang_access_key: string; // String!
+    coupang_default_inbound: string; // String!
+    coupang_default_outbound: string; // String!
+    coupang_fee: number; // Float!
+    coupang_image_opt: string; // String!
+    coupang_login_id: string; // String!
+    coupang_maximum_buy_for_person: number; // Int!
+    coupang_outbound_shipping_time_day: number; // Int!
+    coupang_secret_key: string; // String!
+    coupang_union_delivery_type: string; // String!
+    coupang_vendor_id: string; // String!
     default_shipping_fee: number; // Int!
+    description_show_title: string; // String!
+    discount_amount: number | null; // Int
+    discount_unit_type: string | null; // String
+    esmplus_auction_id: string; // String!
+    esmplus_gmarket_id: string; // String!
+    esmplus_master_id: string; // String!
     exchange_shipping_fee: number; // Int!
+    extra_shipping_fee: number; // Int!
     fix_image_bottom: string | null; // String
     fix_image_top: string | null; // String
+    gmarket_fee: number; // Float!
+    interpark_cert_key: string; // String!
+    interpark_fee: number; // Float!
+    interpark_secret_key: string; // String!
+    lotteon_api_key: string; // String!
+    lotteon_fee: number; // Float!
+    lotteon_normal_fee: number; // Float!
+    lotteon_vendor_id: string; // String!
     margin_rate: number; // Float!
+    margin_unit_type: string | null; // String
     max_product_limit: number | null; // Int
+    naver_fee: number; // Float!
+    naver_origin: string; // String!
+    naver_origin_code: string; // String!
+    naver_store_only: string; // String!
+    naver_store_url: string; // String!
+    option_align_top: string; // String!
+    option_index_type: number; // Int!
+    option_twoways: string; // String!
     phone: string | null; // String
     product_collect_count: number; // Int!
     refund_shipping_fee: number; // Int!
+    street_api_key: string; // String!
+    street_default_inbound: string; // String!
+    street_default_outbound: string; // String!
+    street_fee: number; // Float!
+    street_normal_api_key: string; // String!
+    street_normal_fee: number; // Float!
+    street_normal_inbound: string | null; // String
+    street_normal_outbound: string | null; // String
+    street_seller_type: number; // Int!
+    tmon_fee: number; // Float!
+    tmon_id: string | null; // String
     user: NexusGenRootTypes['User']; // User!
     user_id: number; // Int!
+    wemakeprice_fee: number; // Float!
+    wemakeprice_id: string; // String!
   }
   UserLog: { // field return type
     created_at: NexusGenScalars['DateTime']; // DateTime!
@@ -1054,11 +1204,18 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     changeMyPasswordByAdmin: 'Boolean'
-    renewToken: 'SignInType'
+    changePasswordByUser: 'Boolean'
+    connectSocialIdByUser: 'User'
     requestPhoneVerificationByEveryone: 'Boolean'
+    setMaxProductLimitByAdmin: 'Boolean'
+    signInUserByEveryone: 'SignInType'
+    signOutUserByEveryone: 'String'
     signUpAdminByAdmin: 'Boolean'
+    signUpUserByEveryone: 'SignInType'
+    silentRefreshToken: 'SignInType'
     translateProductTextByUser: 'String'
     translateProductsTextByUser: 'String'
+    updatePhoneByUser: 'Boolean'
     verifyPhoneByEveryone: 'Int'
   }
   PhoneVerification: { // field return type name
@@ -1113,6 +1270,9 @@ export interface NexusGenFieldTypeNames {
     user_id: 'Int'
   }
   Query: { // field return type name
+    selectMyInfoByUser: 'User'
+    selectUsersByAdmin: 'User'
+    selectUsersCountByAdmin: 'Int'
     translateText: 'String'
     whoami: 'String'
   }
@@ -1122,6 +1282,7 @@ export interface NexusGenFieldTypeNames {
   }
   User: { // field return type name
     created_at: 'DateTime'
+    created_token: 'DateTime'
     email: 'String'
     id: 'Int'
     kakao_id: 'String'
@@ -1135,20 +1296,72 @@ export interface NexusGenFieldTypeNames {
     user_log: 'UserLog'
   }
   UserInfo: { // field return type name
+    additional_shipping_fee_jeju: 'Int'
     as_information: 'String'
     as_tel: 'String'
+    auction_fee: 'Float'
     cny_rate: 'Float'
+    collect_stock: 'Int'
+    collect_timeout: 'Int'
+    coupang_access_key: 'String'
+    coupang_default_inbound: 'String'
+    coupang_default_outbound: 'String'
+    coupang_fee: 'Float'
+    coupang_image_opt: 'String'
+    coupang_login_id: 'String'
+    coupang_maximum_buy_for_person: 'Int'
+    coupang_outbound_shipping_time_day: 'Int'
+    coupang_secret_key: 'String'
+    coupang_union_delivery_type: 'String'
+    coupang_vendor_id: 'String'
     default_shipping_fee: 'Int'
+    description_show_title: 'String'
+    discount_amount: 'Int'
+    discount_unit_type: 'String'
+    esmplus_auction_id: 'String'
+    esmplus_gmarket_id: 'String'
+    esmplus_master_id: 'String'
     exchange_shipping_fee: 'Int'
+    extra_shipping_fee: 'Int'
     fix_image_bottom: 'String'
     fix_image_top: 'String'
+    gmarket_fee: 'Float'
+    interpark_cert_key: 'String'
+    interpark_fee: 'Float'
+    interpark_secret_key: 'String'
+    lotteon_api_key: 'String'
+    lotteon_fee: 'Float'
+    lotteon_normal_fee: 'Float'
+    lotteon_vendor_id: 'String'
     margin_rate: 'Float'
+    margin_unit_type: 'String'
     max_product_limit: 'Int'
+    naver_fee: 'Float'
+    naver_origin: 'String'
+    naver_origin_code: 'String'
+    naver_store_only: 'String'
+    naver_store_url: 'String'
+    option_align_top: 'String'
+    option_index_type: 'Int'
+    option_twoways: 'String'
     phone: 'String'
     product_collect_count: 'Int'
     refund_shipping_fee: 'Int'
+    street_api_key: 'String'
+    street_default_inbound: 'String'
+    street_default_outbound: 'String'
+    street_fee: 'Float'
+    street_normal_api_key: 'String'
+    street_normal_fee: 'Float'
+    street_normal_inbound: 'String'
+    street_normal_outbound: 'String'
+    street_seller_type: 'Int'
+    tmon_fee: 'Float'
+    tmon_id: 'String'
     user: 'User'
     user_id: 'Int'
+    wemakeprice_fee: 'Float'
+    wemakeprice_id: 'String'
   }
   UserLog: { // field return type name
     created_at: 'DateTime'
@@ -1176,16 +1389,42 @@ export interface NexusGenArgTypes {
       currentPassword: string; // String!
       newPassword: string; // String!
     }
-    renewToken: { // args
-      accessToken: string; // String!
-      refreshToken: string; // String!
+    changePasswordByUser: { // args
+      currentPassword: string; // String!
+      newPassword: string; // String!
+    }
+    connectSocialIdByUser: { // args
+      socialId: string; // String!
+      userType: NexusGenEnums['UserSocialType']; // UserSocialType!
     }
     requestPhoneVerificationByEveryone: { // args
       phoneNumber: string; // String!
     }
+    setMaxProductLimitByAdmin: { // args
+      productLimit?: number | null; // Int
+      userId: number; // Int!
+    }
+    signInUserByEveryone: { // args
+      email: string; // String!
+      password: string; // String!
+      userType: NexusGenEnums['UserSocialType']; // UserSocialType!
+    }
+    signOutUserByEveryone: { // args
+      accessToken: string; // String!
+    }
     signUpAdminByAdmin: { // args
       id: string; // String!
       password: string; // String!
+    }
+    signUpUserByEveryone: { // args
+      email: string; // String!
+      password: string; // String!
+      phone: string; // String!
+      verificationId: number; // Int!
+    }
+    silentRefreshToken: { // args
+      accessToken: string; // String!
+      refreshToken: string; // String!
     }
     translateProductTextByUser: { // args
       id: number; // Int!
@@ -1195,12 +1434,26 @@ export interface NexusGenArgTypes {
       ids: number[]; // [Int!]!
       type: NexusGenEnums['TranslateTargetEnumType']; // TranslateTargetEnumType!
     }
+    updatePhoneByUser: { // args
+      phone: string; // String!
+      verificationId: number; // Int!
+    }
     verifyPhoneByEveryone: { // args
       phoneNumber: string; // String!
       verificationNumber: string; // String!
     }
   }
   Query: {
+    selectUsersByAdmin: { // args
+      cursor?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
+      orderBy?: NexusGenInputs['UserOrderByWithRelationInput'][] | null; // [UserOrderByWithRelationInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    }
+    selectUsersCountByAdmin: { // args
+      where?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    }
     translateText: { // args
       engine: NexusGenEnums['TranslateEngineEnumType']; // TranslateEngineEnumType!
       text: string; // String!
@@ -1255,7 +1508,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: Context;
+  context: test;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;

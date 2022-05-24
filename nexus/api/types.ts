@@ -6,6 +6,7 @@ import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { IncomingMessage } from 'http'
 
 export { FileUpload } from "graphql-upload";
+
 export interface Context {
     prisma: PrismaClient
     req: Request
@@ -28,7 +29,7 @@ interface PermissionAdditionalInfo {
     type: 'IMAGE_TRANSLATE' | 'STOCK';
     exp: number;
 }
-
+//Token 인증시 return해서 받아올 값 정의 ,, 즉 Token생성시 payload값들 
 export interface Token {
     userId?: number;
     adminId?: number;
@@ -37,6 +38,7 @@ export interface Token {
     additionalPerm?: PermissionAdditionalInfo[];
     iat: number;
     exp: number;
+    type? : string;
     //aud: string;
 }
 

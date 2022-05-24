@@ -14,12 +14,14 @@ datasource db {
 }
 
 model Admin {
-  id         Int        @id @default(autoincrement())
-  login_id   String     @unique @db.VarChar(50)
-  password   String     @db.VarChar(60)
-  state      AdminState
-  created_at DateTime   @default(now()) @db.DateTime(0)
-  product    Product[]  @relation("adminToproduct")
+  id            Int        @id @default(autoincrement())
+  login_id      String     @unique @db.VarChar(50)
+  password      String     @db.VarChar(60)
+  state         AdminState
+  created_at    DateTime   @default(now()) @db.DateTime(0)
+  token         String?    @db.VarChar(4000)
+  created_token DateTime?  @db.DateTime(0)
+  product       Product[]  @relation("adminToproduct")
 
   @@map("admin")
 }
@@ -185,17 +187,19 @@ model TaobaoProduct {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique @db.VarChar(50)
-  password     String        @db.VarChar(60)
-  state        UserState
-  naver_id     String?       @unique @db.VarChar(10)
-  kakao_id     String?       @unique @db.VarChar(12)
-  created_at   DateTime      @default(now()) @db.DateTime(0)
-  product      Product[]     @relation("userToproduct")
-  purchase_log PurchaseLog[] @relation("purchase_logTouser")
-  user_info    UserInfo?     @relation("userTouserinfo")
-  user_log     UserLog[]     @relation("userTouserlog")
+  id            Int           @id @default(autoincrement())
+  email         String        @unique @db.VarChar(50)
+  password      String        @db.VarChar(60)
+  state         UserState
+  naver_id      String?       @unique @db.VarChar(10)
+  kakao_id      String?       @unique @db.VarChar(12)
+  created_at    DateTime      @default(now()) @db.DateTime(0)
+  token         String?       @db.VarChar(4000)
+  created_token DateTime?     @db.DateTime(0)
+  product       Product[]     @relation("userToproduct")
+  purchase_log  PurchaseLog[] @relation("purchase_logTouser")
+  user_info     UserInfo?     @relation("userTouserinfo")
+  user_log      UserLog[]     @relation("userTouserlog")
 
   @@map("user")
 }
@@ -326,7 +330,7 @@ enum AdminState {
   ACTIVE
   DELETED
 
-  @@map("admin_state")
+   @@map("admin_state")
 }
 
 enum ProductState {
@@ -336,14 +340,14 @@ enum ProductState {
   UPLOAD_FAILED
   SELL_DONE
 
-  @@map("product_state")
+   @@map("product_state")
 }
 
 enum UserState {
   ACTIVE
   DELETED
 
-  @@map("user_state")
+   @@map("user_state")
 }
 
 enum PurchaseLogState {
@@ -353,7 +357,7 @@ enum PurchaseLogState {
   ENDED
   REFUNDED
 
-  @@map("purchase_log_state")
+   @@map("purchase_log_state")
 }
 
 enum PurchaseLogType {
@@ -361,5 +365,5 @@ enum PurchaseLogType {
   IMAGE_TRANSLATE
   STOCK
 
-  @@map("purchase_log_type")
+   @@map("purchase_log_type")
 }
