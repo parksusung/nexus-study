@@ -24,6 +24,7 @@
     "date-fns": "^2.28.0",
     "deepmerge": "^4.2.2",
     "graphql": "^15.5.0",
+    "graphql-middleware": "^6.0.10",
     "graphql-redis-subscriptions": "^2.4.2",
     "graphql-scalars": "^1.9.3",
     "graphql-shield": "^7.5.0",
