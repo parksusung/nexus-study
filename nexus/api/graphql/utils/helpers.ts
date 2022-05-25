@@ -103,7 +103,7 @@ export const createContext = (ctx: any): Context => {
     }
 }
 
-//accessToken기준 refresh Token으로하면 에러남 양식바꿔서 
+//accessToken을 보낼때 기준. refresh Token으로하면 에러남 양식바꿔서 통신은 accessToken으로만 하는게 보안상 맞기때문에 상관 x 
 export const getModifierString = (token: Token | null) => {
     if (token?.userId) return `User ${token.userId}`;
     else if (token?.adminId) return `Admin ${token.adminId}`;

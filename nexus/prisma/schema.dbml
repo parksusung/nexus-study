@@ -8,7 +8,7 @@ Table Admin {
   password String [not null]
   state AdminState [not null]
   created_at DateTime [default: `now()`, not null]
-  token String
+  token String [unique]
   created_token DateTime
   product Product [not null]
 }
@@ -168,7 +168,7 @@ Table User {
   naver_id String [unique]
   kakao_id String [unique]
   created_at DateTime [default: `now()`, not null]
-  token String
+  token String [unique]
   created_token DateTime
   product Product [not null]
   purchase_log PurchaseLog [not null]

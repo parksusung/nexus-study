@@ -19,7 +19,7 @@ model Admin {
   password      String     @db.VarChar(60)
   state         AdminState
   created_at    DateTime   @default(now()) @db.DateTime(0)
-  token         String?    @db.VarChar(4000)
+  token         String?    @unique @db.VarChar(700)
   created_token DateTime?  @db.DateTime(0)
   product       Product[]  @relation("adminToproduct")
 
@@ -194,7 +194,7 @@ model User {
   naver_id      String?       @unique @db.VarChar(10)
   kakao_id      String?       @unique @db.VarChar(12)
   created_at    DateTime      @default(now()) @db.DateTime(0)
-  token         String?       @db.VarChar(4000)
+  token         String?       @unique @db.VarChar(700)
   created_token DateTime?     @db.DateTime(0)
   product       Product[]     @relation("userToproduct")
   purchase_log  PurchaseLog[] @relation("purchase_logTouser")

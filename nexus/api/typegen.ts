@@ -798,6 +798,7 @@ export interface NexusGenInputs {
     id?: number | null; // Int
     kakao_id?: string | null; // String
     naver_id?: string | null; // String
+    token?: string | null; // String
   }
 }
 
@@ -1423,7 +1424,6 @@ export interface NexusGenArgTypes {
       verificationId: number; // Int!
     }
     silentRefreshToken: { // args
-      accessToken: string; // String!
       refreshToken: string; // String!
     }
     translateProductTextByUser: { // args

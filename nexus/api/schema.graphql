@@ -204,7 +204,7 @@ type Mutation {
   signOutUserByEveryone(accessToken: String!): String!
   signUpAdminByAdmin(id: String!, password: String!): Boolean!
   signUpUserByEveryone(email: String!, password: String!, phone: String!, verificationId: Int! = 0): SignInType!
-  silentRefreshToken(accessToken: String!, refreshToken: String!): SignInType
+  silentRefreshToken(refreshToken: String!): SignInType
   translateProductTextByUser(id: Int!, type: TranslateTargetEnumType!): String!
   translateProductsTextByUser(ids: [Int!]!, type: TranslateTargetEnumType!): String!
   updatePhoneByUser(phone: String!, verificationId: Int!): Boolean!
@@ -1124,4 +1124,5 @@ input UserWhereUniqueInput {
   id: Int
   kakao_id: String
   naver_id: String
+  token: String
 }

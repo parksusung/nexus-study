@@ -13,11 +13,12 @@ const agent = new HTTP.Agent({
 });
 
 export const S3Client = new S3({
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    params: { Bucket: AWS_BUCKET },
+    accessKeyId: process.env.AWS_ACCESS_KEY,//ID
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,//PASSWORD
+    params: { Bucket: AWS_BUCKET },//AWS_BUCKET = sellforyou ; 내가만든건 parksuseong
     region: 'ap-northeast-2',
     ...(isDev() ? { // minio용 설정
+        
         endpoint: S3ADDRESS,
         s3ForcePathStyle: true,
         signatureVersion: 'v4',
