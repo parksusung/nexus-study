@@ -9,6 +9,9 @@ export * from './user'
 export * from './admin'
 export * from './product'
 export * from './purchase'
+export * from './category'
+export * from './taobao_product'
+
 
 export * from './auth'
 export * from './enum'

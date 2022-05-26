@@ -4,19 +4,19 @@ import { AWS_BUCKET, isDev, regexPattern } from './constants';
 import { errors, throwError } from "./error";
 import * as HTTP from 'http'
 
-export const S3ADDRESS = "http://localhost:9000";
-export const EXTERNAL_S3_ADDRESS = "https://img.sellforyou.co.kr/sellforyou";
+export const S3ADDRESS = "http://localhost:9000"; //endpoing
+export const EXTERNAL_S3_ADDRESS = "https://img.sellforyou.co.kr/sellforyoutest";
 
 const agent = new HTTP.Agent({
     // Infinity is read as 50 sockets
     maxSockets: Infinity,
 });
-
+//s3 사용하기위한 셋팅이네 그냥 
 export const S3Client = new S3({
     accessKeyId: process.env.AWS_ACCESS_KEY,//ID
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,//PASSWORD
     params: { Bucket: AWS_BUCKET },//AWS_BUCKET = sellforyou ; 내가만든건 parksuseong
-    region: 'ap-northeast-2',
+    region: 'ap-northeast-2',//region설정 
     ...(isDev() ? { // minio용 설정
         
         endpoint: S3ADDRESS,
@@ -57,17 +57,19 @@ export const uploadToS3 = async (file: FileUpload, path: (string | number)[] = [
         url: response.Key
     }
 }
-
+//headObject는 객체가있는지 확인하는 AWS S3 모듈이다. 
 export const checkFileExistAtS3 = async (Key: string): Promise<boolean> => {
     return await S3Client.headObject({ Key, Bucket: AWS_BUCKET, }).promise().then(() => true).catch(() => false);
 }
+//getObject는 해당 bucket에서 key에 해당하는 애를 받아오는것 
 export const getFromS3 = async (Key: string) => {
     return await S3Client.getObject({ Key, Bucket: AWS_BUCKET, }).promise();
 }
+//object 삭제인듯 그냥 
 export const deleteFromS3 = async (Key: string): Promise<boolean> => {
     return await S3Client.deleteObject({ Key, Bucket: AWS_BUCKET }).promise().then(result => result.$response.error ? false : true).catch(() => false);
 }
-
+//s3에 업로드하는 로직인듯 todo 보는중 
 export const uploadToS3AvoidDuplicate = async (pfile: FileUpload, pathArray: (string | number)[], fileNameExcludeExtension?: string) => {
     const file = await pfile;
     let filename = fileNameExcludeExtension ? fileNameExcludeExtension + file.filename.replace(regexPattern.fileNameAndExtension, ".$2") : file.filename;
