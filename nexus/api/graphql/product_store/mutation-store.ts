@@ -1,7 +1,7 @@
 import { extendType, intArg, list, nonNull, stringArg } from "nexus";
-import { errors, throwError } from "../../utils/error";
-import { copyProductsToUser } from "..";
-import { shopDataUrlInfo } from "../../playauto_api_type";
+import { errors, throwError } from "../utils/error";
+// import { copyProductsToUser } from "..";
+// import { shopDataUrlInfo } from "../../playauto_api_type";
 import fetch from "node-fetch";
 
 const endpoint_kooza = "http://www.sellforyou.co.kr:3001/api/"

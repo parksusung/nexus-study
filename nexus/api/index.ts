@@ -1,5 +1,8 @@
-import {server} from './app'
+import {http} from './app'
 
-server.listen().then(({url}) => {
-    console.log(`🚀 Server ready at ${url}`)
+// const PORT = process.env.PORT || 4000
+const PORT = 4000
+http.listen(PORT, () => {
+    console.log(`🚀 GraphQL service ready at http://localhost:${PORT}/graphql`)
 })
+
