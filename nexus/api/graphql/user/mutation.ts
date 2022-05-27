@@ -313,6 +313,29 @@ export const mutation_user = extendType({
                 }
             }
         });
+        t.field("updateMyImageByUser", {
+            type: nonNull("Boolean"),
+            args: {
+                fixImageTop: stringArg(),
+                fixImageBottom: stringArg(),
+            },
+            resolve: async (src, args, ctx, info) => {
+                try {
+                    console.log("fixImageTop",args.fixImageTop);
+                    await ctx.prisma.userInfo.update({
+                        where: { userId: ctx.token!.userId! },
+                        data: {
+                            fixImageTop: args.fixImageTop && /^https?:/.test(args.fixImageTop) ? args.fixImageTop : undefined,
+                            fixImageBottom: args.fixImageBottom && /^https?:/.test(args.fixImageBottom) ? args.fixImageBottom : undefined,
+                        }
+                    });
+
+                    return true;
+                } catch (e) {
+                    return throwError(e, ctx);
+                }
+            }
+        });
         t.field("updateMyDataByUser", {//todo error
             type: nonNull("Boolean"),
             args: {
@@ -382,18 +405,20 @@ export const mutation_user = extendType({
                 try {
                     if ((args.marginRate ?? 1) < 0) return throwError(errors.etc("마진율은 음수일 수 없습니다."), ctx);
                     if ((args.defaultShippingFee ?? 1) < 0) return throwError(errors.etc("기본 해외배송비는 음수일 수 없습니다."), ctx);
-
+                    
                     args.marginRate = args.marginRate ?? undefined;
                     args.defaultShippingFee = args.defaultShippingFee ?? undefined;
                     args.cnyRate = args.cnyRate ?? undefined;
+                    console.log("topImage",args.fixImageTop);
 
                     let fixImageTop: string | null | undefined = args.fixImageTop ? "" : args.fixImageTop;
                     let fixImageBottom: string | null | undefined = args.fixImageBottom ? "" : args.fixImageBottom;
 
                     if (args.fixImageTop) {
-                        fixImageTop = (await uploadToS3(args.fixImageTop, ["user", ctx.token!.userId!, "info"],)).url;
+                        fixImageTop = (await uploadToS3(args.fixImageTop, ["user", ctx.token!.userId!, "info"])).url;//db에 user/유저아디(352)/info/top.jpg
                     }
 
+                    
                     if (args.fixImageBottom) {
                         fixImageBottom = (await uploadToS3(args.fixImageBottom, ["user", ctx.token!.userId!, "info"])).url;
                     }
@@ -405,7 +430,7 @@ export const mutation_user = extendType({
                     asInformation && validateStringLength(ctx, asInformation, 1000, "A/S 안내내용");
 
                     await ctx.prisma.userInfo.update({
-                        where: { userId: ctx.token!.userId! },
+                        where: { user_id: ctx.token!.userId! },
                         data: {
                             margin_rate: args.marginRate,
                             default_shipping_fee: args.defaultShippingFee,
@@ -459,7 +484,7 @@ export const mutation_user = extendType({
                             tmon_id: args.tmonId ?? undefined,
                             tmon_fee: args.tmonFee ?? undefined,
                             option_align_top: args.optionAlignTop ?? undefined,
-                            option_two_ways: args.optionTwoWays ?? undefined,
+                            option_twoways: args.optionTwoWays ?? undefined,
                             option_index_type: args.optionIndexType ?? undefined,
                             discount_amount: args.discountAmount ?? undefined,
                             discount_unit_type: args.discountUnitType ?? undefined,

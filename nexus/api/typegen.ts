@@ -1291,6 +1291,7 @@ export interface NexusGenFieldTypes {
     translateProductTextByUser: string; // String!
     translateProductsTextByUser: string; // String!
     updateMyDataByUser: boolean; // Boolean!
+    updateMyImageByUser: boolean; // Boolean!
     updatePhoneByUser: boolean; // Boolean!
     verifyPhoneByEveryone: number; // Int!
   }
@@ -1636,6 +1637,7 @@ export interface NexusGenFieldTypeNames {
     translateProductTextByUser: 'String'
     translateProductsTextByUser: 'String'
     updateMyDataByUser: 'Boolean'
+    updateMyImageByUser: 'Boolean'
     updatePhoneByUser: 'Boolean'
     verifyPhoneByEveryone: 'Int'
   }
@@ -2026,6 +2028,10 @@ export interface NexusGenArgTypes {
       tmonId?: string | null; // String
       wemakepriceFee?: number | null; // Float
       wemakepriceId?: string | null; // String
+    }
+    updateMyImageByUser: { // args
+      fixImageBottom?: string | null; // String
+      fixImageTop?: string | null; // String
     }
     updatePhoneByUser: { // args
       phone: string; // String!

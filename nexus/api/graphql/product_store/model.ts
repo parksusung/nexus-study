@@ -1,6 +1,6 @@
 import { objectType } from "nexus";
 import { shopDataUrlInfo } from "../../playauto_api_type";
-import { throwError } from "../../utils/error";
+import { throwError } from "../utils/error";
 
 
 export const t_ProductStore = objectType({

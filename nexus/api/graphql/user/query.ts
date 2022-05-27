@@ -8,7 +8,11 @@ export const query_user = extendType({
             type: nonNull("User"),
             resolve: async (src, args, ctx, info) => {
                 try {
-                    return (await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! } }))!;//front에서 access Token 보내도록 (수성 )
+                    // console.log("test",ctx.token);
+                    const test =   await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! } })
+                    // console.log("selectMyInfoByUser",test);
+                    return (test)!;//front에서 access Token 보내도록 (수성 )
+                    
                 } catch (e) {
                     return throwError(e, ctx);
                 }

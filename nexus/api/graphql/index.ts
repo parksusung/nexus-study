@@ -35,7 +35,6 @@ export const query_etc = extendType({
                 try {
                     // if (!isDev()) return throwError(errors.notAuthenticated, ctx);
                     if (isDev()) return getModifierString(ctx.token);
-
                     if (ctx.token?.userId) return `User`;
                     else if (ctx.token?.adminId) return `Admin`;
                     else return "Unknown";

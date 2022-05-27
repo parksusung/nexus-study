@@ -4,8 +4,8 @@ import { AWS_BUCKET, isDev, regexPattern } from './constants';
 import { errors, throwError } from "./error";
 import * as HTTP from 'http'
 
-export const S3ADDRESS = "http://localhost:9000"; //endpoing
-export const EXTERNAL_S3_ADDRESS = "https://img.sellforyou.co.kr/sellforyoutest";
+export const S3ADDRESS = "http://localhost:2000"; //endpoing
+export const EXTERNAL_S3_ADDRESS = "https://img.sellforyou.co.kr/sellforyoutesttest";
 
 const agent = new HTTP.Agent({
     // Infinity is read as 50 sockets
@@ -45,11 +45,12 @@ export const uploadToS3 = async (file: FileUpload, path: (string | number)[] = [
     const stream = createReadStream();
 
     const response = await S3Client.upload({
-        Key: path.join("/"),
-        ACL: 'public-read',
-        Body: stream,
-        ContentType: mimetype,
-        Bucket: AWS_BUCKET,
+        Key: path.join("/"),//파일 저장 경로 
+        ACL: 'public-read',//권한 정보
+        Body: stream,//보낼 파일 스트림
+
+        ContentType: mimetype,//컨텐츠 타입
+        Bucket: AWS_BUCKET,//버킷이름
     }).promise();
 
     return {
@@ -57,6 +58,7 @@ export const uploadToS3 = async (file: FileUpload, path: (string | number)[] = [
         url: response.Key
     }
 }
+
 //headObject는 객체가있는지 확인하는 AWS S3 모듈이다. 
 export const checkFileExistAtS3 = async (Key: string): Promise<boolean> => {
     return await S3Client.headObject({ Key, Bucket: AWS_BUCKET, }).promise().then(() => true).catch(() => false);
