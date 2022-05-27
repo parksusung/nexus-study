@@ -24,6 +24,16 @@ export const t_token = objectType({
         t.nonNull.string("refreshToken");
     }
 })
+//graphql에서 formdata를 보낼때 upload가 안되는경우 이렇게 scalar를 정의해두어서 에러 해결함.
+export const Upload = decorateType(GraphQLUpload, {
+    sourceType: "FileUpload",
+    asNexusMethod: "upload",
+});
+
+export const DateTime = decorateType(DateTimeResolver, {
+    sourceType: "Date",
+    asNexusMethod: "date",
+});
 
 
 export const query_etc = extendType({
@@ -46,12 +56,3 @@ export const query_etc = extendType({
     }
 });
 
-
-export const Upload = decorateType(GraphQLUpload, {
-    sourceType: "FileUpload",
-    asNexusMethod: "upload",
-});
-export const DateTime = decorateType(DateTimeResolver, {
-    sourceType: "Date",
-    asNexusMethod: "date",
-});
