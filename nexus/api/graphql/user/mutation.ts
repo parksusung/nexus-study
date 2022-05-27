@@ -323,10 +323,10 @@ export const mutation_user = extendType({
                 try {
                     console.log("fixImageTop",args.fixImageTop);
                     await ctx.prisma.userInfo.update({
-                        where: { userId: ctx.token!.userId! },
+                        where: { user_id: ctx.token!.userId! },
                         data: {
-                            fixImageTop: args.fixImageTop && /^https?:/.test(args.fixImageTop) ? args.fixImageTop : undefined,
-                            fixImageBottom: args.fixImageBottom && /^https?:/.test(args.fixImageBottom) ? args.fixImageBottom : undefined,
+                            fix_image_top: args.fixImageTop && /^https?:/.test(args.fixImageTop) ? args.fixImageTop : undefined,//ReqExp test() method는 문자열이 일치하면 true 아니면 false반환하는 함수 
+                            fix_image_bottom: args.fixImageBottom && /^https?:/.test(args.fixImageBottom) ? args.fixImageBottom : undefined,//즉 https로 시작하는지 여부를 보는거같다.
                         }
                     });
 
@@ -418,7 +418,8 @@ export const mutation_user = extendType({
                         fixImageTop = (await uploadToS3(args.fixImageTop, ["user", ctx.token!.userId!, "info"])).url;//db에 user/유저아디(352)/info/top.jpg
                     }
 
-                    
+
+
                     if (args.fixImageBottom) {
                         fixImageBottom = (await uploadToS3(args.fixImageBottom, ["user", ctx.token!.userId!, "info"])).url;
                     }

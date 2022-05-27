@@ -10,7 +10,7 @@ export const query_user = extendType({
                 try {
                     // console.log("test",ctx.token);
                     const test =   await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! } })
-                    // console.log("selectMyInfoByUser",test);
+                    console.log("selectMyInfoByUser",test);
                     return (test)!;//front에서 access Token 보내도록 (수성 )
                     
                 } catch (e) {

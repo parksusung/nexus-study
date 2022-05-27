@@ -4,8 +4,8 @@ import { AWS_BUCKET, isDev, regexPattern } from './constants';
 import { errors, throwError } from "./error";
 import * as HTTP from 'http'
 
-export const S3ADDRESS = "http://localhost:2000"; //endpoing
-export const EXTERNAL_S3_ADDRESS = "https://img.sellforyou.co.kr/sellforyoutesttest";
+export const S3ADDRESS = "http://118.35.126.70:2000"; //endpoing  원래는 http://localhost:9000 
+export const EXTERNAL_S3_ADDRESS = "http://118.35.126.70:2000/sellforyou";//image 버킷 주소 원래 https://img.sellforyou.co.kr/sellforyou/ (아마 포트 3000, 3001) 쓸듯 
 
 const agent = new HTTP.Agent({
     // Infinity is read as 50 sockets
@@ -58,6 +58,7 @@ export const uploadToS3 = async (file: FileUpload, path: (string | number)[] = [
         url: response.Key
     }
 }
+
 
 //headObject는 객체가있는지 확인하는 AWS S3 모듈이다. 
 export const checkFileExistAtS3 = async (Key: string): Promise<boolean> => {

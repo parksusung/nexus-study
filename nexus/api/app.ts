@@ -56,12 +56,6 @@ server.installSubscriptionHandlers(http)
 // })
 // runScheduler();
 
-// import { GraphQLUpload } from "graphql-upload";
-
-// export const Upload = decorateType(GraphQLUpload, {
-//     sourceType: "Promise<FileUpload>",
-//     asNexusMethod: "upload",
-// });
 const PORT = 4000
 http.listen(PORT, () => {
     console.log(`🚀 GraphQL service ready at http://localhost:${PORT}/graphql`)
