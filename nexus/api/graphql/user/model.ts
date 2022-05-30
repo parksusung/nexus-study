@@ -29,6 +29,8 @@ export const getPurchaseInfo = async (prisma: PrismaClient, userId: number): Pro
 export const t_User = objectType({
   name: "User",
   definition(t) {
+    t.model.token();
+    t.model.created_token();
     t.model.id();
     t.model.email();
     t.field("password", {

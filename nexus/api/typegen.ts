@@ -1341,6 +1341,7 @@ export interface NexusGenObjects {
     kakao_id?: string | null; // String
     naver_id?: string | null; // String
     state: NexusGenEnums['UserState']; // UserState!
+    token?: string | null; // String
   }
   UserInfo: { // root type
     additional_shipping_fee_jeju: number; // Int!
@@ -1747,6 +1748,7 @@ export interface NexusGenFieldTypes {
     productCount: number; // Int!
     purchaseInfo: NexusGenRootTypes['UserPurchaseInfo']; // UserPurchaseInfo!
     state: NexusGenEnums['UserState']; // UserState!
+    token: string | null; // String
     user_info: NexusGenRootTypes['UserInfo'] | null; // UserInfo
     user_log: NexusGenRootTypes['UserLog'][]; // [UserLog!]!
   }
@@ -2147,6 +2149,7 @@ export interface NexusGenFieldTypeNames {
     productCount: 'Int'
     purchaseInfo: 'UserPurchaseInfo'
     state: 'UserState'
+    token: 'String'
     user_info: 'UserInfo'
     user_log: 'UserLog'
   }

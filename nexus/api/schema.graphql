@@ -1274,6 +1274,7 @@ type User {
   productCount: Int!
   purchaseInfo: UserPurchaseInfo!
   state: UserState!
+  token: String
   user_info: UserInfo
   user_log(cursor: UserLogWhereUniqueInput, orderBy: [UserLogOrderByWithRelationInput!], skip: Int, take: Int, where: UserLogWhereInput): [UserLog!]!
 }
