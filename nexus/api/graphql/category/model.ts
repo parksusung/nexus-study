@@ -19,26 +19,26 @@ export const t_Category = objectType({
     }
 });
 
-// export const t_CategoryStore = objectType({
-//     name: "CategoryStore",
-//     definition(t) {
-//         t.model.id();
-//         t.model.acode();
-//         t.model.pcode();
-//         t.model.ccode();
-//         t.model.dc1();
-//         t.model.dc2();
-//         t.model.dc3();
-//         t.model.dc4();
-//         t.model.dc1Name();
-//         t.model.dc2Name();
-//         t.model.dc3Name();
-//         t.model.dc4Name();
-//         t.model.state();
-//         t.model.cateStatePdate();
-//         t.model.cateStateCdate();
-//     }
-// });
+export const t_CategoryStore = objectType({
+    name: "CategoryStore",
+    definition(t) {
+        t.model.id();
+        t.model.acode();
+        t.model.pcode();
+        t.model.ccode();
+        t.model.dc1();
+        t.model.dc2();
+        t.model.dc3();
+        t.model.dc4();
+        t.model.dc1_name();
+        t.model.dc2_name();
+        t.model.dc3_name();
+        t.model.dc4_name();
+        t.model.state();
+        t.model.cate_state_pdate();
+        t.model.cate_state_cdate();
+    }
+});
 
 export const t_CategoryPartialType = objectType({
     name: "CategorySelectType",

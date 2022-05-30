@@ -112,6 +112,30 @@ type CategorySelectType {
   name: String!
 }
 
+type CategoryStore {
+  acode: String!
+  cate_state_cdate: DateTime
+  cate_state_pdate: DateTime
+  ccode: String!
+  dc1: String!
+  dc1_name: String!
+  dc2: String!
+  dc2_name: String!
+  dc3: String!
+  dc3_name: String!
+  dc4: String!
+  dc4_name: String!
+  id: Int!
+  pcode: String!
+  state: CategoryStoreState!
+}
+
+enum CategoryStoreState {
+  CHANGE
+  DELETE
+  NORMAL
+}
+
 input CategoryWhereInput {
   AND: [CategoryWhereInput!]
   NOT: [CategoryWhereInput!]
@@ -131,6 +155,12 @@ input CategoryWhereInput {
   id: IntFilter
   product: ProductListRelationFilter
   siil_code: StringFilter
+}
+
+input CategoryWhereUniqueInput {
+  a077_code: String
+  code: String
+  id: Int
 }
 
 """
@@ -239,12 +269,19 @@ type Mutation {
   changeMyPasswordByAdmin(currentPassword: String!, newPassword: String!): Boolean!
   changePasswordByUser(currentPassword: String!, newPassword: String!): Boolean!
   connectSocialIdByUser(socialId: String!, userType: UserSocialType!): User!
+  deleteProductByAdmin(productId: Int!): Boolean!
+  deleteProductByUser(productId: Int!): Boolean!
+  disableUserOption(id: Int!): Boolean!
+  endProductSellStateByAdmin(productIds: [Int!]!): Int!
+  endProductSellStateByUser(productIds: [Int!]!): Int!
+  initProductImageByUser(productId: Int!): String
   requestPhoneVerificationByEveryone(phoneNumber: String!): Boolean!
   setMaxProductLimitByAdmin(
     """미설정시 무제한"""
     productLimit: Int
     userId: Int!
   ): Boolean!
+  setVisibleStateToProductOptionValueBySomeone(isActive: Boolean!, productOptionValueId: Int!): Boolean!
   signInUserByEveryone(
     email: String!
 
@@ -256,11 +293,49 @@ type Mutation {
   signUpAdminByAdmin(id: String!, password: String!): Boolean!
   signUpUserByEveryone(email: String!, password: String!, phone: String!, verificationId: Int! = 0): SignInType!
   silentRefreshToken(refreshToken: String!): SignInType
+  transferProductsToUserByAdmin(productIds: [Int!]!, targetUserId: Int!): String!
   translateProductTextByUser(id: Int!, type: TranslateTargetEnumType!): String!
   translateProductsTextByUser(ids: [Int!]!, type: TranslateTargetEnumType!): String!
+  updateManyProductCategoryByAdmin(categoryA001: String, categoryA001Name: String, categoryA006: String, categoryA006Name: String, categoryA027: String, categoryA027Name: String, categoryA077: String, categoryA077Name: String, categoryA112: String, categoryA112Name: String, categoryB378: String, categoryB378Name: String, productIds: [Int!]!): Int!
+  updateManyProductCategoryByUser(categoryA001: String, categoryA001Name: String, categoryA006: String, categoryA006Name: String, categoryA027: String, categoryA027Name: String, categoryA077: String, categoryA077Name: String, categoryA112: String, categoryA112Name: String, categoryA113: String, categoryA113Name: String, categoryA524: String, categoryA524Name: String, categoryA525: String, categoryA525Name: String, categoryB378: String, categoryB378Name: String, categoryB719: String, categoryB719Name: String, categoryB956: String, categoryB956Name: String, productIds: [Int!]!): Int!
+  updateManyProductNameByUser(body: String, head: String, productIds: [Int!]!, tail: String): String!
+  updateManyProductSiilInfoByAdmin(productIds: [Int!]!, siilCode: String!): Int!
+  updateManyProductSiilInfoByUser(productIds: [Int!]!, siilCode: String!): Int!
+  updateManyProductTagByUser(productIds: [Int!]!, searchTags: String!): String!
   updateMyDataByUser(additionalShippingFeeJeju: Int, asInformation: String, asTel: String, auctionFee: Float, cnyRate: Float, collectStock: Int, collectTimeout: Int, coupangAccessKey: String, coupangDefaultInbound: String, coupangDefaultOutbound: String, coupangFee: Float, coupangImageOpt: String, coupangLoginId: String, coupangMaximumBuyForPerson: Int, coupangOutboundShippingTimeDay: Int, coupangSecretKey: String, coupangUnionDeliveryType: String, coupangVendorId: String, defaultShippingFee: Int, descriptionShowTitle: String, discountAmount: Int, discountUnitType: String, esmplusAuctionId: String, esmplusGmarketId: String, esmplusMasterId: String, exchangeShippingFee: Int, extraShippingFee: Int, fixImageBottom: Upload, fixImageTop: Upload, gmarketFee: Float, interparkCertKey: String, interparkFee: Float, interparkSecretKey: String, lotteonApiKey: String, lotteonFee: Float, lotteonNormalFee: Float, lotteonVendorId: String, marginRate: Float, marginUnitType: String, naverFee: Float, naverOrigin: String, naverOriginCode: String, naverStoreOnly: String, naverStoreUrl: String, optionAlignTop: String, optionIndexType: Int, optionTwoWays: String, refundShippingFee: Int, streetApiKey: String, streetDefaultInbound: String, streetDefaultOutbound: String, streetFee: Float, streetNormalApiKey: String, streetNormalFee: Float, streetNormalInbound: String, streetNormalOutbound: String, streetSellerType: Int, tmonFee: Float, tmonId: String, wemakepriceFee: Float, wemakepriceId: String): Boolean!
   updateMyImageByUser(fixImageBottom: String, fixImageTop: String): Boolean!
   updatePhoneByUser(phone: String!, verificationId: Int!): Boolean!
+  updateProductByAdmin(categoryCode: String, description: String, localShippingFee: Int, name: String, optionNames: [ProductOptionNameUpdateInput!]!, optionValues: [ProductOptionValueUpdateInput!]!, options: [ProductOptionUpdateInput!]!, price: Int, productId: Int!, shippingFee: Int, siilCode: String, siilData: [SiilInput!], thumbnails: [ProductThumbnailUpdateInput!]): Product!
+  updateProductByUser(categoryA001: String, categoryA001Name: String, categoryA006: String, categoryA006Name: String, categoryA027: String, categoryA027Name: String, categoryA077: String, categoryA077Name: String, categoryA112: String, categoryA112Name: String, categoryA113: String, categoryA113Name: String, categoryA524: String, categoryA524Name: String, categoryA525: String, categoryA525Name: String, categoryB378: String, categoryB378Name: String, categoryB719: String, categoryB719Name: String, categoryB956: String, categoryB956Name: String, categoryCode: String, description: String, localShippingCode: Int, localShippingFee: Int, name: String, optionNames: [ProductOptionNameUpdateInput!]!, optionValues: [ProductOptionValueUpdateInput!]!, options: [ProductOptionUpdateInput!]!, price: Int, productId: Int!, searchTags: String, shippingFee: Int, siilCode: String, siilData: [SiilInput!], thumbnails: [ProductThumbnailUpdateInput!]): Product!
+  updateProductImageBySomeone(description: String, optionValues: [ProductOptionValueImageUpdateInput!]!, productId: Int!, thumbnails: [ProductThumbnailImageUpdateInput!]): Product!
+  updateProductNameByAdmin(name: String!, productId: Int!): Product!
+  updateProductNameByUser(name: String!, productId: Int!): Product!
+  updateProductPriceByAdmin(
+    cnyRate: Float!
+    localShippingCode: Int
+
+    """해외배송비(배대지배송비)"""
+    localShippingFee: Int!
+    marginRate: Float!
+    marginUnitType: String!
+    productIds: [Int!]!
+
+    """유료배송비"""
+    shippingFee: Int!
+  ): Int!
+  updateProductPriceByUser(
+    cnyRate: Float!
+    localShippingCode: Int
+
+    """해외배송비(배대지배송비)"""
+    localShippingFee: Int!
+    marginRate: Float!
+    marginUnitType: String!
+    productIds: [Int!]!
+
+    """유료배송비"""
+    shippingFee: Int!
+  ): Int!
   verifyPhoneByEveryone(phoneNumber: String!, verificationNumber: String!): Int!
 }
 
@@ -1074,7 +1149,28 @@ input PurchaseLogWhereInput {
 }
 
 type Query {
+  searchCategoriesByA077Code(a077Code: [String!]!): [Category!]!
+  searchCategoriesBySomeone(keyword: String!): [Category!]!
+  searchCategoryInfoA001BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA006BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA027BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA077BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA112BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA113BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA524BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA525BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoB378BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoB719BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoB956BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  selectCategoriesByHierarchicalBySomeone(code: String): [CategorySelectType!]!
+  selectCategoriesBySomeone(cursor: CategoryWhereUniqueInput, orderBy: [CategoryOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryWhereInput): [Category!]!
   selectMyInfoByUser: User!
+  selectMyProductByUser(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
+  selectMyProductsCountByUser(where: ProductWhereInput): Int!
+  selectProductsByAdmin(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
+  selectProductsBySomeone(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
+  selectProductsCountByAdmin(where: ProductWhereInput): Int
+  selectProductsCountBySomeone(where: ProductWhereInput): Int
   selectSiilInfoBySomeone(code: String!): [SiilItems!]!
   selectUsersByAdmin(cursor: UserWhereUniqueInput, orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
   selectUsersCountByAdmin(where: UserWhereInput): Int!

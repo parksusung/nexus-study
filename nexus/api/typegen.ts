@@ -102,6 +102,11 @@ export interface NexusGenInputs {
     product?: NexusGenInputs['ProductListRelationFilter'] | null; // ProductListRelationFilter
     siil_code?: NexusGenInputs['StringFilter'] | null; // StringFilter
   }
+  CategoryWhereUniqueInput: { // input type
+    a077_code?: string | null; // String
+    code?: string | null; // String
+    id?: number | null; // Int
+  }
   DateTimeFilter: { // input type
     equals?: NexusGenScalars['DateTime'] | null; // DateTime
     gt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -1066,6 +1071,7 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   AdminState: "ACTIVE" | "DELETED"
+  CategoryStoreState: "CHANGE" | "DELETE" | "NORMAL"
   ProductState: "COLLECTED" | "ON_SALE" | "SELL_DONE" | "UPLOAD_FAILED" | "UPLOAD_WAITING"
   ProductStoreLogUploadState: "CANCEL" | "FAIL" | "ON_PROGRESS" | "SUCCESS" | "WAIT"
   PurchaseLogState: "ACTIVE" | "ENDED" | "REFUNDED" | "WAIT_DEPOSIT" | "WAIT_PAYMENT"
@@ -1143,6 +1149,23 @@ export interface NexusGenObjects {
   CategorySelectType: { // root type
     code: string; // String!
     name: string; // String!
+  }
+  CategoryStore: { // root type
+    acode: string; // String!
+    cate_state_cdate?: NexusGenScalars['DateTime'] | null; // DateTime
+    cate_state_pdate?: NexusGenScalars['DateTime'] | null; // DateTime
+    ccode: string; // String!
+    dc1: string; // String!
+    dc1_name: string; // String!
+    dc2: string; // String!
+    dc2_name: string; // String!
+    dc3: string; // String!
+    dc3_name: string; // String!
+    dc4: string; // String!
+    dc4_name: string; // String!
+    id: number; // Int!
+    pcode: string; // String!
+    state: NexusGenEnums['CategoryStoreState']; // CategoryStoreState!
   }
   Mutation: {};
   PhoneVerification: { // root type
@@ -1492,22 +1515,60 @@ export interface NexusGenFieldTypes {
     code: string; // String!
     name: string; // String!
   }
+  CategoryStore: { // field return type
+    acode: string; // String!
+    cate_state_cdate: NexusGenScalars['DateTime'] | null; // DateTime
+    cate_state_pdate: NexusGenScalars['DateTime'] | null; // DateTime
+    ccode: string; // String!
+    dc1: string; // String!
+    dc1_name: string; // String!
+    dc2: string; // String!
+    dc2_name: string; // String!
+    dc3: string; // String!
+    dc3_name: string; // String!
+    dc4: string; // String!
+    dc4_name: string; // String!
+    id: number; // Int!
+    pcode: string; // String!
+    state: NexusGenEnums['CategoryStoreState']; // CategoryStoreState!
+  }
   Mutation: { // field return type
     changeMyPasswordByAdmin: boolean; // Boolean!
     changePasswordByUser: boolean; // Boolean!
     connectSocialIdByUser: NexusGenRootTypes['User']; // User!
+    deleteProductByAdmin: boolean; // Boolean!
+    deleteProductByUser: boolean; // Boolean!
+    disableUserOption: boolean; // Boolean!
+    endProductSellStateByAdmin: number; // Int!
+    endProductSellStateByUser: number; // Int!
+    initProductImageByUser: string | null; // String
     requestPhoneVerificationByEveryone: boolean; // Boolean!
     setMaxProductLimitByAdmin: boolean; // Boolean!
+    setVisibleStateToProductOptionValueBySomeone: boolean; // Boolean!
     signInUserByEveryone: NexusGenRootTypes['SignInType']; // SignInType!
     signOutUserByEveryone: string; // String!
     signUpAdminByAdmin: boolean; // Boolean!
     signUpUserByEveryone: NexusGenRootTypes['SignInType']; // SignInType!
     silentRefreshToken: NexusGenRootTypes['SignInType'] | null; // SignInType
+    transferProductsToUserByAdmin: string; // String!
     translateProductTextByUser: string; // String!
     translateProductsTextByUser: string; // String!
+    updateManyProductCategoryByAdmin: number; // Int!
+    updateManyProductCategoryByUser: number; // Int!
+    updateManyProductNameByUser: string; // String!
+    updateManyProductSiilInfoByAdmin: number; // Int!
+    updateManyProductSiilInfoByUser: number; // Int!
+    updateManyProductTagByUser: string; // String!
     updateMyDataByUser: boolean; // Boolean!
     updateMyImageByUser: boolean; // Boolean!
     updatePhoneByUser: boolean; // Boolean!
+    updateProductByAdmin: NexusGenRootTypes['Product']; // Product!
+    updateProductByUser: NexusGenRootTypes['Product']; // Product!
+    updateProductImageBySomeone: NexusGenRootTypes['Product']; // Product!
+    updateProductNameByAdmin: NexusGenRootTypes['Product']; // Product!
+    updateProductNameByUser: NexusGenRootTypes['Product']; // Product!
+    updateProductPriceByAdmin: number; // Int!
+    updateProductPriceByUser: number; // Int!
     verifyPhoneByEveryone: number; // Int!
   }
   PhoneVerification: { // field return type
@@ -1674,7 +1735,28 @@ export interface NexusGenFieldTypes {
     user_id: number; // Int!
   }
   Query: { // field return type
+    searchCategoriesByA077Code: NexusGenRootTypes['Category'][]; // [Category!]!
+    searchCategoriesBySomeone: NexusGenRootTypes['Category'][]; // [Category!]!
+    searchCategoryInfoA001BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoA006BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoA027BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoA077BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoA112BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoA113BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoA524BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoA525BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoB378BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoB719BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    searchCategoryInfoB956BySomeone: NexusGenRootTypes['CategoryInformationType'][]; // [CategoryInformationType!]!
+    selectCategoriesByHierarchicalBySomeone: NexusGenRootTypes['CategorySelectType'][]; // [CategorySelectType!]!
+    selectCategoriesBySomeone: NexusGenRootTypes['Category'][]; // [Category!]!
     selectMyInfoByUser: NexusGenRootTypes['User']; // User!
+    selectMyProductByUser: NexusGenRootTypes['Product'][]; // [Product!]!
+    selectMyProductsCountByUser: number; // Int!
+    selectProductsByAdmin: NexusGenRootTypes['Product'][]; // [Product!]!
+    selectProductsBySomeone: NexusGenRootTypes['Product'][]; // [Product!]!
+    selectProductsCountByAdmin: number | null; // Int
+    selectProductsCountBySomeone: number | null; // Int
     selectSiilInfoBySomeone: NexusGenRootTypes['SiilItems'][]; // [SiilItems!]!
     selectUsersByAdmin: NexusGenRootTypes['User'][]; // [User!]!
     selectUsersCountByAdmin: number; // Int!
@@ -1893,22 +1975,60 @@ export interface NexusGenFieldTypeNames {
     code: 'String'
     name: 'String'
   }
+  CategoryStore: { // field return type name
+    acode: 'String'
+    cate_state_cdate: 'DateTime'
+    cate_state_pdate: 'DateTime'
+    ccode: 'String'
+    dc1: 'String'
+    dc1_name: 'String'
+    dc2: 'String'
+    dc2_name: 'String'
+    dc3: 'String'
+    dc3_name: 'String'
+    dc4: 'String'
+    dc4_name: 'String'
+    id: 'Int'
+    pcode: 'String'
+    state: 'CategoryStoreState'
+  }
   Mutation: { // field return type name
     changeMyPasswordByAdmin: 'Boolean'
     changePasswordByUser: 'Boolean'
     connectSocialIdByUser: 'User'
+    deleteProductByAdmin: 'Boolean'
+    deleteProductByUser: 'Boolean'
+    disableUserOption: 'Boolean'
+    endProductSellStateByAdmin: 'Int'
+    endProductSellStateByUser: 'Int'
+    initProductImageByUser: 'String'
     requestPhoneVerificationByEveryone: 'Boolean'
     setMaxProductLimitByAdmin: 'Boolean'
+    setVisibleStateToProductOptionValueBySomeone: 'Boolean'
     signInUserByEveryone: 'SignInType'
     signOutUserByEveryone: 'String'
     signUpAdminByAdmin: 'Boolean'
     signUpUserByEveryone: 'SignInType'
     silentRefreshToken: 'SignInType'
+    transferProductsToUserByAdmin: 'String'
     translateProductTextByUser: 'String'
     translateProductsTextByUser: 'String'
+    updateManyProductCategoryByAdmin: 'Int'
+    updateManyProductCategoryByUser: 'Int'
+    updateManyProductNameByUser: 'String'
+    updateManyProductSiilInfoByAdmin: 'Int'
+    updateManyProductSiilInfoByUser: 'Int'
+    updateManyProductTagByUser: 'String'
     updateMyDataByUser: 'Boolean'
     updateMyImageByUser: 'Boolean'
     updatePhoneByUser: 'Boolean'
+    updateProductByAdmin: 'Product'
+    updateProductByUser: 'Product'
+    updateProductImageBySomeone: 'Product'
+    updateProductNameByAdmin: 'Product'
+    updateProductNameByUser: 'Product'
+    updateProductPriceByAdmin: 'Int'
+    updateProductPriceByUser: 'Int'
     verifyPhoneByEveryone: 'Int'
   }
   PhoneVerification: { // field return type name
@@ -2075,7 +2195,28 @@ export interface NexusGenFieldTypeNames {
     user_id: 'Int'
   }
   Query: { // field return type name
+    searchCategoriesByA077Code: 'Category'
+    searchCategoriesBySomeone: 'Category'
+    searchCategoryInfoA001BySomeone: 'CategoryInformationType'
+    searchCategoryInfoA006BySomeone: 'CategoryInformationType'
+    searchCategoryInfoA027BySomeone: 'CategoryInformationType'
+    searchCategoryInfoA077BySomeone: 'CategoryInformationType'
+    searchCategoryInfoA112BySomeone: 'CategoryInformationType'
+    searchCategoryInfoA113BySomeone: 'CategoryInformationType'
+    searchCategoryInfoA524BySomeone: 'CategoryInformationType'
+    searchCategoryInfoA525BySomeone: 'CategoryInformationType'
+    searchCategoryInfoB378BySomeone: 'CategoryInformationType'
+    searchCategoryInfoB719BySomeone: 'CategoryInformationType'
+    searchCategoryInfoB956BySomeone: 'CategoryInformationType'
+    selectCategoriesByHierarchicalBySomeone: 'CategorySelectType'
+    selectCategoriesBySomeone: 'Category'
     selectMyInfoByUser: 'User'
+    selectMyProductByUser: 'Product'
+    selectMyProductsCountByUser: 'Int'
+    selectProductsByAdmin: 'Product'
+    selectProductsBySomeone: 'Product'
+    selectProductsCountByAdmin: 'Int'
+    selectProductsCountBySomeone: 'Int'
     selectSiilInfoBySomeone: 'SiilItems'
     selectUsersByAdmin: 'User'
     selectUsersCountByAdmin: 'Int'
@@ -2255,12 +2396,34 @@ export interface NexusGenArgTypes {
       socialId: string; // String!
       userType: NexusGenEnums['UserSocialType']; // UserSocialType!
     }
+    deleteProductByAdmin: { // args
+      productId: number; // Int!
+    }
+    deleteProductByUser: { // args
+      productId: number; // Int!
+    }
+    disableUserOption: { // args
+      id: number; // Int!
+    }
+    endProductSellStateByAdmin: { // args
+      productIds: number[]; // [Int!]!
+    }
+    endProductSellStateByUser: { // args
+      productIds: number[]; // [Int!]!
+    }
+    initProductImageByUser: { // args
+      productId: number; // Int!
+    }
     requestPhoneVerificationByEveryone: { // args
       phoneNumber: string; // String!
     }
     setMaxProductLimitByAdmin: { // args
       productLimit?: number | null; // Int
       userId: number; // Int!
+    }
+    setVisibleStateToProductOptionValueBySomeone: { // args
+      isActive: boolean; // Boolean!
+      productOptionValueId: number; // Int!
     }
     signInUserByEveryone: { // args
       email: string; // String!
@@ -2283,6 +2446,10 @@ export interface NexusGenArgTypes {
     silentRefreshToken: { // args
       refreshToken: string; // String!
     }
+    transferProductsToUserByAdmin: { // args
+      productIds: number[]; // [Int!]!
+      targetUserId: number; // Int!
+    }
     translateProductTextByUser: { // args
       id: number; // Int!
       type: NexusGenEnums['TranslateTargetEnumType']; // TranslateTargetEnumType!
@@ -2290,6 +2457,64 @@ export interface NexusGenArgTypes {
     translateProductsTextByUser: { // args
       ids: number[]; // [Int!]!
       type: NexusGenEnums['TranslateTargetEnumType']; // TranslateTargetEnumType!
+    }
+    updateManyProductCategoryByAdmin: { // args
+      categoryA001?: string | null; // String
+      categoryA001Name?: string | null; // String
+      categoryA006?: string | null; // String
+      categoryA006Name?: string | null; // String
+      categoryA027?: string | null; // String
+      categoryA027Name?: string | null; // String
+      categoryA077?: string | null; // String
+      categoryA077Name?: string | null; // String
+      categoryA112?: string | null; // String
+      categoryA112Name?: string | null; // String
+      categoryB378?: string | null; // String
+      categoryB378Name?: string | null; // String
+      productIds: number[]; // [Int!]!
+    }
+    updateManyProductCategoryByUser: { // args
+      categoryA001?: string | null; // String
+      categoryA001Name?: string | null; // String
+      categoryA006?: string | null; // String
+      categoryA006Name?: string | null; // String
+      categoryA027?: string | null; // String
+      categoryA027Name?: string | null; // String
+      categoryA077?: string | null; // String
+      categoryA077Name?: string | null; // String
+      categoryA112?: string | null; // String
+      categoryA112Name?: string | null; // String
+      categoryA113?: string | null; // String
+      categoryA113Name?: string | null; // String
+      categoryA524?: string | null; // String
+      categoryA524Name?: string | null; // String
+      categoryA525?: string | null; // String
+      categoryA525Name?: string | null; // String
+      categoryB378?: string | null; // String
+      categoryB378Name?: string | null; // String
+      categoryB719?: string | null; // String
+      categoryB719Name?: string | null; // String
+      categoryB956?: string | null; // String
+      categoryB956Name?: string | null; // String
+      productIds: number[]; // [Int!]!
+    }
+    updateManyProductNameByUser: { // args
+      body?: string | null; // String
+      head?: string | null; // String
+      productIds: number[]; // [Int!]!
+      tail?: string | null; // String
+    }
+    updateManyProductSiilInfoByAdmin: { // args
+      productIds: number[]; // [Int!]!
+      siilCode: string; // String!
+    }
+    updateManyProductSiilInfoByUser: { // args
+      productIds: number[]; // [Int!]!
+      siilCode: string; // String!
+    }
+    updateManyProductTagByUser: { // args
+      productIds: number[]; // [Int!]!
+      searchTags: string; // String!
     }
     updateMyDataByUser: { // args
       additionalShippingFeeJeju?: number | null; // Int
@@ -2361,6 +2586,92 @@ export interface NexusGenArgTypes {
     updatePhoneByUser: { // args
       phone: string; // String!
       verificationId: number; // Int!
+    }
+    updateProductByAdmin: { // args
+      categoryCode?: string | null; // String
+      description?: string | null; // String
+      localShippingFee?: number | null; // Int
+      name?: string | null; // String
+      optionNames: NexusGenInputs['ProductOptionNameUpdateInput'][]; // [ProductOptionNameUpdateInput!]!
+      optionValues: NexusGenInputs['ProductOptionValueUpdateInput'][]; // [ProductOptionValueUpdateInput!]!
+      options: NexusGenInputs['ProductOptionUpdateInput'][]; // [ProductOptionUpdateInput!]!
+      price?: number | null; // Int
+      productId: number; // Int!
+      shippingFee?: number | null; // Int
+      siilCode?: string | null; // String
+      siilData?: NexusGenInputs['SiilInput'][] | null; // [SiilInput!]
+      thumbnails?: NexusGenInputs['ProductThumbnailUpdateInput'][] | null; // [ProductThumbnailUpdateInput!]
+    }
+    updateProductByUser: { // args
+      categoryA001?: string | null; // String
+      categoryA001Name?: string | null; // String
+      categoryA006?: string | null; // String
+      categoryA006Name?: string | null; // String
+      categoryA027?: string | null; // String
+      categoryA027Name?: string | null; // String
+      categoryA077?: string | null; // String
+      categoryA077Name?: string | null; // String
+      categoryA112?: string | null; // String
+      categoryA112Name?: string | null; // String
+      categoryA113?: string | null; // String
+      categoryA113Name?: string | null; // String
+      categoryA524?: string | null; // String
+      categoryA524Name?: string | null; // String
+      categoryA525?: string | null; // String
+      categoryA525Name?: string | null; // String
+      categoryB378?: string | null; // String
+      categoryB378Name?: string | null; // String
+      categoryB719?: string | null; // String
+      categoryB719Name?: string | null; // String
+      categoryB956?: string | null; // String
+      categoryB956Name?: string | null; // String
+      categoryCode?: string | null; // String
+      description?: string | null; // String
+      localShippingCode?: number | null; // Int
+      localShippingFee?: number | null; // Int
+      name?: string | null; // String
+      optionNames: NexusGenInputs['ProductOptionNameUpdateInput'][]; // [ProductOptionNameUpdateInput!]!
+      optionValues: NexusGenInputs['ProductOptionValueUpdateInput'][]; // [ProductOptionValueUpdateInput!]!
+      options: NexusGenInputs['ProductOptionUpdateInput'][]; // [ProductOptionUpdateInput!]!
+      price?: number | null; // Int
+      productId: number; // Int!
+      searchTags?: string | null; // String
+      shippingFee?: number | null; // Int
+      siilCode?: string | null; // String
+      siilData?: NexusGenInputs['SiilInput'][] | null; // [SiilInput!]
+      thumbnails?: NexusGenInputs['ProductThumbnailUpdateInput'][] | null; // [ProductThumbnailUpdateInput!]
+    }
+    updateProductImageBySomeone: { // args
+      description?: string | null; // String
+      optionValues: NexusGenInputs['ProductOptionValueImageUpdateInput'][]; // [ProductOptionValueImageUpdateInput!]!
+      productId: number; // Int!
+      thumbnails?: NexusGenInputs['ProductThumbnailImageUpdateInput'][] | null; // [ProductThumbnailImageUpdateInput!]
+    }
+    updateProductNameByAdmin: { // args
+      name: string; // String!
+      productId: number; // Int!
+    }
+    updateProductNameByUser: { // args
+      name: string; // String!
+      productId: number; // Int!
+    }
+    updateProductPriceByAdmin: { // args
+      cnyRate: number; // Float!
+      localShippingCode?: number | null; // Int
+      localShippingFee: number; // Int!
+      marginRate: number; // Float!
+      marginUnitType: string; // String!
+      productIds: number[]; // [Int!]!
+      shippingFee: number; // Int!
+    }
+    updateProductPriceByUser: { // args
+      cnyRate: number; // Float!
+      localShippingCode?: number | null; // Int
+      localShippingFee: number; // Int!
+      marginRate: number; // Float!
+      marginUnitType: string; // String!
+      productIds: number[]; // [Int!]!
+      shippingFee: number; // Int!
     }
     verifyPhoneByEveryone: { // args
       phoneNumber: string; // String!
@@ -2439,6 +2750,96 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    searchCategoriesByA077Code: { // args
+      a077Code: string[]; // [String!]!
+    }
+    searchCategoriesBySomeone: { // args
+      keyword: string; // String!
+    }
+    searchCategoryInfoA001BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoA006BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoA027BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoA077BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoA112BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoA113BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoA524BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoA525BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoB378BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoB719BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    searchCategoryInfoB956BySomeone: { // args
+      code?: string | null; // String
+      keyword?: string | null; // String
+    }
+    selectCategoriesByHierarchicalBySomeone: { // args
+      code?: string | null; // String
+    }
+    selectCategoriesBySomeone: { // args
+      cursor?: NexusGenInputs['CategoryWhereUniqueInput'] | null; // CategoryWhereUniqueInput
+      orderBy?: NexusGenInputs['CategoryOrderByWithRelationInput'][] | null; // [CategoryOrderByWithRelationInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['CategoryWhereInput'] | null; // CategoryWhereInput
+    }
+    selectMyProductByUser: { // args
+      cursor?: NexusGenInputs['ProductWhereUniqueInput'] | null; // ProductWhereUniqueInput
+      orderBy?: NexusGenInputs['ProductOrderByWithRelationInput'][] | null; // [ProductOrderByWithRelationInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
+    }
+    selectMyProductsCountByUser: { // args
+      where?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
+    }
+    selectProductsByAdmin: { // args
+      cursor?: NexusGenInputs['ProductWhereUniqueInput'] | null; // ProductWhereUniqueInput
+      orderBy?: NexusGenInputs['ProductOrderByWithRelationInput'][] | null; // [ProductOrderByWithRelationInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
+    }
+    selectProductsBySomeone: { // args
+      cursor?: NexusGenInputs['ProductWhereUniqueInput'] | null; // ProductWhereUniqueInput
+      orderBy?: NexusGenInputs['ProductOrderByWithRelationInput'][] | null; // [ProductOrderByWithRelationInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
+    }
+    selectProductsCountByAdmin: { // args
+      where?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
+    }
+    selectProductsCountBySomeone: { // args
+      where?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
+    }
     selectSiilInfoBySomeone: { // args
       code: string; // String!
     }

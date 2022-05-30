@@ -4,7 +4,7 @@ import { errors, throwError } from "../utils/error";
 import { shopDataUrlInfo } from "../../playauto_api_type";
 import fetch from "node-fetch";
 
-const endpoint_kooza = "http://www.sellforyou.co.kr:3001/api/"
+const endpoint_kooza = "http://www.sellforyou.co.kr:3001/api/" //todo
 
 export const mutation_product_store_store = extendType({
     type: "Mutation",
@@ -23,6 +23,7 @@ export const mutation_product_store_store = extendType({
                     if (ctx.token?.userId) {
                         if (productStore.user_id !== ctx.token.userId) return throwError(errors.forbidden, ctx);
                     }
+                    
                     if (!userInfo) return throwError(errors.etc("회원정보를 찾을 수 없습니다."), ctx);
 
                     const refresh_body = {

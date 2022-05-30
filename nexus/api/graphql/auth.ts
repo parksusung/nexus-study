@@ -42,7 +42,7 @@ export const mutation_auto = extendType({
                             })
                             if(!userInfo) {return throwError(errors.etc("해당 token을 가진 사용자가 존재하지 않습니다."),ctx)}
                             else {
-                                day = ((now.getTime() - userInfo.created_token.getTime()) / (1000 * 3600 * 24)) ;
+                                day = ((now.getTime() - userInfo.created_token.getTime()) / (1000 * 3600 * 24)) ;//이거왜빨간줄인진 몰겠네 테스트결과 작동은 잘됨 
                                 if(day >= 1) return throwError(errors.etc("토큰을 재발급 할수 없습니다."),ctx);//refresh Token 처음 생성일 기준으로 기한인 하루지나면 accessToken을 재발급해주지않음 
                                 accessToken = await generateUserToken(ctx.prisma, userInfo.id);//accessToken 재생성 
                                 refreshToken = generateToken(userInfo.id, "userId", true); //refreshToken도 재발급 왜냐면 노출이되서 보안상 해킹당했을수도잇으므로
