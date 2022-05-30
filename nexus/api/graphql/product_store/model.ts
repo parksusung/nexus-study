@@ -1,5 +1,5 @@
 import { objectType } from "nexus";
-import { shopDataUrlInfo } from "../../playauto_api_type";
+// import { shopDataUrlInfo } from "../../playauto_api_type";
 import { throwError } from "../utils/error";
 
 
@@ -7,22 +7,22 @@ export const t_ProductStore = objectType({
     name: "ProductStore",
     definition(t) {
         t.model.id();
-        t.model.productId();
-        t.model.userId();
+        t.model.product_id();
+        t.model.user_id();
         t.model.user();
-        t.model.siteCode();
+        t.model.site_code();
         t.model.state();
-        t.model.productStoreState();
-        t.model.storeProductId();
+        t.model.product_store_state();
+        t.model.store_product_id();
         t.model.product();
-        t.model.productStoreLog({
+        t.model.product_store_log({
             filtering: true,
             ordering: true,
             pagination: true,
         });
-        t.model.etcVendorItemId();
-        t.model.storeUrl();
-        t.model.connectedAt();
+        t.model.etc_vendor_item_id();
+        t.model.store_url();
+        t.model.connected_at();
     }
 });
 
@@ -39,14 +39,14 @@ export const t_ProductStoreLog = objectType({
     name: "ProductStoreLog",
     definition(t) {
         t.model.id();
-        t.model.productStoreId();
-        t.model.jobId();
-        t.model.destState();
-        t.model.uploadState();
-        t.model.errorMessage();
-        t.model.createdAt();
-        t.model.modifiedAt();
-        t.model.productStoreState();
-        t.model.productStore();
+        t.model.product_store_id();
+        t.model.job_id();
+        t.model.dest_state();
+        t.model.upload_state();
+        t.model.error_message();
+        t.model.created_at();
+        t.model.modified_at();
+        t.model.product_store_state();
+        t.model.product_store();
     }
 });

@@ -1,6 +1,6 @@
 import { FileUpload } from "./types"
 
-import { test } from "./types"
+import { Context } from "./types"
 import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
@@ -134,6 +134,12 @@ export interface NexusGenInputs {
     not?: NexusGenInputs['NestedEnumProductStateFilter'] | null; // NestedEnumProductStateFilter
     notIn?: NexusGenEnums['ProductState'][] | null; // [ProductState!]
   }
+  EnumProductStoreLogUploadStateFilter: { // input type
+    equals?: NexusGenEnums['ProductStoreLogUploadState'] | null; // ProductStoreLogUploadState
+    in?: NexusGenEnums['ProductStoreLogUploadState'][] | null; // [ProductStoreLogUploadState!]
+    not?: NexusGenInputs['NestedEnumProductStoreLogUploadStateFilter'] | null; // NestedEnumProductStoreLogUploadStateFilter
+    notIn?: NexusGenEnums['ProductStoreLogUploadState'][] | null; // [ProductStoreLogUploadState!]
+  }
   EnumPurchaseLogStateFilter: { // input type
     equals?: NexusGenEnums['PurchaseLogState'] | null; // PurchaseLogState
     in?: NexusGenEnums['PurchaseLogState'][] | null; // [PurchaseLogState!]
@@ -217,6 +223,12 @@ export interface NexusGenInputs {
     in?: NexusGenEnums['ProductState'][] | null; // [ProductState!]
     not?: NexusGenInputs['NestedEnumProductStateFilter'] | null; // NestedEnumProductStateFilter
     notIn?: NexusGenEnums['ProductState'][] | null; // [ProductState!]
+  }
+  NestedEnumProductStoreLogUploadStateFilter: { // input type
+    equals?: NexusGenEnums['ProductStoreLogUploadState'] | null; // ProductStoreLogUploadState
+    in?: NexusGenEnums['ProductStoreLogUploadState'][] | null; // [ProductStoreLogUploadState!]
+    not?: NexusGenInputs['NestedEnumProductStoreLogUploadStateFilter'] | null; // NestedEnumProductStoreLogUploadStateFilter
+    notIn?: NexusGenEnums['ProductStoreLogUploadState'][] | null; // [ProductStoreLogUploadState!]
   }
   NestedEnumPurchaseLogStateFilter: { // input type
     equals?: NexusGenEnums['PurchaseLogState'] | null; // PurchaseLogState
@@ -511,6 +523,7 @@ export interface NexusGenInputs {
     product_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
     product_option?: NexusGenInputs['ProductOptionOrderByRelationAggregateInput'] | null; // ProductOptionOrderByRelationAggregateInput
     product_option_name?: NexusGenInputs['ProductOptionNameOrderByRelationAggregateInput'] | null; // ProductOptionNameOrderByRelationAggregateInput
+    product_store?: NexusGenInputs['ProductStoreOrderByRelationAggregateInput'] | null; // ProductStoreOrderByRelationAggregateInput
     search_tags?: NexusGenEnums['SortOrder'] | null; // SortOrder
     shipping_fee?: NexusGenEnums['SortOrder'] | null; // SortOrder
     siil_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
@@ -521,6 +534,107 @@ export interface NexusGenInputs {
     taobao_product_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     user?: NexusGenInputs['UserOrderByWithRelationInput'] | null; // UserOrderByWithRelationInput
     user_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  ProductStoreListRelationFilter: { // input type
+    every?: NexusGenInputs['ProductStoreWhereInput'] | null; // ProductStoreWhereInput
+    none?: NexusGenInputs['ProductStoreWhereInput'] | null; // ProductStoreWhereInput
+    some?: NexusGenInputs['ProductStoreWhereInput'] | null; // ProductStoreWhereInput
+  }
+  ProductStoreLogListRelationFilter: { // input type
+    every?: NexusGenInputs['ProductStoreLogWhereInput'] | null; // ProductStoreLogWhereInput
+    none?: NexusGenInputs['ProductStoreLogWhereInput'] | null; // ProductStoreLogWhereInput
+    some?: NexusGenInputs['ProductStoreLogWhereInput'] | null; // ProductStoreLogWhereInput
+  }
+  ProductStoreLogOrderByRelationAggregateInput: { // input type
+    _count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  ProductStoreLogOrderByWithRelationInput: { // input type
+    created_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    dest_state?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    error_message?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    job_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    modified_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product_store?: NexusGenInputs['ProductStoreOrderByWithRelationInput'] | null; // ProductStoreOrderByWithRelationInput
+    product_store_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product_store_state?: NexusGenInputs['ProductStoreStateOrderByWithRelationInput'] | null; // ProductStoreStateOrderByWithRelationInput
+    upload_state?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  ProductStoreLogWhereInput: { // input type
+    AND?: NexusGenInputs['ProductStoreLogWhereInput'][] | null; // [ProductStoreLogWhereInput!]
+    NOT?: NexusGenInputs['ProductStoreLogWhereInput'][] | null; // [ProductStoreLogWhereInput!]
+    OR?: NexusGenInputs['ProductStoreLogWhereInput'][] | null; // [ProductStoreLogWhereInput!]
+    created_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    dest_state?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    error_message?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    job_id?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    modified_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    product_store?: NexusGenInputs['ProductStoreWhereInput'] | null; // ProductStoreWhereInput
+    product_store_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    product_store_state?: NexusGenInputs['ProductStoreStateWhereInput'] | null; // ProductStoreStateWhereInput
+    upload_state?: NexusGenInputs['EnumProductStoreLogUploadStateFilter'] | null; // EnumProductStoreLogUploadStateFilter
+  }
+  ProductStoreLogWhereUniqueInput: { // input type
+    id?: number | null; // Int
+  }
+  ProductStoreOrderByRelationAggregateInput: { // input type
+    _count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  ProductStoreOrderByWithRelationInput: { // input type
+    connected_at?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    etc_vendor_item_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product?: NexusGenInputs['ProductOrderByWithRelationInput'] | null; // ProductOrderByWithRelationInput
+    product_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product_store_log?: NexusGenInputs['ProductStoreLogOrderByRelationAggregateInput'] | null; // ProductStoreLogOrderByRelationAggregateInput
+    product_store_state?: NexusGenInputs['ProductStoreStateOrderByWithRelationInput'] | null; // ProductStoreStateOrderByWithRelationInput
+    site_code?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    state?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    store_product_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    store_url?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    user?: NexusGenInputs['UserOrderByWithRelationInput'] | null; // UserOrderByWithRelationInput
+    user_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  ProductStoreStateOrderByWithRelationInput: { // input type
+    description?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    product_store?: NexusGenInputs['ProductStoreOrderByRelationAggregateInput'] | null; // ProductStoreOrderByRelationAggregateInput
+    product_store_log?: NexusGenInputs['ProductStoreLogOrderByRelationAggregateInput'] | null; // ProductStoreLogOrderByRelationAggregateInput
+  }
+  ProductStoreStateWhereInput: { // input type
+    AND?: NexusGenInputs['ProductStoreStateWhereInput'][] | null; // [ProductStoreStateWhereInput!]
+    NOT?: NexusGenInputs['ProductStoreStateWhereInput'][] | null; // [ProductStoreStateWhereInput!]
+    OR?: NexusGenInputs['ProductStoreStateWhereInput'][] | null; // [ProductStoreStateWhereInput!]
+    description?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    product_store?: NexusGenInputs['ProductStoreListRelationFilter'] | null; // ProductStoreListRelationFilter
+    product_store_log?: NexusGenInputs['ProductStoreLogListRelationFilter'] | null; // ProductStoreLogListRelationFilter
+  }
+  ProductStoreWhereInput: { // input type
+    AND?: NexusGenInputs['ProductStoreWhereInput'][] | null; // [ProductStoreWhereInput!]
+    NOT?: NexusGenInputs['ProductStoreWhereInput'][] | null; // [ProductStoreWhereInput!]
+    OR?: NexusGenInputs['ProductStoreWhereInput'][] | null; // [ProductStoreWhereInput!]
+    connected_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    etc_vendor_item_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    product?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
+    product_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    product_store_log?: NexusGenInputs['ProductStoreLogListRelationFilter'] | null; // ProductStoreLogListRelationFilter
+    product_store_state?: NexusGenInputs['ProductStoreStateWhereInput'] | null; // ProductStoreStateWhereInput
+    site_code?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    state?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    store_product_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    store_url?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    user_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+  }
+  ProductStoreWhereUniqueInput: { // input type
+    id?: number | null; // Int
   }
   ProductThumbnailImageUpdateInput: { // input type
     defaultImage: string; // String!
@@ -582,6 +696,7 @@ export interface NexusGenInputs {
     product_code?: NexusGenInputs['StringFilter'] | null; // StringFilter
     product_option?: NexusGenInputs['ProductOptionListRelationFilter'] | null; // ProductOptionListRelationFilter
     product_option_name?: NexusGenInputs['ProductOptionNameListRelationFilter'] | null; // ProductOptionNameListRelationFilter
+    product_store?: NexusGenInputs['ProductStoreListRelationFilter'] | null; // ProductStoreListRelationFilter
     search_tags?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     shipping_fee?: NexusGenInputs['IntFilter'] | null; // IntFilter
     siil_code?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
@@ -620,6 +735,10 @@ export interface NexusGenInputs {
     type?: NexusGenInputs['EnumPurchaseLogTypeFilter'] | null; // EnumPurchaseLogTypeFilter
     user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
     user_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+  }
+  SiilInput: { // input type
+    code: string; // String!
+    value: string; // String!
   }
   StringFilter: { // input type
     contains?: string | null; // String
@@ -863,11 +982,38 @@ export interface NexusGenInputs {
     naver_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
     password?: NexusGenEnums['SortOrder'] | null; // SortOrder
     product?: NexusGenInputs['ProductOrderByRelationAggregateInput'] | null; // ProductOrderByRelationAggregateInput
+    product_store?: NexusGenInputs['ProductStoreOrderByRelationAggregateInput'] | null; // ProductStoreOrderByRelationAggregateInput
     purchase_log?: NexusGenInputs['PurchaseLogOrderByRelationAggregateInput'] | null; // PurchaseLogOrderByRelationAggregateInput
     state?: NexusGenEnums['SortOrder'] | null; // SortOrder
     token?: NexusGenEnums['SortOrder'] | null; // SortOrder
     user_info?: NexusGenInputs['UserInfoOrderByWithRelationInput'] | null; // UserInfoOrderByWithRelationInput
     user_log?: NexusGenInputs['UserLogOrderByRelationAggregateInput'] | null; // UserLogOrderByRelationAggregateInput
+    user_question?: NexusGenInputs['UserQuestionOrderByRelationAggregateInput'] | null; // UserQuestionOrderByRelationAggregateInput
+    word_table?: NexusGenInputs['WordTableOrderByRelationAggregateInput'] | null; // WordTableOrderByRelationAggregateInput
+  }
+  UserQuestionListRelationFilter: { // input type
+    every?: NexusGenInputs['UserQuestionWhereInput'] | null; // UserQuestionWhereInput
+    none?: NexusGenInputs['UserQuestionWhereInput'] | null; // UserQuestionWhereInput
+    some?: NexusGenInputs['UserQuestionWhereInput'] | null; // UserQuestionWhereInput
+  }
+  UserQuestionOrderByRelationAggregateInput: { // input type
+    _count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  UserQuestionWhereInput: { // input type
+    AND?: NexusGenInputs['UserQuestionWhereInput'][] | null; // [UserQuestionWhereInput!]
+    NOT?: NexusGenInputs['UserQuestionWhereInput'][] | null; // [UserQuestionWhereInput!]
+    OR?: NexusGenInputs['UserQuestionWhereInput'][] | null; // [UserQuestionWhereInput!]
+    answer?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    answered_at?: NexusGenInputs['DateTimeNullableFilter'] | null; // DateTimeNullableFilter
+    attachment_file?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    content?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    created_at?: NexusGenInputs['DateTimeFilter'] | null; // DateTimeFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    is_active?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    title?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    user_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
   }
   UserWhereInput: { // input type
     AND?: NexusGenInputs['UserWhereInput'][] | null; // [UserWhereInput!]
@@ -881,11 +1027,14 @@ export interface NexusGenInputs {
     naver_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     password?: NexusGenInputs['StringFilter'] | null; // StringFilter
     product?: NexusGenInputs['ProductListRelationFilter'] | null; // ProductListRelationFilter
+    product_store?: NexusGenInputs['ProductStoreListRelationFilter'] | null; // ProductStoreListRelationFilter
     purchase_log?: NexusGenInputs['PurchaseLogListRelationFilter'] | null; // PurchaseLogListRelationFilter
     state?: NexusGenInputs['EnumUserStateFilter'] | null; // EnumUserStateFilter
     token?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
     user_info?: NexusGenInputs['UserInfoWhereInput'] | null; // UserInfoWhereInput
     user_log?: NexusGenInputs['UserLogListRelationFilter'] | null; // UserLogListRelationFilter
+    user_question?: NexusGenInputs['UserQuestionListRelationFilter'] | null; // UserQuestionListRelationFilter
+    word_table?: NexusGenInputs['WordTableListRelationFilter'] | null; // WordTableListRelationFilter
   }
   UserWhereUniqueInput: { // input type
     email?: string | null; // String
@@ -894,13 +1043,34 @@ export interface NexusGenInputs {
     naver_id?: string | null; // String
     token?: string | null; // String
   }
+  WordTableListRelationFilter: { // input type
+    every?: NexusGenInputs['WordTableWhereInput'] | null; // WordTableWhereInput
+    none?: NexusGenInputs['WordTableWhereInput'] | null; // WordTableWhereInput
+    some?: NexusGenInputs['WordTableWhereInput'] | null; // WordTableWhereInput
+  }
+  WordTableOrderByRelationAggregateInput: { // input type
+    _count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    count?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  WordTableWhereInput: { // input type
+    AND?: NexusGenInputs['WordTableWhereInput'][] | null; // [WordTableWhereInput!]
+    NOT?: NexusGenInputs['WordTableWhereInput'][] | null; // [WordTableWhereInput!]
+    OR?: NexusGenInputs['WordTableWhereInput'][] | null; // [WordTableWhereInput!]
+    find_word?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    replace_word?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    user?: NexusGenInputs['UserWhereInput'] | null; // UserWhereInput
+    user_id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+  }
 }
 
 export interface NexusGenEnums {
   AdminState: "ACTIVE" | "DELETED"
   ProductState: "COLLECTED" | "ON_SALE" | "SELL_DONE" | "UPLOAD_FAILED" | "UPLOAD_WAITING"
+  ProductStoreLogUploadState: "CANCEL" | "FAIL" | "ON_PROGRESS" | "SUCCESS" | "WAIT"
   PurchaseLogState: "ACTIVE" | "ENDED" | "REFUNDED" | "WAIT_DEPOSIT" | "WAIT_PAYMENT"
   PurchaseLogType: "IMAGE_TRANSLATE" | "PLAN" | "STOCK"
+  SiilItemTypeEnum: "INPUT" | "SELECT" | "YESNO"
   SortOrder: "asc" | "desc"
   TaobaoItemOrderBy: "_credit" | "_sale"
   TranslateEngineEnumType: "baidu" | "google" | "papago"
@@ -1071,6 +1241,32 @@ export interface NexusGenObjects {
     option_name_order: number; // Int!
     taobao_vid: string; // String!
   }
+  ProductStore: { // root type
+    connected_at: NexusGenScalars['DateTime']; // DateTime!
+    etc_vendor_item_id?: string | null; // String
+    id: number; // Int!
+    product_id: number; // Int!
+    site_code: string; // String!
+    state: number; // Int!
+    store_product_id?: string | null; // String
+    store_url?: string | null; // String
+    user_id: number; // Int!
+  }
+  ProductStoreLog: { // root type
+    created_at: NexusGenScalars['DateTime']; // DateTime!
+    dest_state: number; // Int!
+    error_message: string; // String!
+    id: number; // Int!
+    job_id: string; // String!
+    modified_at: NexusGenScalars['DateTime']; // DateTime!
+    product_store_id: number; // Int!
+    upload_state: NexusGenEnums['ProductStoreLogUploadState']; // ProductStoreLogUploadState!
+  }
+  ProductStoreState: { // root type
+    description: string; // String!
+    id: number; // Int!
+    name: string; // String!
+  }
   PurchaseLog: { // root type
     expired_at: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
@@ -1086,6 +1282,24 @@ export interface NexusGenObjects {
   SignInType: { // root type
     accessToken: string; // String!
     refreshToken: string; // String!
+  }
+  SiilItem: { // root type
+    code: string; // String!
+    inputType: NexusGenEnums['SiilItemTypeEnum']; // SiilItemTypeEnum!
+    name: string; // String!
+    options?: string[] | null; // [String!]
+  }
+  SiilItems: { // root type
+    data: NexusGenRootTypes['SiilItem'][]; // [SiilItem!]!
+    description: string; // String!
+  }
+  SiilSavedData: { // root type
+    code: string; // String!
+    data: NexusGenRootTypes['SiilSavedItem'][]; // [SiilSavedItem!]!
+  }
+  SiilSavedItem: { // root type
+    code: string; // String!
+    value: string; // String!
   }
   TaobaoProduct: { // root type
     brand: string; // String!
@@ -1312,6 +1526,7 @@ export interface NexusGenFieldTypes {
     price: number; // Int!
   }
   Product: { // field return type
+    activeProductStore: NexusGenRootTypes['ProductStore'][]; // [ProductStore!]!
     admin: NexusGenRootTypes['Admin'] | null; // Admin
     admin_id: number | null; // Int
     category: NexusGenRootTypes['Category'] | null; // Category
@@ -1357,8 +1572,10 @@ export interface NexusGenFieldTypes {
     product_code: string; // String!
     product_option: NexusGenRootTypes['ProductOption'][]; // [ProductOption!]!
     product_option_name: NexusGenRootTypes['ProductOptionName'][]; // [ProductOptionName!]!
+    product_store: NexusGenRootTypes['ProductStore'][]; // [ProductStore!]!
     search_tags: string | null; // String
     shipping_fee: number; // Int!
+    siilInfo: NexusGenRootTypes['SiilSavedData'] | null; // SiilSavedData
     siil_code: string | null; // String
     siil_data: string | null; // String
     state: NexusGenEnums['ProductState']; // ProductState!
@@ -1411,6 +1628,38 @@ export interface NexusGenFieldTypes {
     product_option_name: NexusGenRootTypes['ProductOptionName']; // ProductOptionName!
     taobao_vid: string; // String!
   }
+  ProductStore: { // field return type
+    connected_at: NexusGenScalars['DateTime']; // DateTime!
+    etc_vendor_item_id: string | null; // String
+    id: number; // Int!
+    product: NexusGenRootTypes['Product']; // Product!
+    product_id: number; // Int!
+    product_store_log: NexusGenRootTypes['ProductStoreLog'][]; // [ProductStoreLog!]!
+    product_store_state: NexusGenRootTypes['ProductStoreState']; // ProductStoreState!
+    site_code: string; // String!
+    state: number; // Int!
+    store_product_id: string | null; // String
+    store_url: string | null; // String
+    user: NexusGenRootTypes['User']; // User!
+    user_id: number; // Int!
+  }
+  ProductStoreLog: { // field return type
+    created_at: NexusGenScalars['DateTime']; // DateTime!
+    dest_state: number; // Int!
+    error_message: string; // String!
+    id: number; // Int!
+    job_id: string; // String!
+    modified_at: NexusGenScalars['DateTime']; // DateTime!
+    product_store: NexusGenRootTypes['ProductStore']; // ProductStore!
+    product_store_id: number; // Int!
+    product_store_state: NexusGenRootTypes['ProductStoreState']; // ProductStoreState!
+    upload_state: NexusGenEnums['ProductStoreLogUploadState']; // ProductStoreLogUploadState!
+  }
+  ProductStoreState: { // field return type
+    description: string; // String!
+    id: number; // Int!
+    name: string; // String!
+  }
   PurchaseLog: { // field return type
     expired_at: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
@@ -1425,6 +1674,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     selectMyInfoByUser: NexusGenRootTypes['User']; // User!
+    selectSiilInfoBySomeone: NexusGenRootTypes['SiilItems'][]; // [SiilItems!]!
     selectUsersByAdmin: NexusGenRootTypes['User'][]; // [User!]!
     selectUsersCountByAdmin: number; // Int!
     translateText: string; // String!
@@ -1433,6 +1683,24 @@ export interface NexusGenFieldTypes {
   SignInType: { // field return type
     accessToken: string; // String!
     refreshToken: string; // String!
+  }
+  SiilItem: { // field return type
+    code: string; // String!
+    inputType: NexusGenEnums['SiilItemTypeEnum']; // SiilItemTypeEnum!
+    name: string; // String!
+    options: string[] | null; // [String!]
+  }
+  SiilItems: { // field return type
+    data: NexusGenRootTypes['SiilItem'][]; // [SiilItem!]!
+    description: string; // String!
+  }
+  SiilSavedData: { // field return type
+    code: string; // String!
+    data: NexusGenRootTypes['SiilSavedItem'][]; // [SiilSavedItem!]!
+  }
+  SiilSavedItem: { // field return type
+    code: string; // String!
+    value: string; // String!
   }
   TaobaoProduct: { // field return type
     brand: string; // String!
@@ -1658,6 +1926,7 @@ export interface NexusGenFieldTypeNames {
     price: 'Int'
   }
   Product: { // field return type name
+    activeProductStore: 'ProductStore'
     admin: 'Admin'
     admin_id: 'Int'
     category: 'Category'
@@ -1703,8 +1972,10 @@ export interface NexusGenFieldTypeNames {
     product_code: 'String'
     product_option: 'ProductOption'
     product_option_name: 'ProductOptionName'
+    product_store: 'ProductStore'
     search_tags: 'String'
     shipping_fee: 'Int'
+    siilInfo: 'SiilSavedData'
     siil_code: 'String'
     siil_data: 'String'
     state: 'ProductState'
@@ -1757,6 +2028,38 @@ export interface NexusGenFieldTypeNames {
     product_option_name: 'ProductOptionName'
     taobao_vid: 'String'
   }
+  ProductStore: { // field return type name
+    connected_at: 'DateTime'
+    etc_vendor_item_id: 'String'
+    id: 'Int'
+    product: 'Product'
+    product_id: 'Int'
+    product_store_log: 'ProductStoreLog'
+    product_store_state: 'ProductStoreState'
+    site_code: 'String'
+    state: 'Int'
+    store_product_id: 'String'
+    store_url: 'String'
+    user: 'User'
+    user_id: 'Int'
+  }
+  ProductStoreLog: { // field return type name
+    created_at: 'DateTime'
+    dest_state: 'Int'
+    error_message: 'String'
+    id: 'Int'
+    job_id: 'String'
+    modified_at: 'DateTime'
+    product_store: 'ProductStore'
+    product_store_id: 'Int'
+    product_store_state: 'ProductStoreState'
+    upload_state: 'ProductStoreLogUploadState'
+  }
+  ProductStoreState: { // field return type name
+    description: 'String'
+    id: 'Int'
+    name: 'String'
+  }
   PurchaseLog: { // field return type name
     expired_at: 'DateTime'
     id: 'Int'
@@ -1771,6 +2074,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     selectMyInfoByUser: 'User'
+    selectSiilInfoBySomeone: 'SiilItems'
     selectUsersByAdmin: 'User'
     selectUsersCountByAdmin: 'Int'
     translateText: 'String'
@@ -1779,6 +2083,24 @@ export interface NexusGenFieldTypeNames {
   SignInType: { // field return type name
     accessToken: 'String'
     refreshToken: 'String'
+  }
+  SiilItem: { // field return type name
+    code: 'String'
+    inputType: 'SiilItemTypeEnum'
+    name: 'String'
+    options: 'String'
+  }
+  SiilItems: { // field return type name
+    data: 'SiilItem'
+    description: 'String'
+  }
+  SiilSavedData: { // field return type name
+    code: 'String'
+    data: 'SiilSavedItem'
+  }
+  SiilSavedItem: { // field return type name
+    code: 'String'
+    value: 'String'
   }
   TaobaoProduct: { // field return type name
     brand: 'String'
@@ -2057,6 +2379,13 @@ export interface NexusGenArgTypes {
       take?: number | null; // Int
       where?: NexusGenInputs['ProductOptionNameWhereInput'] | null; // ProductOptionNameWhereInput
     }
+    product_store: { // args
+      cursor?: NexusGenInputs['ProductStoreWhereUniqueInput'] | null; // ProductStoreWhereUniqueInput
+      orderBy?: NexusGenInputs['ProductStoreOrderByWithRelationInput'][] | null; // [ProductStoreOrderByWithRelationInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['ProductStoreWhereInput'] | null; // ProductStoreWhereInput
+    }
   }
   ProductOptionName: {
     product_option_value: { // args
@@ -2097,7 +2426,19 @@ export interface NexusGenArgTypes {
       where?: NexusGenInputs['ProductOptionWhereInput'] | null; // ProductOptionWhereInput
     }
   }
+  ProductStore: {
+    product_store_log: { // args
+      cursor?: NexusGenInputs['ProductStoreLogWhereUniqueInput'] | null; // ProductStoreLogWhereUniqueInput
+      orderBy?: NexusGenInputs['ProductStoreLogOrderByWithRelationInput'][] | null; // [ProductStoreLogOrderByWithRelationInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['ProductStoreLogWhereInput'] | null; // ProductStoreLogWhereInput
+    }
+  }
   Query: {
+    selectSiilInfoBySomeone: { // args
+      code: string; // String!
+    }
     selectUsersByAdmin: { // args
       cursor?: NexusGenInputs['UserWhereUniqueInput'] | null; // UserWhereUniqueInput
       orderBy?: NexusGenInputs['UserOrderByWithRelationInput'][] | null; // [UserOrderByWithRelationInput!]
@@ -2169,7 +2510,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: test;
+  context: Context;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;

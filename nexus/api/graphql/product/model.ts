@@ -44,20 +44,20 @@ export const t_Product = objectType({
             }
         });
         t.model.siil_data();
-        // t.field("siilInfo", {
-        //     type: "SiilSavedData",
-        //     resolve: async (src, args, ctx, info) => {
-        //         try {
-        //             if (src.siil_data) {
-        //                 const info = JSON.parse(src.siil_data) as SiilEncodedSavedData;
-        //                 return { code: info.c, data: info.d.map(v => ({ code: v.c, value: v.v })) }
-        //             }
-        //             return null;
-        //         } catch (e) {
-        //             return throwError(e, ctx);
-        //         }
-        //     }
-        // })
+        t.field("siilInfo", {
+            type: "SiilSavedData",
+            resolve: async (src, args, ctx, info) => {
+                try {
+                    if (src.siil_data) {
+                        const info = JSON.parse(src.siil_data) as SiilEncodedSavedData;
+                        return { code: info.c, data: info.d.map(v => ({ code: v.c, value: v.v })) }
+                    }
+                    return null;
+                } catch (e) {
+                    return throwError(e, ctx);
+                }
+            }
+        })
         t.model.category();
 
         t.model.category_a077();
@@ -144,135 +144,135 @@ export const t_Product = objectType({
                 }
             }
         });
-        // t.model.productStore({
-        //     filtering: true,
-        //     ordering: true,
-        //     pagination: true,
-        //     resolve: async (src, args, ctx, info, ori) => {
-        //         try {
-        //             args.orderBy = [{ siteCode: "asc" }, ...(args.orderBy ?? [])]
-        //             return ori(src, args, ctx, info);
-        //         } catch (e) {
-        //             return throwError(e, ctx);
-        //         }
-        //     }
-        // });
-        // t.field("activeProductStore", {
-        //     type: nonNull(list(nonNull("ProductStore"))),
-        //     resolve: async (src, args, ctx, info) => {
-        //         try {
-        //             const where: Prisma.ProductStoreWhereInput = {
-        //                 productId: src.id,
-        //                 state: 2
-        //             }
+        t.model.product_store({
+            filtering: true,
+            ordering: true,
+            pagination: true,
+            resolve: async (src, args, ctx, info, ori) => {
+                try {
+                    args.orderBy = [{ site_code: "asc" }, ...(args.orderBy ?? [])]
+                    return ori(src, args, ctx, info);
+                } catch (e) {
+                    return throwError(e, ctx);
+                }
+            }
+        });
+        t.field("activeProductStore", {
+            type: nonNull(list(nonNull("ProductStore"))),
+            resolve: async (src, args, ctx, info) => {
+                try {
+                    const where: Prisma.ProductStoreWhereInput = {
+                        product_id: src.id,
+                        state: 2
+                    }
 
-        //             let smartStore = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "A077",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let smartStore = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "A077",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let coupang = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "B378",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let coupang = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "B378",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let street = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "A112",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let street = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "A112",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let action = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "A001",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let action = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "A001",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let gmarket = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "A006",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let gmarket = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "A006",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let interpark = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "A027",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let interpark = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "A027",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let street_normal = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "A113",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let street_normal = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "A113",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let wemakeprice = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "B719",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let wemakeprice = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "B719",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let lotteon = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "A524",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let lotteon = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "A524",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let lotteon_normal = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "A525",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let lotteon_normal = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "A525",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             let tmon = await ctx.prisma.productStore.findFirst({
-        //                 where: {
-        //                     ...where,
-        //                     siteCode: "B956",
-        //                 },
-        //                 orderBy: [{ id: "desc" }]
-        //             });
+                    let tmon = await ctx.prisma.productStore.findFirst({
+                        where: {
+                            ...where,
+                            site_code: "B956",
+                        },
+                        orderBy: [{ id: "desc" }]
+                    });
 
-        //             const data = [smartStore, coupang, street, action, gmarket, interpark, street_normal, wemakeprice, lotteon, lotteon_normal, tmon].filter((v): v is ProductStore => v !== null);
-        //             if (src.state === 'UPLOAD_FAILED') {
-        //                 const errorData = await ctx.prisma.productStore.findFirst({
-        //                     where: {
-        //                         productId: src.id,
-        //                         state: 3,
-        //                     },
-        //                     orderBy: [{ id: "desc" }]
-        //                 });
-        //                 if (errorData) {
-        //                     return [errorData].concat(data);
-        //                 }
-        //             }
-        //             return data;
-        //         } catch (e) {
-        //             return throwError(e, ctx);
-        //         }
-        //     }
-        // });
+                    const data = [smartStore, coupang, street, action, gmarket, interpark, street_normal, wemakeprice, lotteon, lotteon_normal, tmon].filter((v): v is ProductStore => v !== null);
+                    if (src.state === 'UPLOAD_FAILED') {
+                        const errorData = await ctx.prisma.productStore.findFirst({
+                            where: {
+                                product_id: src.id,
+                                state: 3,
+                            },
+                            orderBy: [{ id: "desc" }]
+                        });
+                        if (errorData) {
+                            return [errorData].concat(data);
+                        }
+                    }
+                    return data;
+                } catch (e) {
+                    return throwError(e, ctx);
+                }
+            }
+        });
         t.field("optionInfoHtml", {
             type: nonNull("String"),
             resolve: async (src, args, ctx, info) => {
@@ -305,10 +305,10 @@ export const t_ProductOption = objectType({
                 try {
                     const optionValues = await ctx.prisma.productOptionValue.findMany({
                         where: { id: { in: [src.option_value1_id, src.option_value2_id ?? -1, src.option_value3_id ?? -1] } },
-                        include: { productOptionName: true }
+                        include: { product_option_name: true }
                     });
-                    optionValues.sort((a, b) => a.optionNameOrder - b.optionNameOrder);
-                    return optionValues.reduce((p, c) => p + `${c.productOptionName.name}:${c.name}, `, "").slice(0, -2);
+                    optionValues.sort((a, b) => a.option_name_order - b.option_name_order);
+                    return optionValues.reduce((p, c) => p + `${c.product_option_name.name}:${c.name}, `, "").slice(0, -2);
                 } catch (e) {
                     return throwError(e, ctx);
                 }

@@ -101,6 +101,7 @@ model Product {
   user                 User?               @relation("userToproduct", fields: [user_id], references: [id])
   product_option       ProductOption[]     @relation("productToproductoption")
   product_option_name  ProductOptionName[] @relation("productTooptionname")
+  product_store        ProductStore[]      @relation("productToproduct_store")
 
   @@unique([user_id, taobao_product_id], name: "UQ_user_id_taobao_product_id")
   @@index([admin_id], name: "FK_product_admin_id_admin_id")
@@ -187,19 +188,22 @@ model TaobaoProduct {
 }
 
 model User {
-  id            Int           @id @default(autoincrement())
-  email         String        @unique @db.VarChar(50)
-  password      String        @db.VarChar(60)
+  id            Int            @id @default(autoincrement())
+  email         String         @unique @db.VarChar(50)
+  password      String         @db.VarChar(60)
   state         UserState
-  naver_id      String?       @unique @db.VarChar(10)
-  kakao_id      String?       @unique @db.VarChar(12)
-  created_at    DateTime      @default(now()) @db.DateTime(0)
-  token         String?       @unique @db.VarChar(700)
-  created_token DateTime?     @db.DateTime(0)
-  product       Product[]     @relation("userToproduct")
-  purchase_log  PurchaseLog[] @relation("purchase_logTouser")
-  user_info     UserInfo?     @relation("userTouserinfo")
-  user_log      UserLog[]     @relation("userTouserlog")
+  naver_id      String?        @unique @db.VarChar(10)
+  kakao_id      String?        @unique @db.VarChar(12)
+  created_at    DateTime       @default(now()) @db.DateTime(0)
+  token         String?        @unique @db.VarChar(700)
+  created_token DateTime?      @db.DateTime(0)
+  product       Product[]      @relation("userToproduct")
+  product_store ProductStore[] @relation("product_storeTouser")
+  purchase_log  PurchaseLog[]  @relation("purchase_logTouser")
+  user_info     UserInfo?      @relation("userTouserinfo")
+  user_log      UserLog[]      @relation("userTouserlog")
+  user_question UserQuestion[] @relation("userTouser_question")
+  word_table    WordTable[]    @relation("userToword_table")
 
   @@map("user")
 }
@@ -326,6 +330,312 @@ model PurchaseLog {
   @@map("purchase_log")
 }
 
+model CategoryInfoA001 {
+  id     Int    @id @default(autoincrement())
+  code   String @unique @db.VarChar(40)
+  depth1 String @db.Text
+  depth2 String @db.Text
+  depth3 String @db.Text
+  depth4 String @db.Text
+  depth5 String @db.Text
+  depth6 String @db.Text
+  name   String @db.Text
+
+  @@map("category_info_a001")
+}
+
+model CategoryInfoA006 {
+  id     Int    @id @default(autoincrement())
+  code   String @unique @db.VarChar(40)
+  depth1 String @db.Text
+  depth2 String @db.Text
+  depth3 String @db.Text
+  depth4 String @db.Text
+  depth5 String @db.Text
+  depth6 String @db.Text
+  name   String @db.Text
+
+  @@map("category_info_a006")
+}
+
+model CategoryInfoA027 {
+  id     Int    @id @default(autoincrement())
+  code   String @unique @db.VarChar(40)
+  depth1 String @db.Text
+  depth2 String @db.Text
+  depth3 String @db.Text
+  depth4 String @db.Text
+  depth5 String @db.Text
+  depth6 String @db.Text
+  name   String @db.Text
+
+  @@map("category_info_a027")
+}
+
+model CategoryInfoA077 {
+  id        Int    @id @default(autoincrement())
+  code      String @unique @db.VarChar(40)
+  depth1    String @db.Text
+  depth2    String @db.Text
+  depth3    String @db.Text
+  depth4    String @db.Text
+  depth5    String @db.Text
+  depth6    String @db.Text
+  name      String @db.Text
+  code_b378 String @db.Text
+  code_a112 String @db.Text
+  code_a113 String @db.Text
+  code_a027 String @db.Text
+  code_a006 String @db.Text
+  code_a001 String @db.Text
+  code_b719 String @db.Text
+  code_b956 String @db.Text
+  code_a524 String @db.Text
+  code_a525 String @db.Text
+
+  @@map("category_info_a077")
+}
+
+model CategoryInfoA112 {
+  id     Int    @id @default(autoincrement())
+  code   String @unique @db.VarChar(40)
+  depth1 String @db.Text
+  depth2 String @db.Text
+  depth3 String @db.Text
+  depth4 String @db.Text
+  depth5 String @db.Text
+  depth6 String @db.Text
+  name   String @db.Text
+
+  @@map("category_info_a112")
+}
+
+model CategoryInfoA113 {
+  id     Int    @id @default(autoincrement())
+  code   String @unique @db.VarChar(40)
+  depth1 String @db.Text
+  depth2 String @db.Text
+  depth3 String @db.Text
+  depth4 String @db.Text
+  depth5 String @db.Text
+  depth6 String @db.Text
+  name   String @db.Text
+
+  @@map("category_info_a113")
+}
+
+model CategoryInfoA524 {
+  id     Int    @id @default(autoincrement())
+  code   String @unique @db.VarChar(40)
+  depth1 String @db.Text
+  depth2 String @db.Text
+  depth3 String @db.Text
+  depth4 String @db.Text
+  depth5 String @db.Text
+  depth6 String @db.Text
+  name   String @db.Text
+
+  @@map("category_info_a524")
+}
+
+model CategoryInfoA525 {
+  id     Int    @id @default(autoincrement())
+  code   String @unique @db.VarChar(40)
+  depth1 String @db.Text
+  depth2 String @db.Text
+  depth3 String @db.Text
+  depth4 String @db.Text
+  depth5 String @db.Text
+  depth6 String @db.Text
+  name   String @db.Text
+
+  @@map("category_info_a525")
+}
+
+model CategoryInfoB378 {
+  id        Int    @id @default(autoincrement())
+  code      String @unique @db.VarChar(40)
+  depth1    String @db.Text
+  depth2    String @db.Text
+  depth3    String @db.Text
+  depth4    String @db.Text
+  depth5    String @db.Text
+  depth6    String @db.Text
+  name      String @db.Text
+  code_a077 String @db.Text
+
+  @@map("category_info_b378")
+}
+
+model CategoryInfoB719 {
+  id     Int    @id @default(autoincrement())
+  code   String @unique @db.VarChar(40)
+  depth1 String @db.Text
+  depth2 String @db.Text
+  depth3 String @db.Text
+  depth4 String @db.Text
+  depth5 String @db.Text
+  depth6 String @db.Text
+  name   String @db.Text
+
+  @@map("category_info_b719")
+}
+
+model CategoryInfoB956 {
+  id     Int    @id @default(autoincrement())
+  code   String @unique @db.VarChar(40)
+  depth1 String @db.Text
+  depth2 String @db.Text
+  depth3 String @db.Text
+  depth4 String @db.Text
+  depth5 String @db.Text
+  depth6 String @db.Text
+  name   String @db.Text
+
+  @@map("category_info_b956")
+}
+
+model CategoryMameMatch {
+  code   String @id @db.VarChar(8)
+  depth  Int    @db.TinyInt
+  number Int
+  name   String @db.VarChar(20)
+
+  @@map("category_name_match")
+}
+
+model CategoryStore {
+  id               Int                @id @default(autoincrement())
+  number           Int                @unique
+  acode            String             @db.VarChar(45)
+  pcode            String             @db.Char(11)
+  ccode            String             @db.VarChar(45)
+  dc1              String             @db.VarChar(20)
+  dc2              String             @db.VarChar(20)
+  dc3              String             @db.VarChar(20)
+  dc4              String             @db.VarChar(20)
+  dc1_name         String             @db.VarChar(40)
+  dc2_name         String             @db.VarChar(40)
+  dc3_name         String             @db.VarChar(40)
+  dc4_name         String             @db.VarChar(40)
+  state            CategoryStoreState
+  cate_state_pdate DateTime?          @db.DateTime(0)
+  cate_state_cdate DateTime?          @db.DateTime(0)
+
+  @@map("category_store")
+}
+
+model ProductStore {
+  id                  Int               @id @default(autoincrement())
+  user_id             Int
+  product_id          Int
+  state               Int               @db.TinyInt
+  store_product_id    String?           @db.VarChar(100)
+  etc_vendor_item_id  String?           @db.VarChar(20)
+  site_code           String            @db.VarChar(10)
+  store_url           String?           @db.VarChar(200)
+  connected_at        DateTime          @default(now()) @db.DateTime(0)
+  product             Product           @relation("productToproduct_store", fields: [product_id], references: [id])
+  product_store_state ProductStoreState @relation("storeTostate", fields: [state], references: [id])
+  user                User              @relation("product_storeTouser", fields: [user_id], references: [id])
+  product_store_log   ProductStoreLog[] @relation("logTostore")
+
+  @@index([product_id], name: "FK_product_store_product_id_product_id")
+  @@index([state], name: "FK_product_store_state_product_store_state_id")
+  @@index([user_id], name: "FK_product_store_user_id_user_id")
+  @@map("product_store")
+}
+
+model ProductStoreLog {
+  id                  Int                        @id @default(autoincrement())
+  product_store_id    Int
+  job_id              String                     @db.VarChar(12)
+  dest_state          Int                        @db.TinyInt
+  upload_state        ProductStoreLogUploadState @default(WAIT)
+  error_message       String                     @db.Text
+  created_at          DateTime                   @default(now()) @db.DateTime(0)
+  modified_at         DateTime                   @default(now()) @db.DateTime(0)
+  product_store_state ProductStoreState          @relation("logTostate", fields: [dest_state], references: [id])
+  product_store       ProductStore               @relation("logTostore", fields: [product_store_id], references: [id])
+
+  @@index([dest_state], name: "FK_product_store_log_dest_state_product_store_state_id")
+  @@index([product_store_id], name: "FK_product_store_log_product_store_id_product_store_id")
+  @@map("product_store_log")
+}
+
+model ProductStoreState {
+  id                Int               @id @db.TinyInt
+  name              String            @unique @db.VarChar(20)
+  description       String            @unique @db.VarChar(20)
+  product_store     ProductStore[]    @relation("storeTostate")
+  product_store_log ProductStoreLog[] @relation("logTostate")
+
+  @@map("product_store_state")
+}
+
+model TaobaoProductTranslateRequest {
+  id               Int      @id @default(autoincrement())
+  user_id          Int?
+  admin_id         Int?
+  taobao_iid_array String   @db.Text
+  category_code    String?  @db.VarChar(40)
+  siil_code        String?  @db.VarChar(3)
+  created_at       DateTime @default(now()) @db.DateTime(0)
+  is_done          Boolean  @default(false)
+
+  @@map("taobao_product_translate_request")
+}
+
+model UserQuestion {
+  id              Int       @id @default(autoincrement())
+  user_id         Int
+  title           String    @db.VarChar(50)
+  content         String    @db.LongText
+  attachment_file String?   @db.Text
+  answer          String?   @db.LongText
+  is_active       Boolean   @default(true)
+  answered_at     DateTime? @db.DateTime(0)
+  created_at      DateTime  @default(now()) @db.DateTime(0)
+  user            User      @relation("userTouser_question", fields: [user_id], references: [id])
+
+  @@index([user_id], name: "FK_user_question_user_id_user_id")
+  @@map("user_question")
+}
+
+model WordTable {
+  id           Int     @id @default(autoincrement())
+  user_id      Int
+  find_word    String  @db.VarChar(50)
+  replace_word String? @db.VarChar(50)
+  user         User    @relation("userToword_table", fields: [user_id], references: [id])
+
+  @@unique([user_id, find_word], name: "UQ_word_table_word")
+  @@map("word_table")
+}
+
+model notice {
+  id              Int      @id @default(autoincrement())
+  title           String   @db.VarChar(200)
+  content         String   @db.LongText
+  attachment_file String?  @db.Text
+  is_visible      Boolean  @default(true)
+  view_count      Int      @default(0)
+  created_at      DateTime @default(now())
+}
+
+model setting {
+  name  String @id @db.VarChar(100)
+  value String @db.Text
+}
+
+model withdraw {
+  id          Int      @id @default(autoincrement())
+  email       String   @db.VarChar(50)
+  naver_id    String?  @db.VarChar(10)
+  kakao_id    String?  @db.VarChar(12)
+  withdraw_at DateTime @default(now()) @db.DateTime(0)
+}
+
 enum AdminState {
   ACTIVE
   DELETED
@@ -366,4 +676,22 @@ enum PurchaseLogType {
   STOCK
 
    @@map("purchase_log_type")
+}
+
+enum CategoryStoreState {
+  NORMAL
+  DELETE
+  CHANGE
+
+   @@map("category_store_state")
+}
+
+enum ProductStoreLogUploadState {
+  WAIT
+  SUCCESS
+  FAIL
+  CANCEL
+  ON_PROGRESS
+
+   @@map("product_store_log_upload_state")
 }

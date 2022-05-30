@@ -15,7 +15,7 @@ export const schema = makeSchema({
     typegen: join(__dirname, "typegen.ts"),
     schema: join(__dirname, "schema.graphql"),
   },
-  contextType: { module: join(__dirname, "types.ts"), export: "test" },
+  contextType: { module: join(__dirname, "types.ts"), export: "Context" },
   plugins: [
     nexusPrisma({
       shouldGenerateArtifacts: true,
