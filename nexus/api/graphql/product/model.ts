@@ -387,7 +387,7 @@ export const t_ProductOptionValue = objectType({
 
                     return ctx.prisma.productOption.findMany({
                         where: args.where,
-                        order_by: args.orderBy,
+                        orderBy: args.orderBy,
                         skip: args.skip,
                         take: args.take,
                         cursor: args.cursor,

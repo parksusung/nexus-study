@@ -12,6 +12,8 @@ export * from './purchase'
 export * from './category'
 export * from './taobao_product'
 export * from './product_store'
+export * from './word'
+
 
 export * from './auth'
 export * from './enum'

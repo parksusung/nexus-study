@@ -309,6 +309,32 @@ export interface NexusGenInputs {
     notIn?: string[] | null; // [String!]
     startsWith?: string | null; // String
   }
+  PlanInfoOrderByWithRelationInput: { // input type
+    description?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    external_feature_variable_id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    id?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    is_active?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    month?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    name?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    plan_level?: NexusGenEnums['SortOrder'] | null; // SortOrder
+    price?: NexusGenEnums['SortOrder'] | null; // SortOrder
+  }
+  PlanInfoWhereInput: { // input type
+    AND?: NexusGenInputs['PlanInfoWhereInput'][] | null; // [PlanInfoWhereInput!]
+    NOT?: NexusGenInputs['PlanInfoWhereInput'][] | null; // [PlanInfoWhereInput!]
+    OR?: NexusGenInputs['PlanInfoWhereInput'][] | null; // [PlanInfoWhereInput!]
+    description?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    external_feature_variable_id?: NexusGenInputs['StringNullableFilter'] | null; // StringNullableFilter
+    id?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    is_active?: NexusGenInputs['BoolFilter'] | null; // BoolFilter
+    month?: NexusGenInputs['IntFilter'] | null; // IntFilter
+    name?: NexusGenInputs['StringFilter'] | null; // StringFilter
+    plan_level?: NexusGenInputs['IntNullableFilter'] | null; // IntNullableFilter
+    price?: NexusGenInputs['IntFilter'] | null; // IntFilter
+  }
+  PlanInfoWhereUniqueInput: { // input type
+    id?: number | null; // Int
+  }
   ProductListRelationFilter: { // input type
     every?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
     none?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
@@ -1450,6 +1476,12 @@ export interface NexusGenObjects {
     level: number; // Int!
     levelExpiredAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  WordTable: { // root type
+    find_word: string; // String!
+    id: number; // Int!
+    replace_word?: string | null; // String
+    user_id: number; // Int!
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -1533,6 +1565,7 @@ export interface NexusGenFieldTypes {
     state: NexusGenEnums['CategoryStoreState']; // CategoryStoreState!
   }
   Mutation: { // field return type
+    cancelPurchasePlanByUser: boolean; // Boolean!
     changeMyPasswordByAdmin: boolean; // Boolean!
     changePasswordByUser: boolean; // Boolean!
     connectSocialIdByUser: NexusGenRootTypes['User']; // User!
@@ -1542,9 +1575,13 @@ export interface NexusGenFieldTypes {
     endProductSellStateByAdmin: number; // Int!
     endProductSellStateByUser: number; // Int!
     initProductImageByUser: string | null; // String
+    invalidatePurchaseInfoByAdmin: boolean; // Boolean!
+    purchasePlanByUser: number; // Int!
     requestPhoneVerificationByEveryone: boolean; // Boolean!
     setMaxProductLimitByAdmin: boolean; // Boolean!
+    setPurchaseInfoByAdmin: boolean; // Boolean!
     setVisibleStateToProductOptionValueBySomeone: boolean; // Boolean!
+    signInAdminByEveryone: NexusGenRootTypes['SignInType']; // SignInType!
     signInUserByEveryone: NexusGenRootTypes['SignInType']; // SignInType!
     signOutUserByEveryone: string; // String!
     signUpAdminByAdmin: boolean; // Boolean!
@@ -1562,6 +1599,7 @@ export interface NexusGenFieldTypes {
     updateMyDataByUser: boolean; // Boolean!
     updateMyImageByUser: boolean; // Boolean!
     updatePhoneByUser: boolean; // Boolean!
+    updatePlanInfoByAdmin: NexusGenRootTypes['PlanInfo']; // PlanInfo!
     updateProductByAdmin: NexusGenRootTypes['Product']; // Product!
     updateProductByUser: NexusGenRootTypes['Product']; // Product!
     updateProductImageBySomeone: NexusGenRootTypes['Product']; // Product!
@@ -1569,6 +1607,7 @@ export interface NexusGenFieldTypes {
     updateProductNameByUser: NexusGenRootTypes['Product']; // Product!
     updateProductPriceByAdmin: number; // Int!
     updateProductPriceByUser: number; // Int!
+    updateProductStoreUrlInfoBySomeone: string; // String!
     verifyPhoneByEveryone: number; // Int!
   }
   PhoneVerification: { // field return type
@@ -1753,6 +1792,7 @@ export interface NexusGenFieldTypes {
     selectMyInfoByUser: NexusGenRootTypes['User']; // User!
     selectMyProductByUser: NexusGenRootTypes['Product'][]; // [Product!]!
     selectMyProductsCountByUser: number; // Int!
+    selectPlanInfosForEveryone: NexusGenRootTypes['PlanInfo'][]; // [PlanInfo!]!
     selectProductsByAdmin: NexusGenRootTypes['Product'][]; // [Product!]!
     selectProductsBySomeone: NexusGenRootTypes['Product'][]; // [Product!]!
     selectProductsCountByAdmin: number | null; // Int
@@ -1920,6 +1960,13 @@ export interface NexusGenFieldTypes {
     level: number; // Int!
     levelExpiredAt: NexusGenScalars['DateTime']; // DateTime!
   }
+  WordTable: { // field return type
+    find_word: string; // String!
+    id: number; // Int!
+    replace_word: string | null; // String
+    user: NexusGenRootTypes['User']; // User!
+    user_id: number; // Int!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -1993,6 +2040,7 @@ export interface NexusGenFieldTypeNames {
     state: 'CategoryStoreState'
   }
   Mutation: { // field return type name
+    cancelPurchasePlanByUser: 'Boolean'
     changeMyPasswordByAdmin: 'Boolean'
     changePasswordByUser: 'Boolean'
     connectSocialIdByUser: 'User'
@@ -2002,9 +2050,13 @@ export interface NexusGenFieldTypeNames {
     endProductSellStateByAdmin: 'Int'
     endProductSellStateByUser: 'Int'
     initProductImageByUser: 'String'
+    invalidatePurchaseInfoByAdmin: 'Boolean'
+    purchasePlanByUser: 'Int'
     requestPhoneVerificationByEveryone: 'Boolean'
     setMaxProductLimitByAdmin: 'Boolean'
+    setPurchaseInfoByAdmin: 'Boolean'
     setVisibleStateToProductOptionValueBySomeone: 'Boolean'
+    signInAdminByEveryone: 'SignInType'
     signInUserByEveryone: 'SignInType'
     signOutUserByEveryone: 'String'
     signUpAdminByAdmin: 'Boolean'
@@ -2022,6 +2074,7 @@ export interface NexusGenFieldTypeNames {
     updateMyDataByUser: 'Boolean'
     updateMyImageByUser: 'Boolean'
     updatePhoneByUser: 'Boolean'
+    updatePlanInfoByAdmin: 'PlanInfo'
     updateProductByAdmin: 'Product'
     updateProductByUser: 'Product'
     updateProductImageBySomeone: 'Product'
@@ -2029,6 +2082,7 @@ export interface NexusGenFieldTypeNames {
     updateProductNameByUser: 'Product'
     updateProductPriceByAdmin: 'Int'
     updateProductPriceByUser: 'Int'
+    updateProductStoreUrlInfoBySomeone: 'String'
     verifyPhoneByEveryone: 'Int'
   }
   PhoneVerification: { // field return type name
@@ -2213,6 +2267,7 @@ export interface NexusGenFieldTypeNames {
     selectMyInfoByUser: 'User'
     selectMyProductByUser: 'Product'
     selectMyProductsCountByUser: 'Int'
+    selectPlanInfosForEveryone: 'PlanInfo'
     selectProductsByAdmin: 'Product'
     selectProductsBySomeone: 'Product'
     selectProductsCountByAdmin: 'Int'
@@ -2380,10 +2435,20 @@ export interface NexusGenFieldTypeNames {
     level: 'Int'
     levelExpiredAt: 'DateTime'
   }
+  WordTable: { // field return type name
+    find_word: 'String'
+    id: 'Int'
+    replace_word: 'String'
+    user: 'User'
+    user_id: 'Int'
+  }
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
+    cancelPurchasePlanByUser: { // args
+      merchantUid: string; // String!
+    }
     changeMyPasswordByAdmin: { // args
       currentPassword: string; // String!
       newPassword: string; // String!
@@ -2414,6 +2479,13 @@ export interface NexusGenArgTypes {
     initProductImageByUser: { // args
       productId: number; // Int!
     }
+    invalidatePurchaseInfoByAdmin: { // args
+      purchaseLogId: number; // Int!
+    }
+    purchasePlanByUser: { // args
+      merchantUid: string; // String!
+      planInfoId: number; // Int!
+    }
     requestPhoneVerificationByEveryone: { // args
       phoneNumber: string; // String!
     }
@@ -2421,9 +2493,17 @@ export interface NexusGenArgTypes {
       productLimit?: number | null; // Int
       userId: number; // Int!
     }
+    setPurchaseInfoByAdmin: { // args
+      planInfoId: number; // Int!
+      userId: number; // Int!
+    }
     setVisibleStateToProductOptionValueBySomeone: { // args
       isActive: boolean; // Boolean!
       productOptionValueId: number; // Int!
+    }
+    signInAdminByEveryone: { // args
+      id: string; // String!
+      password: string; // String!
     }
     signInUserByEveryone: { // args
       email: string; // String!
@@ -2587,6 +2667,13 @@ export interface NexusGenArgTypes {
       phone: string; // String!
       verificationId: number; // Int!
     }
+    updatePlanInfoByAdmin: { // args
+      description?: string | null; // String
+      isActive?: boolean | null; // Boolean
+      name?: string | null; // String
+      planId: number; // Int!
+      price?: number | null; // Int
+    }
     updateProductByAdmin: { // args
       categoryCode?: string | null; // String
       description?: string | null; // String
@@ -2672,6 +2759,10 @@ export interface NexusGenArgTypes {
       marginUnitType: string; // String!
       productIds: number[]; // [Int!]!
       shippingFee: number; // Int!
+    }
+    updateProductStoreUrlInfoBySomeone: { // args
+      etcVendorItemId: string; // String!
+      productStoreId: number; // Int!
     }
     verifyPhoneByEveryone: { // args
       phoneNumber: string; // String!
@@ -2819,6 +2910,13 @@ export interface NexusGenArgTypes {
     }
     selectMyProductsCountByUser: { // args
       where?: NexusGenInputs['ProductWhereInput'] | null; // ProductWhereInput
+    }
+    selectPlanInfosForEveryone: { // args
+      cursor?: NexusGenInputs['PlanInfoWhereUniqueInput'] | null; // PlanInfoWhereUniqueInput
+      orderBy?: NexusGenInputs['PlanInfoOrderByWithRelationInput'][] | null; // [PlanInfoOrderByWithRelationInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+      where?: NexusGenInputs['PlanInfoWhereInput'] | null; // PlanInfoWhereInput
     }
     selectProductsByAdmin: { // args
       cursor?: NexusGenInputs['ProductWhereUniqueInput'] | null; // ProductWhereUniqueInput

@@ -266,6 +266,7 @@ input IntNullableFilter {
 }
 
 type Mutation {
+  cancelPurchasePlanByUser(merchantUid: String!): Boolean!
   changeMyPasswordByAdmin(currentPassword: String!, newPassword: String!): Boolean!
   changePasswordByUser(currentPassword: String!, newPassword: String!): Boolean!
   connectSocialIdByUser(socialId: String!, userType: UserSocialType!): User!
@@ -275,13 +276,22 @@ type Mutation {
   endProductSellStateByAdmin(productIds: [Int!]!): Int!
   endProductSellStateByUser(productIds: [Int!]!): Int!
   initProductImageByUser(productId: Int!): String
+  invalidatePurchaseInfoByAdmin(purchaseLogId: Int!): Boolean!
+  purchasePlanByUser(merchantUid: String!, planInfoId: Int!): Int!
   requestPhoneVerificationByEveryone(phoneNumber: String!): Boolean!
   setMaxProductLimitByAdmin(
     """미설정시 무제한"""
     productLimit: Int
     userId: Int!
   ): Boolean!
+  setPurchaseInfoByAdmin(planInfoId: Int!, userId: Int!): Boolean!
   setVisibleStateToProductOptionValueBySomeone(isActive: Boolean!, productOptionValueId: Int!): Boolean!
+  signInAdminByEveryone(
+    id: String!
+
+    """소셜의 경우 그냥 빈 문자열"""
+    password: String!
+  ): SignInType!
   signInUserByEveryone(
     email: String!
 
@@ -305,6 +315,7 @@ type Mutation {
   updateMyDataByUser(additionalShippingFeeJeju: Int, asInformation: String, asTel: String, auctionFee: Float, cnyRate: Float, collectStock: Int, collectTimeout: Int, coupangAccessKey: String, coupangDefaultInbound: String, coupangDefaultOutbound: String, coupangFee: Float, coupangImageOpt: String, coupangLoginId: String, coupangMaximumBuyForPerson: Int, coupangOutboundShippingTimeDay: Int, coupangSecretKey: String, coupangUnionDeliveryType: String, coupangVendorId: String, defaultShippingFee: Int, descriptionShowTitle: String, discountAmount: Int, discountUnitType: String, esmplusAuctionId: String, esmplusGmarketId: String, esmplusMasterId: String, exchangeShippingFee: Int, extraShippingFee: Int, fixImageBottom: Upload, fixImageTop: Upload, gmarketFee: Float, interparkCertKey: String, interparkFee: Float, interparkSecretKey: String, lotteonApiKey: String, lotteonFee: Float, lotteonNormalFee: Float, lotteonVendorId: String, marginRate: Float, marginUnitType: String, naverFee: Float, naverOrigin: String, naverOriginCode: String, naverStoreOnly: String, naverStoreUrl: String, optionAlignTop: String, optionIndexType: Int, optionTwoWays: String, refundShippingFee: Int, streetApiKey: String, streetDefaultInbound: String, streetDefaultOutbound: String, streetFee: Float, streetNormalApiKey: String, streetNormalFee: Float, streetNormalInbound: String, streetNormalOutbound: String, streetSellerType: Int, tmonFee: Float, tmonId: String, wemakepriceFee: Float, wemakepriceId: String): Boolean!
   updateMyImageByUser(fixImageBottom: String, fixImageTop: String): Boolean!
   updatePhoneByUser(phone: String!, verificationId: Int!): Boolean!
+  updatePlanInfoByAdmin(description: String, isActive: Boolean, name: String, planId: Int!, price: Int): PlanInfo!
   updateProductByAdmin(categoryCode: String, description: String, localShippingFee: Int, name: String, optionNames: [ProductOptionNameUpdateInput!]!, optionValues: [ProductOptionValueUpdateInput!]!, options: [ProductOptionUpdateInput!]!, price: Int, productId: Int!, shippingFee: Int, siilCode: String, siilData: [SiilInput!], thumbnails: [ProductThumbnailUpdateInput!]): Product!
   updateProductByUser(categoryA001: String, categoryA001Name: String, categoryA006: String, categoryA006Name: String, categoryA027: String, categoryA027Name: String, categoryA077: String, categoryA077Name: String, categoryA112: String, categoryA112Name: String, categoryA113: String, categoryA113Name: String, categoryA524: String, categoryA524Name: String, categoryA525: String, categoryA525Name: String, categoryB378: String, categoryB378Name: String, categoryB719: String, categoryB719Name: String, categoryB956: String, categoryB956Name: String, categoryCode: String, description: String, localShippingCode: Int, localShippingFee: Int, name: String, optionNames: [ProductOptionNameUpdateInput!]!, optionValues: [ProductOptionValueUpdateInput!]!, options: [ProductOptionUpdateInput!]!, price: Int, productId: Int!, searchTags: String, shippingFee: Int, siilCode: String, siilData: [SiilInput!], thumbnails: [ProductThumbnailUpdateInput!]): Product!
   updateProductImageBySomeone(description: String, optionValues: [ProductOptionValueImageUpdateInput!]!, productId: Int!, thumbnails: [ProductThumbnailImageUpdateInput!]): Product!
@@ -336,6 +347,7 @@ type Mutation {
     """유료배송비"""
     shippingFee: Int!
   ): Int!
+  updateProductStoreUrlInfoBySomeone(etcVendorItemId: String!, productStoreId: Int!): String!
   verifyPhoneByEveryone(phoneNumber: String!, verificationNumber: String!): Int!
 }
 
@@ -485,6 +497,35 @@ type PlanInfo {
   name: String!
   plan_level: Int
   price: Int!
+}
+
+input PlanInfoOrderByWithRelationInput {
+  description: SortOrder
+  external_feature_variable_id: SortOrder
+  id: SortOrder
+  is_active: SortOrder
+  month: SortOrder
+  name: SortOrder
+  plan_level: SortOrder
+  price: SortOrder
+}
+
+input PlanInfoWhereInput {
+  AND: [PlanInfoWhereInput!]
+  NOT: [PlanInfoWhereInput!]
+  OR: [PlanInfoWhereInput!]
+  description: StringFilter
+  external_feature_variable_id: StringNullableFilter
+  id: IntFilter
+  is_active: BoolFilter
+  month: IntFilter
+  name: StringFilter
+  plan_level: IntNullableFilter
+  price: IntFilter
+}
+
+input PlanInfoWhereUniqueInput {
+  id: Int
 }
 
 type Product {
@@ -1167,6 +1208,7 @@ type Query {
   selectMyInfoByUser: User!
   selectMyProductByUser(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
   selectMyProductsCountByUser(where: ProductWhereInput): Int!
+  selectPlanInfosForEveryone(cursor: PlanInfoWhereUniqueInput, orderBy: [PlanInfoOrderByWithRelationInput!], skip: Int, take: Int, where: PlanInfoWhereInput): [PlanInfo!]!
   selectProductsByAdmin(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
   selectProductsBySomeone(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
   selectProductsCountByAdmin(where: ProductWhereInput): Int
@@ -1741,6 +1783,14 @@ input UserWhereUniqueInput {
   kakao_id: String
   naver_id: String
   token: String
+}
+
+type WordTable {
+  find_word: String!
+  id: Int!
+  replace_word: String
+  user: User!
+  user_id: Int!
 }
 
 input WordTableListRelationFilter {

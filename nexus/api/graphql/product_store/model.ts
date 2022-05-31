@@ -1,5 +1,5 @@
 import { objectType } from "nexus";
-// import { shopDataUrlInfo } from "../../playauto_api_type";
+import { shopDataUrlInfo } from "../../playauto_api_type";
 import { throwError } from "../utils/error";
 
 

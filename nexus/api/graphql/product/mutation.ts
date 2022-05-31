@@ -976,7 +976,7 @@ export const mutation_product = extendType({
                         return throwError(errors.etc("해당 상품을 수정할 수 없습니다."), ctx);
                     }
 
-                    const productOptionValue = await ctx.prisma.productOptionValue.findMany({ where: { productOptionNameId: productOptionName.id } });
+                    const productOptionValue = await ctx.prisma.productOptionValue.findMany({ where: { product_option_name_id: productOptionName.id } });
 
                     const optionValueIds = productOptionValue.map((v) => {
                         return v.id;
@@ -1034,16 +1034,16 @@ export const mutation_product = extendType({
                             }
                         });
 
-                        // await ctx.prisma.productOptionValue.updateMany({
-                        //     where: {
-                        //         productOptionNameId: productOptionName.id,
-                        //         optionNameOrder: i + 1
-                        //     },
+                        await ctx.prisma.productOptionValue.updateMany({
+                            where: {
+                                product_option_name_id: productOptionName.id,
+                                option_name_order: i + 1
+                            },
     
-                        //     data: {
-                        //         optionNameOrder: i
-                        //     }
-                        // });
+                            data: {
+                                option_name_order: i
+                            }
+                        });
                     }
 
                     await ctx.prisma.productOptionValue.deleteMany({ where: { product_option_name_id: productOptionName.id } });
