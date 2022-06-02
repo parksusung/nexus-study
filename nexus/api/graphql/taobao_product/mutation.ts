@@ -3,7 +3,7 @@ import { add, isAfter, isBefore, sub } from "date-fns";
 import { arg, extendType, floatArg, intArg, list, nonNull, stringArg } from "nexus";
 import fetch from "node-fetch";
 import { siilInfo } from "../sill";
-// import { IOBItem, IOBItemGetParam, IOBItemGetResponse, IOBItemSearchParam, IOBItemSearchResponse } from "../../onebound_api_types";
+import { IOBItem, IOBItemGetParam, IOBItemGetResponse, IOBItemSearchParam, IOBItemSearchResponse } from "../../onebound_api_types";
 import { errors, throwError } from "../utils/error";
 import { getFromS3, uploadToS3ByBuffer } from "../utils/file_manage";
 import { wait } from "../utils/helpers";
@@ -13,9 +13,9 @@ import { FileUpload } from "graphql-upload";
 import { Context } from "../../types";
 import { GraphQLResolveInfo } from "graphql";
 import * as util from 'util'
-import { ITranslateData } from "../translate_types";
+import { ITranslateData } from "../../graphql/utils/translate_types";
 import { publishUserLogData } from "../utils/local/pubsub";
-import { EXTERNAL_ADDRESS } from "../utils/constants";
+// import { EXTERNAL_ADDRESS } from "../utils/constants";
 
 interface IGetTaobaoItemUsingExcelFileArgs {
     categoryCode?: string | null;
@@ -84,8 +84,8 @@ const getTaobaoItemUsingExcelFileResolver = (isAdmin: boolean) => async (src: {}
             if (!result) return throwError(errors.notInitialized, ctx);
             const freeUserDayLimit = parseInt(result.value);
             // const user = await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! }, select: { createdAt: true } })
-            const user = await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! }, select: { createdAt: true, userInfo: { select: { productCollectCount: true } } } })
-            if (isAfter(new Date(), add(user!.createdAt, { days: freeUserDayLimit }))) return throwError(errors.etc("무료체험기간이 지났습니다."), ctx);
+            const user = await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! }, select: { created_at: true, user_info: { select: { product_collect_count: true } } } })
+            if (isAfter(new Date(), add(user!.created_at, { days: freeUserDayLimit }))) return throwError(errors.etc("무료체험기간이 지났습니다."), ctx);
 
 
             result = await ctx.prisma.setting.findUnique({ where: { name: "FREE_USER_PRODUCT_LIMIT" } });
@@ -93,20 +93,20 @@ const getTaobaoItemUsingExcelFileResolver = (isAdmin: boolean) => async (src: {}
             const freeUserProductLimit = parseInt(result.value);
 
             // const productCount = await ctx.prisma.product.count({ where: { userId: ctx.token!.userId! } });
-            const productCount = user!.userInfo!.productCollectCount;
+            const productCount = user!.user_info!.product_collect_count;
             if (productCount >= freeUserProductLimit) return throwError(errors.etc("무료 이용량을 초과하였습니다."), ctx);
             taobaoIids = taobaoIids.slice(0, freeUserProductLimit - productCount);
             isRestricted = true;
         }
         if (ctx.token?.userId) {
             // const userInfo = await ctx.prisma.userInfo.findUnique({ where: { userId: ctx.token.userId }, select: { maxProductLimit: true } });
-            const userInfo = await ctx.prisma.userInfo.findUnique({ where: { userId: ctx.token.userId }, select: { productCollectCount: true, maxProductLimit: true } });
+            const userInfo = await ctx.prisma.userInfo.findUnique({ where: { user_id: ctx.token.userId }, select: { product_collect_count: true, max_product_limit: true } });
             if (!userInfo) return throwError(errors.noSuchData, ctx);
-            if (userInfo.maxProductLimit) {
+            if (userInfo.max_product_limit) {
                 // const productCount = await ctx.prisma.product.count({ where: { userId: ctx.token!.userId! } });
-                const productCount = userInfo.productCollectCount;
-                if (productCount >= userInfo.maxProductLimit) return throwError(errors.etc("이용 가능한 최대 상품 수집량을 초과하였습니다."), ctx);
-                taobaoIids = taobaoIids.slice(0, userInfo.maxProductLimit - productCount);
+                const productCount = userInfo.product_collect_count;
+                if (productCount >= userInfo.max_product_limit) return throwError(errors.etc("이용 가능한 최대 상품 수집량을 초과하였습니다."), ctx);
+                taobaoIids = taobaoIids.slice(0, userInfo.max_product_limit - productCount);
             }
         }
         getItemAndSave(ctx2, taobaoIids, { categoryCode: args.categoryCode ?? undefined, siilCode: args.siilCode ?? undefined, isRestricted, isAdmin }).then(() => { console.log("getTaobaoItemUsingNumIidsByUser done.") });
@@ -146,8 +146,8 @@ const getTaobaoItemUsingNumIidsResolver = (isAdmin: boolean) => async (src: {}, 
             if (!result) return throwError(errors.notInitialized, ctx);
             const freeUserDayLimit = parseInt(result.value);
             // const user = await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! }, select: { createdAt: true } })
-            const user = await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! }, select: { createdAt: true, userInfo: { select: { productCollectCount: true } } } })
-            if (isAfter(new Date(), add(user!.createdAt, { days: freeUserDayLimit }))) return throwError(errors.etc("무료체험기간이 지났습니다."), ctx);
+            const user = await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! }, select: { created_at: true, user_info: { select: { product_collect_count: true } } } })
+            if (isAfter(new Date(), add(user!.created_at, { days: freeUserDayLimit }))) return throwError(errors.etc("무료체험기간이 지났습니다."), ctx);
 
 
             result = await ctx.prisma.setting.findUnique({ where: { name: "FREE_USER_PRODUCT_LIMIT" } });
@@ -155,20 +155,20 @@ const getTaobaoItemUsingNumIidsResolver = (isAdmin: boolean) => async (src: {}, 
             const freeUserProductLimit = parseInt(result.value);
 
             // const productCount = await ctx.prisma.product.count({ where: { userId: ctx.token!.userId! } });
-            const productCount = user!.userInfo!.productCollectCount;
+            const productCount = user!.user_info!.product_collect_count;
             if (productCount >= freeUserProductLimit) return throwError(errors.etc("무료 이용량을 초과하였습니다."), ctx);
             taobaoIids = taobaoIids.slice(0, freeUserProductLimit - productCount);
             isRestricted = true;
         }
         if (ctx.token?.userId) {
             // const userInfo = await ctx.prisma.userInfo.findUnique({ where: { userId: ctx.token.userId }, select: { maxProductLimit: true } });
-            const userInfo = await ctx.prisma.userInfo.findUnique({ where: { userId: ctx.token.userId }, select: { productCollectCount: true, maxProductLimit: true } });
+            const userInfo = await ctx.prisma.userInfo.findUnique({ where: { user_id: ctx.token.userId }, select: { product_collect_count: true, max_product_limit: true } });
             if (!userInfo) return throwError(errors.noSuchData, ctx);
-            if (userInfo.maxProductLimit) {
+            if (userInfo.max_product_limit) {
                 // const productCount = await ctx.prisma.product.count({ where: { userId: ctx.token!.userId! } });
-                const productCount = userInfo.productCollectCount;
-                if (productCount >= userInfo.maxProductLimit) return throwError(errors.etc("이용 가능한 최대 상품 수집량을 초과하였습니다."), ctx);
-                taobaoIids = taobaoIids.slice(0, userInfo.maxProductLimit - productCount);
+                const productCount = userInfo.product_collect_count;
+                if (productCount >= userInfo.max_product_limit) return throwError(errors.etc("이용 가능한 최대 상품 수집량을 초과하였습니다."), ctx);
+                taobaoIids = taobaoIids.slice(0, userInfo.max_product_limit - productCount);
             }
         }
         getItemAndSave(ctx2, taobaoIids, { categoryCode: args.categoryCode ?? undefined, siilCode: args.siilCode ?? undefined, isRestricted, isAdmin }).then(() => { console.log("getTaobaoItemUsingNumIidsByUser done.") });
@@ -236,8 +236,8 @@ const getTaobaoItemsResolver = (isAdmin: boolean) => async (src: {}, args: IGetT
             if (!result) return throwError(errors.notInitialized, ctx);
             const freeUserDayLimit = parseInt(result.value);
             // const user = await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! }, select: { createdAt: true } })
-            const user = await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! }, select: { createdAt: true, userInfo: { select: { productCollectCount: true } } } })
-            if (isAfter(new Date(), add(user!.createdAt, { days: freeUserDayLimit }))) return throwError(errors.etc("무료체험기간이 지났습니다."), ctx);
+            const user = await ctx.prisma.user.findUnique({ where: { id: ctx.token!.userId! }, select: { created_at: true, user_info: { select: { product_collect_count: true } } } })
+            if (isAfter(new Date(), add(user!.created_at, { days: freeUserDayLimit }))) return throwError(errors.etc("무료체험기간이 지났습니다."), ctx);
 
 
             result = await ctx.prisma.setting.findUnique({ where: { name: "FREE_USER_PRODUCT_LIMIT" } });
@@ -245,7 +245,7 @@ const getTaobaoItemsResolver = (isAdmin: boolean) => async (src: {}, args: IGetT
             const freeUserProductLimit = parseInt(result.value);
 
             // const productCount = await ctx.prisma.product.count({ where: { userId: ctx.token!.userId! } });
-            const productCount = user!.userInfo!.productCollectCount;
+            const productCount = user!.user_info!.product_collect_count;
             if (productCount >= freeUserProductLimit) return throwError(errors.etc("무료 이용량을 초과하였습니다."), ctx);
 
             taobaoIids = taobaoIids.slice(0, freeUserProductLimit - productCount);
@@ -253,13 +253,13 @@ const getTaobaoItemsResolver = (isAdmin: boolean) => async (src: {}, args: IGetT
         }
         if (ctx.token?.userId) {
             // const userInfo = await ctx.prisma.userInfo.findUnique({ where: { userId: ctx.token.userId }, select: { maxProductLimit: true } });
-            const userInfo = await ctx.prisma.userInfo.findUnique({ where: { userId: ctx.token.userId }, select: { productCollectCount: true, maxProductLimit: true } });
+            const userInfo = await ctx.prisma.userInfo.findUnique({ where: { user_id: ctx.token.userId }, select: { product_collect_count: true, max_product_limit: true } });
             if (!userInfo) return throwError(errors.noSuchData, ctx);
-            if (userInfo.maxProductLimit) {
+            if (userInfo.max_product_limit) {
                 // const productCount = await ctx.prisma.product.count({ where: { userId: ctx.token!.userId! } });
-                const productCount = userInfo.productCollectCount;
-                if (productCount >= userInfo.maxProductLimit) return throwError(errors.etc("이용 가능한 최대 상품 수집량을 초과하였습니다."), ctx);
-                taobaoIids = taobaoIids.slice(0, userInfo.maxProductLimit - productCount);
+                const productCount = userInfo.product_collect_count;
+                if (productCount >= userInfo.max_product_limit) return throwError(errors.etc("이용 가능한 최대 상품 수집량을 초과하였습니다."), ctx);
+                taobaoIids = taobaoIids.slice(0, userInfo.max_product_limit - productCount);
             }
         }
 
@@ -423,13 +423,13 @@ export const mutation_taobao_product = extendType({
 
                         // 현재 본인이 가진 상품 중 중복상품이 있는지 검사
                         const checkUserId = await ctx.prisma.product.findMany({
-                            where: { userId: ctx.token?.userId ?? null, taobaoProduct: { taobaoNumIid: num_iid } },
-                            select: { id: true, categoryCode: true, userId: true, productCode: true, productStore: true, productOptionName: { select: { id: true } }, state: true, taobaoProductId: true, taobaoProduct: { select: { taobaoNumIid: true, originalData: true } } }
+                            where: { user_id: ctx.token?.userId ?? null, taobao_product: { taobao_num_iid: num_iid } },
+                            select: { id: true, category_code: true, user_id: true, product_code: true, product_store: true, product_option_name: { select: { id: true } }, state: true, taobao_product_id: true, taobao_product: { select: { taobao_num_iid: true, original_data: true } } }
                         });
 
                         if (checkUserId.length > 0) {
                             for (var i in checkUserId) {
-                                var temp = JSON.parse(checkUserId[i].taobaoProduct.originalData);
+                                var temp = JSON.parse(checkUserId[i].taobao_product.original_data);
                                 
                                 if (item.shop_id === temp.shop_id) {
                                     if (
@@ -442,10 +442,10 @@ export const mutation_taobao_product = extendType({
                                     }
 
                                     if (ctx.token?.userId) {
-                                        publishUserLogData(ctx, { type: "getTaobaoItem", title: `상품이 이미 최신 상태로 등록되어 있습니다. (${checkUserId[i].productCode})` });
+                                        publishUserLogData(ctx, { type: "getTaobaoItem", title: `상품이 이미 최신 상태로 등록되어 있습니다. (${checkUserId[i].product_code})` });
                                     }
 
-                                    return `상품이 이미 최신 상태로 등록되어 있습니다. (${checkUserId[i].productCode})`;
+                                    return `상품이 이미 최신 상태로 등록되어 있습니다. (${checkUserId[i].product_code})`;
                                 }
                             }
                         }
@@ -454,15 +454,15 @@ export const mutation_taobao_product = extendType({
                             let updatedProduct = await ctx.prisma.taobaoProduct.create({
                                 data: {
                                     id: undefined,
-                                    taobaoNumIid: num_iid,
+                                    taobao_num_iid: num_iid,
                                     brand: item.brand ?? "",
-                                    imageThumbnail: "http:" + item.pic_url.replace(/^https?:/, ""),
-                                    originalData,
+                                    image_thumbnail: "http:" + item.pic_url.replace(/^https?:/, ""),
+                                    original_data:originalData,
                                     price,
-                                    taobaoBrandId: item.brandId?.toString() ?? null,
-                                    taobaoCategoryId: item.rootCatId,
+                                    taobao_brand_id: item.brandId?.toString() ?? null,
+                                    taobao_category_id: item.rootCatId,
                                     name: item.title,
-                                    videoUrl: item.video
+                                    video_url: item.video
                                 }
                             });
 
@@ -486,7 +486,7 @@ export const mutation_taobao_product = extendType({
                         }
                         
                         const cnyRate = parseFloat(cnyRateSetting.value);
-                        const userInfo = await ctx.prisma.userInfo.findUnique({ where: { userId: ctx.token!.userId ?? 0 } });
+                        const userInfo = await ctx.prisma.userInfo.findUnique({ where: { user_id: ctx.token!.userId ?? 0 } });
 
                         let info: IFeeInfo = {
                             marginRate: 0,
@@ -497,13 +497,13 @@ export const mutation_taobao_product = extendType({
                         };
 
                         if (userInfo) {
-                            const productCount = await ctx.prisma.product.count({ where: { userId: ctx.token!.userId! } });
+                            const productCount = await ctx.prisma.product.count({ where: { user_id: ctx.token!.userId! } });
 
-                            info.marginRate = userInfo.marginRate;
-                            info.marginUnitType = userInfo.marginUnitType ?? "PERCENT";
-                            info.cnyRate = userInfo.cnyRate;
-                            info.defaultShippingFee = userInfo.defaultShippingFee;
-                            info.extraShippingFee = userInfo.extraShippingFee;
+                            info.marginRate = userInfo.margin_rate;
+                            info.marginUnitType = userInfo.margin_unit_type ?? "PERCENT";
+                            info.cnyRate = userInfo.cny_rate;
+                            info.defaultShippingFee = userInfo.default_shipping_fee;
+                            info.extraShippingFee = userInfo.extra_shipping_fee;
 
                             if (!option.isAdmin && option.isRestricted) {
                                 const result = await ctx.prisma.setting.findUnique({ where: { name: "FREE_USER_PRODUCT_LIMIT" } });
@@ -514,7 +514,7 @@ export const mutation_taobao_product = extendType({
 
                                 const freeUserProductLimit = parseInt(result.value);
 
-                                if (userInfo.productCollectCount >= freeUserProductLimit) {
+                                if (userInfo.product_collect_count >= freeUserProductLimit) {
                                     if (ctx.token?.userId) {
                                         publishUserLogData(ctx, { type: "getTaobaoItem", title: `이용 가능한 상품 수집 횟수를 초과하였습니다.` });
                                     }
@@ -525,8 +525,8 @@ export const mutation_taobao_product = extendType({
                                 taobaoProducts = taobaoProducts.slice(0, freeUserProductLimit - productCount);
                             }
 
-                            if (userInfo.maxProductLimit) {
-                                if (productCount >= userInfo.maxProductLimit) {
+                            if (userInfo.max_product_limit) {
+                                if (productCount >= userInfo.max_product_limit) {
                                     if (ctx.token?.userId) {
                                         publishUserLogData(ctx, { type: "getTaobaoItem", title: `이용 가능한 상품 관리 개수를 초과하였습니다.` });
                                     }
@@ -534,11 +534,11 @@ export const mutation_taobao_product = extendType({
                                     return throwError(errors.etc("이용 가능한 상품 관리 개수를 초과하였습니다."), ctx);
                                 }
     
-                                taobaoProducts = taobaoProducts.slice(0, userInfo.maxProductLimit - productCount);
+                                taobaoProducts = taobaoProducts.slice(0, userInfo.max_product_limit - productCount);
                                 
                             }
 
-                            await ctx.prisma.userInfo.update({ where: { userId: userInfo.userId }, data: { productCollectCount: { increment: taobaoProducts.length } } });
+                            await ctx.prisma.userInfo.update({ where: { user_id: userInfo.user_id }, data: { product_collect_count: { increment: taobaoProducts.length } } });
                         }
 
                         let category = null;
@@ -552,10 +552,10 @@ export const mutation_taobao_product = extendType({
                         const resultProducts = products.filter((v): v is Product => v !== null);
 
                         if (userId) {
-                            publishUserLogData(ctx, { type: "getTaobaoItem", title: `상품 수집이 완료되었습니다. (${resultProducts.map(v => v.productCode).join(",")})` });
+                            publishUserLogData(ctx, { type: "getTaobaoItem", title: `상품 수집이 완료되었습니다. (${resultProducts.map(v => v.product_code).join(",")})` });
                         }
 
-                        return `상품 수집이 완료되었습니다. (${resultProducts.map(v => v.productCode).join(",")})`
+                        return `상품 수집이 완료되었습니다. (${resultProducts.map(v => v.product_code).join(",")})`
                     }
                     
                     return throwError(errors.etc("데이터 형식이 올바르지 않습니다."), ctx);

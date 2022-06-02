@@ -6,7 +6,7 @@ import { Context } from "nexus-plugin-prisma/typegen";
 import { ArgsValue } from "nexus/dist/typegenTypeHelpers";
 import { ProductStoreStateEnum, predefinedSiilData } from "..";
 import { shopDataNameInfo, IPADShopInfo, IPADataDataSet10 } from "../../playauto_api_type";
-//import { EXTERNAL_ADDRESS } from "../utils/constants";
+// import { EXTERNAL_ADDRESS } from "../utils/constants";
 import { errors, throwError } from "../utils/error";
 import { EXTERNAL_S3_ADDRESS, getFromS3 } from "../utils/file_manage";
 import { encodeObjectToKeyEqualsValueNewline, getOptionHeaderHtmlByProductId, sendPlayAutoJob } from "../utils/local/playauto";
@@ -75,6 +75,8 @@ export function getValidUploadImageUrl(image: string) {
     if (!/^https?:\/\//.test(image) && image !== "") {
         image = `${EXTERNAL_S3_ADDRESS}/${encodeURI(image)}`;
     }
+
+    
     if (/^https:\/\//.test(image)) {
         image = image.replace(/^https/, "http");
     }
@@ -695,7 +697,7 @@ const registerProductResolver = (data: IQueryAdminArg | null) => async (src: {},
                 },
             };
 
-            return JSON.stringify({ job_data: job_json, result_callback_url: `${EXTERNAL_ADDRESS}/playauto/add_job_callback` });
+            return JSON.stringify({ job_data: job_json});
         }
         catch (e) {
             throw e as Error;

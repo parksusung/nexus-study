@@ -9,7 +9,7 @@ import { isDev } from './graphql/utils/constants'
 import { join } from "path";
 import * as HTTP from 'http'
 import { iamportCallbackHandler } from './callback/payment'
-// import { addJobCallbackHandler, jsonToXmlUploader } from './callback'
+import { addJobCallbackHandler, jsonToXmlUploader } from './callback'
 import multer from 'multer'
 // import { translateCallbackHandler } from './callback/translate'
 import { config } from 'dotenv'
@@ -22,7 +22,7 @@ config()
 
 
 const server = new ApolloServer({
-    // schema: applyMiddleware(schema, permissions),
+    // schema: applyMiddleware(schema, permissions),//permission으로 각종 query및 mutation 실행시 권한을 확인한다고함.
     schema : applyMiddleware(schema),
     context: createContext,
     // playground: isDev() === true ? (process.env.CUSTOM_ENDPOINT ? {
@@ -41,11 +41,11 @@ app.use(express.json({ limit: '100mb' }));
 export const http = HTTP.createServer(app);
 app.use(express.static(join(__dirname, 'static')));
 
-app.use("/playauto/*", multer().any());
-// app.route("/playauto/add_job_callback*").post((req, res) => addJobCallbackHandler(req, res));
-app.use("/callback/*", multer().any());
-app.route("/callback/iamport_pay_result*").post((req, res) => iamportCallbackHandler(req, res));
-// app.route("/callback/translate*").post((req, res) => translateCallbackHandler(req, res));
+// app.use("/playauto/*", multer().any()); 안씀
+app.route("/playauto/add_job_callback*").post((req, res) => addJobCallbackHandler(req, res)); 
+// app.use("/callback/*", multer().any()); 안씀 
+// app.route("/callback/iamport_pay_result*").post((req, res) => iamportCallbackHandler(req, res)); 아직 안씀(카드결재기능)
+// app.route("/callback/translate*").post((req, res) => translateCallbackHandler(req, res));안씀
 // const PORT = process.env.PORT || 3000
 server.applyMiddleware({ app })
 server.installSubscriptionHandlers(http)
