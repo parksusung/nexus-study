@@ -275,6 +275,25 @@ type Mutation {
   disableUserOption(id: Int!): Boolean!
   endProductSellStateByAdmin(productIds: [Int!]!): Int!
   endProductSellStateByUser(productIds: [Int!]!): Int!
+
+  """상품 ID/URL로 상품 가져오기"""
+  getTaobaoItemUsingExcelFileByAdmin(categoryCode: String, data: Upload!, siilCode: String, userId: Int): Int!
+
+  """상품 ID/URL로 상품 가져오기"""
+  getTaobaoItemUsingExcelFileByUser(categoryCode: String, data: Upload!, siilCode: String): Int!
+  getTaobaoItemUsingExtensionByUser(data: String!): String!
+
+  """상품 ID/URL로 상품 가져오기"""
+  getTaobaoItemUsingNumIidsByAdmin(categoryCode: String, siilCode: String, taobaoIds: [String!]!, userId: Int): Int!
+
+  """상품 ID/URL로 상품 가져오기"""
+  getTaobaoItemUsingNumIidsByUser(categoryCode: String, siilCode: String, taobaoIds: [String!]!): Int!
+
+  """키워드 검색으로 상품 가져오기"""
+  getTaobaoItemsByAdmin(categoryCode: String, endPrice: Float, orderBy: TaobaoItemOrderBy!, page: Int = 1, pageCount: Int = 1, query: String!, siilCode: String, startPrice: Float, userId: Int): Boolean!
+
+  """키워드 검색으로 상품 가져오기"""
+  getTaobaoItemsByUser(categoryCode: String, endPrice: Float, orderBy: TaobaoItemOrderBy!, page: Int = 1, pageCount: Int = 1, query: String!, siilCode: String, startPrice: Float): Boolean!
   initProductImageByUser(productId: Int!): String
   invalidatePurchaseInfoByAdmin(purchaseLogId: Int!): Boolean!
   purchasePlanByUser(merchantUid: String!, planInfoId: Int!): Int!

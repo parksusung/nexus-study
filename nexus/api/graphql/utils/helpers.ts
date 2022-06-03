@@ -120,12 +120,15 @@ export const generateUserToken = async (prisma: PrismaClient, id: number) => {
     const purchaseInfo = await getPurchaseInfo(prisma, id);//level
     const purchaseInfos = await prisma.purchaseLog.findMany({ where: { user_id: id, state: "ACTIVE", expired_at: { gte: new Date() } } });
     const processedInfos = purchaseInfos.map(v => ({ ...v, planInfo: JSON.parse(v.plan_info) as PurchaseLogPlanInfoType }))
-        .sort((a, b) => (b.planInfo.planLevel ?? 0) - (a.planInfo.planLevel ?? 0))
-    const levelInfo = processedInfos.find(v => v.planInfo.planLevel);
+        .sort((a, b) => (b.planInfo.plan_level ?? 0) - (a.planInfo.plan_level ?? 0))
+    //console.log("test",processedInfos);
+    const levelInfo = processedInfos.find(v => v.planInfo.plan_level);
+    //console.log("levelInfo",levelInfo);
     const privateClaim: Omit<Token, "iat" | "exp"> = {}
     privateClaim.userId = id;
     privateClaim.level = { exp: Math.floor(purchaseInfo.levelExpiredAt.getTime() / 1000), level: purchaseInfo.level }
     privateClaim.additionalPerm = purchaseInfo.additionalInfo.map(v => ({ exp: Math.floor(v.expiredAt.getTime() / 1000), type: v.type }));
+    //console.log("payload 정보 ",privateClaim);
     return sign(
         privateClaim,
         APP_SECRET,

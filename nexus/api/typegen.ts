@@ -1574,6 +1574,13 @@ export interface NexusGenFieldTypes {
     disableUserOption: boolean; // Boolean!
     endProductSellStateByAdmin: number; // Int!
     endProductSellStateByUser: number; // Int!
+    getTaobaoItemUsingExcelFileByAdmin: number; // Int!
+    getTaobaoItemUsingExcelFileByUser: number; // Int!
+    getTaobaoItemUsingExtensionByUser: string; // String!
+    getTaobaoItemUsingNumIidsByAdmin: number; // Int!
+    getTaobaoItemUsingNumIidsByUser: number; // Int!
+    getTaobaoItemsByAdmin: boolean; // Boolean!
+    getTaobaoItemsByUser: boolean; // Boolean!
     initProductImageByUser: string | null; // String
     invalidatePurchaseInfoByAdmin: boolean; // Boolean!
     purchasePlanByUser: number; // Int!
@@ -2049,6 +2056,13 @@ export interface NexusGenFieldTypeNames {
     disableUserOption: 'Boolean'
     endProductSellStateByAdmin: 'Int'
     endProductSellStateByUser: 'Int'
+    getTaobaoItemUsingExcelFileByAdmin: 'Int'
+    getTaobaoItemUsingExcelFileByUser: 'Int'
+    getTaobaoItemUsingExtensionByUser: 'String'
+    getTaobaoItemUsingNumIidsByAdmin: 'Int'
+    getTaobaoItemUsingNumIidsByUser: 'Int'
+    getTaobaoItemsByAdmin: 'Boolean'
+    getTaobaoItemsByUser: 'Boolean'
     initProductImageByUser: 'String'
     invalidatePurchaseInfoByAdmin: 'Boolean'
     purchasePlanByUser: 'Int'
@@ -2475,6 +2489,52 @@ export interface NexusGenArgTypes {
     }
     endProductSellStateByUser: { // args
       productIds: number[]; // [Int!]!
+    }
+    getTaobaoItemUsingExcelFileByAdmin: { // args
+      categoryCode?: string | null; // String
+      data: NexusGenScalars['Upload']; // Upload!
+      siilCode?: string | null; // String
+      userId?: number | null; // Int
+    }
+    getTaobaoItemUsingExcelFileByUser: { // args
+      categoryCode?: string | null; // String
+      data: NexusGenScalars['Upload']; // Upload!
+      siilCode?: string | null; // String
+    }
+    getTaobaoItemUsingExtensionByUser: { // args
+      data: string; // String!
+    }
+    getTaobaoItemUsingNumIidsByAdmin: { // args
+      categoryCode?: string | null; // String
+      siilCode?: string | null; // String
+      taobaoIds: string[]; // [String!]!
+      userId?: number | null; // Int
+    }
+    getTaobaoItemUsingNumIidsByUser: { // args
+      categoryCode?: string | null; // String
+      siilCode?: string | null; // String
+      taobaoIds: string[]; // [String!]!
+    }
+    getTaobaoItemsByAdmin: { // args
+      categoryCode?: string | null; // String
+      endPrice?: number | null; // Float
+      orderBy: NexusGenEnums['TaobaoItemOrderBy']; // TaobaoItemOrderBy!
+      page: number | null; // Int
+      pageCount: number | null; // Int
+      query: string; // String!
+      siilCode?: string | null; // String
+      startPrice?: number | null; // Float
+      userId?: number | null; // Int
+    }
+    getTaobaoItemsByUser: { // args
+      categoryCode?: string | null; // String
+      endPrice?: number | null; // Float
+      orderBy: NexusGenEnums['TaobaoItemOrderBy']; // TaobaoItemOrderBy!
+      page: number | null; // Int
+      pageCount: number | null; // Int
+      query: string; // String!
+      siilCode?: string | null; // String
+      startPrice?: number | null; // Float
     }
     initProductImageByUser: { // args
       productId: number; // Int!

@@ -390,20 +390,22 @@ export const mutation_taobao_product = extendType({
                 data: nonNull("String"),
             },
             resolve: async (src, args, ctx, info) => {
+                //todo수성
                 try {
-                    const data = JSON.parse(args.data) as { onebound: { item: IOBItem }, sellforyou: { data: ITranslateData[] } };
-
+                    const data = JSON.parse(args.data) as { onebound: { item: IOBItem }, sellforyou: { data: ITranslateData[] } };//JSON.parse는 JSON문자열 구문 분석해서 객체를 생성해냄 
+                    //console.log("test1",data);
                     if (data.onebound?.item && (data.sellforyou?.data?.length > 0)) {
-                        const translatedData = data.sellforyou.data[0];
-                        const taobaoData = data.onebound.item;
-
+                        const translatedData = data.sellforyou.data[0];//번역한 데이터
+                        const taobaoData = data.onebound.item;// 원본데이터 
+                        // console.log("test2 - translatedData",translatedData);
+                        // console.log("test3 - taobaoData",taobaoData)
                         if (translatedData.taobaoNumIid !== taobaoData.num_iid) {
                             return throwError(errors.etc("원문/번역데이터 고유값이 다릅니다."), ctx);
                         }
 
                         // 가져온 상품 id 쿼리하기
                         const refreshDay = await ctx.prisma.setting.findUnique({ where: { name: "TAOBAO_PRODUCT_REFRESH_DAY" } });
-
+                        console.log("refreshDay",refreshDay);
                         if (!refreshDay) {
                             return throwError(errors.notInitialized, ctx);
                         }
@@ -411,12 +413,11 @@ export const mutation_taobao_product = extendType({
                         let taobaoProducts: ((TaobaoProduct & { itemData: IOBItem, translateDataObject: ITranslateData | null }) | null)[] = [];
 
                         const num_iid = taobaoData.num_iid;
-                        const item = taobaoData;
-
-                        const originalData = JSON.stringify(item);
-
-                        let price = parseFloat(item.price);
-                        
+                        const item = taobaoData;//객체
+                        const originalData = JSON.stringify(item);//객체를 string으로 변환했고 다시 
+                        // console.log("originalData",originalData); //원본 데이터 
+                        let price = parseFloat(item.price);//json의 item.price를 소수점인 float type으로 변환. 이유 object에 value는 현재 다 string value이므로 
+                        console.log("price = ",price);
                         if (isNaN(price)) price = 0;
 
                         var uniqueId = null;
@@ -425,8 +426,9 @@ export const mutation_taobao_product = extendType({
                         const checkUserId = await ctx.prisma.product.findMany({
                             where: { user_id: ctx.token?.userId ?? null, taobao_product: { taobao_num_iid: num_iid } },
                             select: { id: true, category_code: true, user_id: true, product_code: true, product_store: true, product_option_name: { select: { id: true } }, state: true, taobao_product_id: true, taobao_product: { select: { taobao_num_iid: true, original_data: true } } }
-                        });
-
+                        });//쿼리문에서 select column 명 말하는것과 같은거같음 추가적으로 fk에 해당하는 모델들의 컬럼도 저렇게들고와지네 조건도 마찬가지로
+                        console.log("test",ctx.token);
+                        console.log("checkUserId",checkUserId);
                         if (checkUserId.length > 0) {
                             for (var i in checkUserId) {
                                 var temp = JSON.parse(checkUserId[i].taobao_product.original_data);
@@ -449,11 +451,11 @@ export const mutation_taobao_product = extendType({
                                 }
                             }
                         }
-
+                        console.log("dsadsad",item.video);
                         try {
                             let updatedProduct = await ctx.prisma.taobaoProduct.create({
                                 data: {
-                                    id: undefined,
+                                    id: undefined,//index는 undefined로 입력을 하구나. .
                                     taobao_num_iid: num_iid,
                                     brand: item.brand ?? "",
                                     image_thumbnail: "http:" + item.pic_url.replace(/^https?:/, ""),
@@ -462,21 +464,25 @@ export const mutation_taobao_product = extendType({
                                     taobao_brand_id: item.brandId?.toString() ?? null,
                                     taobao_category_id: item.rootCatId,
                                     name: item.title,
-                                    video_url: item.video
+                                    video_url: item.video ?? null//이부분에러남 
                                 }
                             });
-
+                            if(!updatedProduct) return throwError(errors.etc("updatedProduct"),ctx);
+                            console.log("updatedProduct = ",updatedProduct);
                             taobaoProducts.push({ ...updatedProduct, itemData: item, translateDataObject: translatedData });
+
                         }
                         catch (e) {
                             console.log("taobaoProduct Upsert Error : ", e);
                         }
 
-                        const option = { isRestricted: false, isAdmin: !!ctx.token!.adminId };
-
+                        const option = { isRestricted: false, isAdmin: !!ctx.token!.adminId };//isResricted:false 와 isAdmin : boolean 초기값생성 
+                        console.log("option = ",option);
                         if (!ctx.token?.adminId && (!ctx.token?.level || ctx.token.level.level < 2)) {
                             option.isRestricted = true;
                         }
+                        console.log("level",ctx.token?.level?.level);
+                        console.log("option LEVEL = ",option);
 
                         // 마진율 붙여서 본인 상품 만들기
                         const cnyRateSetting = await ctx.prisma.setting.findUnique({ where: { name: "CNY_RATE" } });

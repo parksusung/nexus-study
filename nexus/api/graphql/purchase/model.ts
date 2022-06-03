@@ -3,11 +3,11 @@ import { objectType } from "nexus";
 
 export interface PurchaseLogPlanInfoType {
     id: number;
-    planLevel: number | null;
+    plan_level: number | null;
     name: string;
     month: number;
     price: number;
-    externalFeatureVariableId: string | null;
+    external_feature_variable_id: string | null;
 }
 
 

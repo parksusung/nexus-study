@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient, Product, TaobaoProduct, UserInfo } from "@prisma/client";
 import { isBefore, sub } from "date-fns";
 import fetch from "node-fetch";
-import { IOBApiType, IOBItem, IOBItemGetParam, IOBItemGetResponse, IOBPublicParameter, IQueryParam } from "../../onebound_api_types";
+import { IOBApiType, IOBItem, IOBItemGetParam, IOBItemGetResponse, IOBPublicParameter, IQueryParam } from "../../../onebound_api_types";
 import { ITranslateData } from "../translate_types";
 import { Context } from "../../../types";
 // import { EXTERNAL_ADDRESS, TRANSLATE_ITEM_SERVER } from "../constants";
@@ -9,6 +9,7 @@ import { errors, throwError } from "../error";
 import { getFromS3, uploadToS3ByBuffer, uploadToS3WithEditor,uploadToS3AvoidDuplicateByBuffer } from "../file_manage";
 import { wait } from "../helpers";
 import { publishUserLogData } from "./pubsub";
+import { calculatePrice } from './calculate-product-price';
 
 var axios = require('axios');
 
@@ -291,13 +292,20 @@ export const getNameFromCookie = (cookie: string) => {
 }
 
 export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaClient, productCode: string | undefined, taobaoProducts: ((TaobaoProduct & { itemData: IOBItem, translateDataObject: ITranslateData | null }) | null)[], userId: number | null, userInfo: T, categoryCode?: string | null, siilCode?: string | null, adminId?: number) => {
-    const boundCalculatePrice = (cnyPrice: number, cnyRate: number, defaultShippingFee: number) => calculatePrice.bind(null, cnyPrice, userInfo.marginRate, userInfo.marginUnitType, cnyRate, defaultShippingFee)();
-
+    const boundCalculatePrice = (cnyPrice: number, cnyRate: number, defaultShippingFee: number) => 
+    calculatePrice.bind(null, cnyPrice, userInfo.marginRate, userInfo.marginUnitType, cnyRate, defaultShippingFee)();
+    // 메모 const calculatePrice: any = (cnyPrice: string | number, marginRate: number, marginUnitType: string, cnyRate: number, shippingFee: number) => {
+    //     if (marginUnitType === "WON") {
+    //         return Math.round((Math.floor(parseFloat(cnyPrice.toString()) * cnyRate) + shippingFee + marginRate) / 100) * 100;
+    //     } else {
+    //         return Math.round((Math.floor(parseFloat(cnyPrice.toString()) * cnyRate) + shippingFee) * (100 + marginRate) / 10000) * 100;
+    //     }
+    // }
     return await Promise.all(taobaoProducts.filter((v): v is TaobaoProduct & { itemData: IOBItem, translateDataObject: ITranslateData | null } => v !== null).map(async v => {
         const taobaoData = v.itemData;
         const translateData = v.translateDataObject;
 
-        let product = await prisma.product.findUnique({ where: { UQ_user_id_taobao_product_id: { taobaoProductId: v.id, userId: userId ?? 0 } } })
+        let product = await prisma.product.findUnique({ where: { UQ_user_id_taobao_product_id: { taobao_product_id: v.id, user_id: userId ?? 0 } } })
 
         //productOptionName 분석
         const firstPropertyInfo = taobaoData.skus.sku.length === 0 ? undefined : taobaoData.skus.sku[0]?.properties_name?.match(/[-\d]+?:[-\d]+?:(.+?):([^;]+);?/g)
@@ -553,7 +561,7 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                     },
                     data: { 
                         description,
-                        imageThumbnailData: JSON.stringify(taobaoData.item_imgs.map(v => v.url)),
+                        image_thumbnail_data: JSON.stringify(taobaoData.item_imgs.map(v => v.url)),
                     }
                 });
             }
@@ -563,17 +571,17 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                     id: product.id 
                 },
                 data: { 
-                    productCode: productCode ?? `SFY${adminId ? "A" : ""}_` + product.id.toString(36) 
+                    product_code: productCode ?? `SFY${adminId ? "A" : ""}_` + product.id.toString(36) 
                 }
             });
             
             if (res) { //옵션 있는 상품의 경우
-                const productOptionNames = await Promise.all(res!.map(async v => {
-                    const name = translateData?.optionName.find(v2 => v2.taobaoPid === v.taobaoPid)?.name ?? v.name;
-                    const urlInfo = taobaoData.prop_imgs.prop_img.find(v2 => v2.properties.split(":")[0] === v.taobaoPid);
+                const productOptionNames = await Promise.all(res!.map(async function (v) {
+                        const name = translateData?.optionName.find(v2 => v2.taobaoPid === v.taobaoPid)?.name ?? v.name;
+                        const urlInfo = taobaoData.prop_imgs.prop_img.find(v2 => v2.properties.split(":")[0] === v.taobaoPid);
 
-                    return await prisma.productOptionName.create({ data: { ...v, hasImage: !!urlInfo, productId: product!.id, name } })
-                }));
+                        return await prisma.productOptionName.create({ data: { taobao_pid : v.taobaoPid , order : v.order , has_image: !!urlInfo, product_id: product!.id, name } });
+                    }));
 
                 //productOptionValue 분석
                 const propsLengthInfo = Object.keys(taobaoData.props_list).map(v => v.match(/([-\d]+):([-\d]+)/)![1]).reduce((p, c) => {
@@ -600,7 +608,7 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
 
                     // 차례대로 1:2 : 3:4 라고 하면
                     // a[1]:1, a[2] : 2, b[1] : 3, b[2] : 4
-                    const productOptionName = productOptionNames.find(v => v.taobaoPid === a[1])!;
+                    const productOptionName = productOptionNames.find(v => v.taobao_pid === a[1])!;
                     const urlInfo = taobaoData.prop_imgs.prop_img.find(v => v.properties === key);
                     const name = translateData?.optionValue.find(v2 => v2.taobaoPid === a[1] && v2.taobaoVid === a[2])?.name ?? b[2];
 
@@ -634,9 +642,9 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                         data: {
                             name,
                             image,
-                            optionNameOrder: productOptionName.order,
-                            taobaoVid: a[2],
-                            productOptionNameId: productOptionName.id,
+                            option_name_order: productOptionName.order,
+                            taobao_vid: a[2],
+                            product_option_name_id: productOptionName.id,
                             number: temp,
                         }
                     });
@@ -646,22 +654,22 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                     const match = sku.properties.match(/^([-\d]+):([-\d]+);?([-\d]+)?:?([-\d]+)?;?([-\d]+)?:?([-\d]+)?/)!;
 
                     const optionString = [
-                        productOptionValues.find(v => v.optionNameOrder === 1 && v.taobaoVid === match[2])!.number,
-                        productOptionValues.find(v => v.optionNameOrder === 2 && v.taobaoVid === match[4])?.number,
-                        productOptionValues.find(v => v.optionNameOrder === 3 && v.taobaoVid === match[6])?.number,
+                        productOptionValues.find(v => v.option_name_order === 1 && v.taobao_vid === match[2])!.number,
+                        productOptionValues.find(v => v.option_name_order === 2 && v.taobao_vid === match[4])?.number,
+                        productOptionValues.find(v => v.option_name_order === 3 && v.taobao_vid === match[6])?.number,
                     ].filter((v): v is number => typeof v === 'number').map(v => ("00" + v).slice(-2)).join('_');
 
                     return await prisma.productOption.create({
                         data: {
-                            productId: product!.id,
-                            optionValue1Id: productOptionValues.find(v => v.optionNameOrder === 1 && v.taobaoVid === match[2])!.id,
-                            optionValue2Id: productOptionValues.find(v => v.optionNameOrder === 2 && v.taobaoVid === match[4])?.id,
-                            optionValue3Id: productOptionValues.find(v => v.optionNameOrder === 3 && v.taobaoVid === match[6])?.id,
-                            taobaoSkuId: sku.sku_id,
-                            priceCny: parseFloat(sku.price),
+                            product_id: product!.id,
+                            option_value1_id: productOptionValues.find(v => v.option_name_order === 1 && v.taobao_vid === match[2])!.id,
+                            option_value2_id: productOptionValues.find(v => v.option_name_order === 2 && v.taobao_vid === match[4])?.id,
+                            option_value3_id: productOptionValues.find(v => v.option_name_order === 3 && v.taobao_vid === match[6])?.id,
+                            taobao_sku_id: sku.sku_id,
+                            price_cny: parseFloat(sku.price),
                             price: taobaoData.shop_id === "express" ? boundCalculatePrice(parseFloat(sku.price), 1, taobaoData.props[code].value) : boundCalculatePrice(parseFloat(sku.price), cnyRate, defaultShippingFee),
                             stock: parseInt(sku.quantity ?? "0"),
-                            optionString
+                            option_string : optionString 
                         }
                     });
                 }));
