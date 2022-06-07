@@ -540,11 +540,13 @@ export const mutation_taobao_product = extendType({
 
                                     return throwError(errors.etc("이용 가능한 상품 관리 개수를 초과하였습니다."), ctx);
                                 }
-                                taobaoProducts = taobaoProducts.slice(0, userInfo.max_product_limit - productCount);
-                                
+                                console.log("count1 = ",taobaoProducts.length);//1
+                                taobaoProducts = taobaoProducts.slice(0, userInfo.max_product_limit - productCount);//? 무슨작업을 한건지 몰겠음 , 달라진게없음 전 후같음 qst
+                                console.log("count2 = ",taobaoProducts.length);//1
                             }
 
-                            // 만약 수집완료시 product 수집 갯수 증가 
+                            // 만약 수집완료시 product 수집했던 갯수 증가  ( increment : 1 ) 갯수를 증가하는걸 prisma에서 지원한다고함
+                            //https://github.com/prisma/prisma/releases/tag/2.6.0
                             await ctx.prisma.userInfo.update({ where: { user_id: userInfo.user_id }, data: { product_collect_count: { increment: taobaoProducts.length } } });
                         }
 

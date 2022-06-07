@@ -174,7 +174,6 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                         break;
                     }
                 }
-
                 cnyRate = 1;
                 defaultShippingFee = taobaoData.props[code].value;
             } else {
@@ -478,6 +477,7 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                             image = `https://img.sellforyou.co.kr/sellforyou/${await uploadToS3AvoidDuplicateByBuffer(buffer, `option${(i + 1).toString().padStart(2, '0')}.${image_ext}`, mimetype, ["product", product.id])}`;
                         }
                     }
+
 
                     return await prisma.productOptionValue.create({
                         data: {
