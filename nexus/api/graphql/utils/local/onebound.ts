@@ -99,186 +99,6 @@ export const getTranslateData = (taobaoData: IOBItem, isTranslated?: boolean) =>
 
 export async function getItemAndSave(ctx: Context, taobaoIids: string[], option: IGetItemAndSaveOption) {}
 
-// export async function getItemAndSave(ctx: Context, taobaoIids: string[], option: IGetItemAndSaveOption) {
-//     // 가져온 상품 id 쿼리하기
-//     const refreshDay = await ctx.prisma.setting.findUnique({ where: { name: "TAOBAO_PRODUCT_REFRESH_DAY" } });
-//     if (!refreshDay) return throwError(errors.notInitialized, ctx);
-//     let taobaoProducts: ((TaobaoProduct & { itemData: IOBItem, translateDataObject: ITranslateData | null }) | null)[] = [];
-
-//     // 현재 본인이 가진 상품 중 중복상품이 있는지 검사
-//     const checkUserId = await ctx.prisma.product.findMany({
-//         where: { userId: ctx.token?.userId ?? null, taobaoProduct: { taobaoNumIid: { in: taobaoIids } } },
-//         select: { taobaoProduct: { select: { taobaoNumIid: true } } }
-//     });
-
-//     const filteredTaobaoIids = taobaoIids.filter(v => checkUserId.findIndex(v2 => v2.taobaoProduct.taobaoNumIid === v) === -1);
-
-//     console.log(taobaoIids.length, taobaoIids, filteredTaobaoIids, filteredTaobaoIids.length);
-//     if (filteredTaobaoIids.length === 0) {
-//         if (ctx.token?.userId) {
-//             publishUserLogData(ctx, { type: "getTaobaoItem", title: `상품 ${taobaoIids.length} 개는 모두 등록된 상품입니다.` });
-//         }
-//         return;
-//     }
-
-//     // await Promise.all(taobaoIids.map(async num_iid => {
-//     for (const num_iid of filteredTaobaoIids) {
-//         const product = await ctx.prisma.taobaoProduct.findUnique({ where: { taobaoNumIid: num_iid } });
-//         if (!product || isBefore(product.modifiedAt, sub(new Date(), { days: parseInt(refreshDay.value) }))) {
-//             let params: IOBItemGetParam = { ...publicParam, num_iid, is_promotion: 1 };
-
-//             const maxAttempt = 10;
-//             let result: IOBItemGetResponse | null = null;
-//             for (let attempt = 1; attempt <= maxAttempt; attempt++) {
-//                 result = await fetch(getOBFetchUrl<IOBItemGetParam>("item_get", params)).then(res => res.json()).catch(async e => {
-//                     console.log(`attempt ${attempt} :`, "Onebound item_get parse error :", e);
-//                     return null;
-//                 }) as IOBItemGetResponse | null;
-//                 if (result) {
-//                     if (result.error !== '') {
-//                         const errorInfo = (({ error, error_code, reason, request_id }) => ({ error, error_code, reason, request_id, time: new Date().toLocaleString() }))(result);
-//                         console.log(`attempt ${attempt} :`, "item_get 에러", errorInfo);
-//                     }
-//                     else if (result.item) {
-//                         break;
-//                     }
-//                 }
-//                 await wait(200);
-//             }
-
-//             if (!result) continue;
-//             if (!result.item) continue;
-
-//             const item = result.item;
-//             console.log("collecting ", item.num_iid);
-
-//             const originalData = JSON.stringify(item);
-
-//             let price = parseFloat(item.price);
-//             if (isNaN(price)) price = 0;
-
-//             try {
-//                 const updatedProduct = await ctx.prisma.taobaoProduct.upsert({
-//                     where: { taobaoNumIid: num_iid },
-//                     create: {
-//                         taobaoNumIid: num_iid,
-//                         brand: item.brand,
-//                         imageThumbnail: "http:" + item.pic_url.replace(/^https?:/, ""),
-//                         originalData,
-//                         price,
-//                         taobaoBrandId: item.brandId?.toString() ?? null,
-//                         taobaoCategoryId: item.rootCatId,
-//                         name: item.title,
-//                     },
-//                     update: {
-//                         brand: item.brand,
-//                         imageThumbnail: "http:" + item.pic_url.replace(/^https?:/, ""),
-//                         originalData,
-//                         price: price !== 0 ? price : undefined,
-//                         taobaoBrandId: item.brandId?.toString() ?? null,
-//                         taobaoCategoryId: item.rootCatId,
-//                         name: item.title,
-//                     }
-//                 })
-//                 taobaoProducts.push({ ...updatedProduct, itemData: item, translateDataObject: null });
-//             }
-//             catch (e) {
-//                 console.log("taobaoProduct upsert error : ", e, JSON.stringify({
-//                     where: { taobaoNumIid: num_iid },
-//                     create: {
-//                         taobaoNumIid: num_iid,
-//                         brand: item.brand,
-//                         imageThumbnail: "http:" + item.pic_url.replace(/^https?:/, ""),
-//                         originalData,
-//                         price: parseFloat(item.price),
-//                         taobaoBrandId: item.brandId?.toString() ?? null,
-//                         taobaoCategoryId: item.rootCatId,
-//                         name: item.title,
-//                     },
-//                     update: {
-//                         brand: item.brand,
-//                         imageThumbnail: "http:" + item.pic_url.replace(/^https?:/, ""),
-//                         originalData,
-//                         price: parseFloat(item.price),
-//                         taobaoBrandId: item.brandId?.toString() ?? null,
-//                         taobaoCategoryId: item.rootCatId,
-//                         name: item.title,
-//                     }
-//                 }));
-
-//             }
-//             // return updatedProduct;
-
-//         }
-//         else {
-//             const taobaoData = JSON.parse(product.originalData) as IOBItem;
-//             const translateDataObject = product.translateData ? JSON.parse(product.translateData) as ITranslateData : null;
-//             console.log("data:", taobaoData);
-//             taobaoProducts.push({ ...product, itemData: taobaoData, translateDataObject });
-//         }
-//         // return product;
-//     }
-
-//     // 마진율 붙여서 본인 상품 만들기
-//     const cnyRateSetting = await ctx.prisma.setting.findUnique({ where: { name: "CNY_RATE" } });
-//     if (!cnyRateSetting) return throwError(errors.notInitialized, ctx);
-//     const cnyRate = parseFloat(cnyRateSetting.value);
-//     const userInfo = await ctx.prisma.userInfo.findUnique({ where: { userId: ctx.token!.userId ?? 0 } });
-//     let info: IFeeInfo = {
-//         marginRate: 0,
-//         cnyRate,
-//         defaultShippingFee: 0,
-//     };
-//     if (userInfo) {
-//         info.marginRate = userInfo.marginRate;
-//         info.cnyRate = userInfo.cnyRate;
-//         info.defaultShippingFee = userInfo.defaultShippingFee;
-//     }
-//     if (!option.isAdmin && option.isRestricted) {
-//         const result = await ctx.prisma.setting.findUnique({ where: { name: "FREE_USER_PRODUCT_LIMIT" } });
-//         if (!result) return throwError(errors.notInitialized, ctx);
-//         const freeUserProductLimit = parseInt(result.value);
-
-//         const productCount = await ctx.prisma.product.count({ where: { userId: ctx.token!.userId! } });
-//         if (productCount >= freeUserProductLimit) return throwError(errors.etc("무료 이용량을 초과하였습니다."), ctx);
-//         taobaoProducts = taobaoProducts.slice(0, freeUserProductLimit - productCount);
-//     }
-//     if (userInfo?.maxProductLimit) {
-//         const productCount = await ctx.prisma.product.count({ where: { userId: ctx.token!.userId! } });
-//         if (productCount >= userInfo.maxProductLimit) return throwError(errors.etc("이용 가능한 최대 상품 수집량을 초과하였습니다."), ctx);
-//         taobaoProducts = taobaoProducts.slice(0, userInfo.maxProductLimit - productCount);
-//         await ctx.prisma.userInfo.update({ where: { userId: userInfo.userId }, data: { productCollectCount: { increment: taobaoProducts.length } } });
-//     }
-
-//     const taobaoProductTranslateRequest = await ctx.prisma.taobaoProductTranslateRequest.create({
-//         data: { taobaoIidArray: JSON.stringify(taobaoProducts.map(v => v!.taobaoNumIid)), adminId: ctx.token!.adminId, userId: ctx.token!.userId, categoryCode: option.categoryCode, siilCode: option.siilCode }
-//     })
-//     const jsonData = {
-//         requestId: taobaoProductTranslateRequest.id,
-//         callbackUrl: `${EXTERNAL_ADDRESS}/callback/translate`,
-//         data: taobaoProducts.map(v => getTranslateData(v!.itemData))
-//     };
-//     try {
-//         const requestResult = await fetch(TRANSLATE_ITEM_SERVER, {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify(jsonData)
-//         }).then(async (res) => ({ code: res.status, data: await res.text() }))
-//         console.log("translateRequest:", requestResult)
-//         if (requestResult.code !== 200) throw new Error(requestResult.data);
-//         return;
-//     }
-//     catch (e) {
-//         console.log("번역 요청 실패 추정 : ", e);
-//         await ctx.prisma.taobaoProductTranslateRequest.delete({ where: { id: taobaoProductTranslateRequest.id } });
-//         if (userInfo) {
-//             await ctx.prisma.userInfo.update({ where: { userId: userInfo.userId }, data: { productCollectCount: { decrement: taobaoProducts.length } } });
-//         }
-//         publishUserLogData(ctx, { type: "getTaobaoItem", title: `상품 ${taobaoProducts.length} 개 수집 요청에 실패하였습니다.` });
-//         return;
-//     }
-// }
-
 export const getNameFromCookie = (cookie: string) => {
     const decodedCookie = Buffer.from(cookie, "base64").toString("utf8");
     console.log(decodedCookie)
@@ -294,6 +114,8 @@ export const getNameFromCookie = (cookie: string) => {
 export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaClient, productCode: string | undefined, taobaoProducts: ((TaobaoProduct & { itemData: IOBItem, translateDataObject: ITranslateData | null }) | null)[], userId: number | null, userInfo: T, categoryCode?: string | null, siilCode?: string | null, adminId?: number) => {
     const boundCalculatePrice = (cnyPrice: number, cnyRate: number, defaultShippingFee: number) => 
     calculatePrice.bind(null, cnyPrice, userInfo.marginRate, userInfo.marginUnitType, cnyRate, defaultShippingFee)();
+
+    console.log("calculatePrice = ", boundCalculatePrice);
     // 메모 const calculatePrice: any = (cnyPrice: string | number, marginRate: number, marginUnitType: string, cnyRate: number, shippingFee: number) => {
     //     if (marginUnitType === "WON") {
     //         return Math.round((Math.floor(parseFloat(cnyPrice.toString()) * cnyRate) + shippingFee + marginRate) / 100) * 100;
@@ -304,27 +126,38 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
     return await Promise.all(taobaoProducts.filter((v): v is TaobaoProduct & { itemData: IOBItem, translateDataObject: ITranslateData | null } => v !== null).map(async v => {
         const taobaoData = v.itemData;
         const translateData = v.translateDataObject;
-
-        let product = await prisma.product.findUnique({ where: { UQ_user_id_taobao_product_id: { taobao_product_id: v.id, user_id: userId ?? 0 } } })
-
-        //productOptionName 분석
+        console.log("taobaoData = ",taobaoData);
+        console.log("translateData = ",translateData);
+        let product = await prisma.product.findUnique({ where: { UQ_user_id_taobao_product_id: { taobao_product_id: v.id, user_id: userId ?? 0 } } })//수집한적이있으면 
+        console.log("product = ",product);
+        //productOptionName 분석 옵션갯수인듯? 
+        console.log("taobaoData.skus.sku",taobaoData.skus.sku);//각 옵션의 가격, 속성, 속성이름, 남은수량, 옵션의 고유 카테고리 가 들어있음 
         const firstPropertyInfo = taobaoData.skus.sku.length === 0 ? undefined : taobaoData.skus.sku[0]?.properties_name?.match(/[-\d]+?:[-\d]+?:(.+?):([^;]+);?/g)
-
+        console.log("firstPropertyInfo",firstPropertyInfo);
         if ((firstPropertyInfo?.length ?? 0) > 3) {
             throw new Error("옵션이 4개 이상인 상품은 수집이 불가합니다.");
         }
 
         const res = firstPropertyInfo?.map((v, i) => {
+            console.log("value = ",v);
             const result = v.match(/([-\d]+):[-\d]+:(.+):.*;?/);
+            console.log("result = ",result);//예시 1627207:28338:颜色:蓝色;  
+            console.log("result[1] = ",result[1]);//예시 1627207
+            console.log("result[2] = ",result[2]);// 예시 颜色
             if (result) {
-                return { taobaoPid: result[1], name: result[2], order: i + 1 };
+                return { taobaoPid: result[1], name: result[2], order: i + 1 };// 숫자 1 , 문자 2 , 
             }
             else throw new Error("파싱 중 문제 발생 " + JSON.stringify(taobaoData));
         });
 
-        if (!product) {
+        if (!product) {//수집한적이 없으면 
+            console.log("dsadfsadsaㅇ");
             var description = (translateData?.description ?? taobaoData.desc).replace(/(?<!<p ?>)(<img [^>]*?>)(?!<p>)/g, "<p>$1</p>");
-
+            console.log("description = ",translateData?.description ?? taobaoData.desc);
+            //<img src=https://img.alicdn.com/imgextra/i3/2170372256/O1CN01xzd4Sd1SXIGJRj64i_!!2170372256.jpg alt="" />
+            
+            console.log("description 변환후  = ",description);
+            //<p><img src=https://img.alicdn.com/imgextra/i3/2170372256/O1CN01xzd4Sd1SXIGJRj64i_!!2170372256.jpg alt="" /></p> 가됨
             let code = 0;
             let price = parseFloat(taobaoData.price);
 
@@ -332,7 +165,7 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
 
             let cnyRate = 0;
             let defaultShippingFee = 0;
-
+            console.log("taobaoData.shop_id = ",taobaoData.shop_id);
             if (taobaoData.shop_id === "express") {
                 for (var i in taobaoData.props) {
                     if (taobaoData.props[i].default) {
@@ -365,19 +198,22 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
             }
 
             let categories: any = {};
-            
+            console.log("categoryCode",categoryCode);//50011123
             if (categoryCode) {
-                let result_b378 = await prisma.categoryInfoB378.findUnique({ where: { code: categoryCode }});
-                let result_a077 = await prisma.categoryInfoA077.findUnique({ where: { code: result_b378?.code_a077 }});
-                let result_a112 = await prisma.categoryInfoA112.findUnique({ where: { code: result_a077?.code_a112 }});
-                let result_a113 = await prisma.categoryInfoA113.findUnique({ where: { code: result_a077?.code_a113 }});
-                let result_a027 = await prisma.categoryInfoA027.findUnique({ where: { code: result_a077?.code_a027 }});
-                let result_a001 = await prisma.categoryInfoA001.findUnique({ where: { code: result_a077?.code_a001 }});
-                let result_a006 = await prisma.categoryInfoA006.findUnique({ where: { code: result_a077?.code_a006 }});
-                let result_b719 = await prisma.categoryInfoB719.findUnique({ where: { code: result_a077?.code_b719 }});
-                let result_a524 = await prisma.categoryInfoA524.findUnique({ where: { code: result_a077?.code_a524 }});
-                let result_a525 = await prisma.categoryInfoA525.findUnique({ where: { code: result_a077?.code_a525 }});
-                let result_b956 = await prisma.categoryInfoB956.findUnique({ where: { code: result_a077?.code_b956 }});
+                let result_b378 = await prisma.categoryInfoB378.findUnique({ where: { code: categoryCode }});//아마 타오바오?
+                
+                console.log("result_b378",result_b378);
+                if(result_b378 !== null){//없을때 예외처리 
+                let result_a077 = await prisma.categoryInfoA077.findUnique({ where: { code: result_b378?.code_a077 }});//아마 네이버
+                let result_a112 = await prisma.categoryInfoA112.findUnique({ where: { code: result_a077?.code_a112 }});//각 네이버 기준의 카테고리들
+                let result_a113 = await prisma.categoryInfoA113.findUnique({ where: { code: result_a077?.code_a113 }});//각 네이버 기준의 카테고리들
+                let result_a027 = await prisma.categoryInfoA027.findUnique({ where: { code: result_a077?.code_a027 }});//각 네이버 기준의 카테고리들
+                let result_a001 = await prisma.categoryInfoA001.findUnique({ where: { code: result_a077?.code_a001 }});//각 네이버 기준의 카테고리들
+                let result_a006 = await prisma.categoryInfoA006.findUnique({ where: { code: result_a077?.code_a006 }});//각 네이버 기준의 카테고리들
+                let result_b719 = await prisma.categoryInfoB719.findUnique({ where: { code: result_a077?.code_b719 }});//각 네이버 기준의 카테고리들
+                let result_a524 = await prisma.categoryInfoA524.findUnique({ where: { code: result_a077?.code_a524 }});//각 네이버 기준의 카테고리들
+                let result_a525 = await prisma.categoryInfoA525.findUnique({ where: { code: result_a077?.code_a525 }});//각 네이버 기준의 카테고리들
+                let result_b956 = await prisma.categoryInfoB956.findUnique({ where: { code: result_a077?.code_b956 }});//각 네이버 기준의 카테고리들
 
                 categories['B378'] = result_b378?.code;
                 categories['B378_name'] = result_b378?.name;
@@ -412,7 +248,9 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                 categories['B956'] = result_b956?.code;
                 categories['B956_name'] = result_b956?.name;
             }
-
+        }
+        console.log("categories['B956']",categories['B956']);
+            //todo 여기까지함 
             product = await prisma.product.create({
                 data: {
                     name: taobaoData.nick !== "" ? taobaoData.nick : translateData?.title ?? taobaoData.title,
@@ -469,8 +307,9 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                     search_tags: taobaoData.desc_short !== "" ? taobaoData.desc_short : searchTags
                 },
             });
-
+            console.log("product",product);
             // VVIC Thumbnails/Descriptions Upload
+            console.log("taobaoData.shop_id",taobaoData.shop_id);
             if (taobaoData.shop_id === 'vvic') {
                 if (taobaoData.item_imgs.length > 0) {
                     var new_imgs = await Promise.all(taobaoData.item_imgs.map(async(v, i) => {
@@ -517,7 +356,6 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                         taobaoData.item_imgs = sorted_imgs;
                     }
                 }
-
                 if (taobaoData.desc_img.length > 0) {
                     var desc_imgs = await Promise.all(taobaoData.desc_img.map(async(v, i) => {
                         let image_resp = await axios.get(v, {responseType: 'arraybuffer'});
@@ -554,7 +392,6 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                         description = (translateData?.description ?? taobaoData.desc).replace(/(?<!<p ?>)(<img [^>]*?>)(?!<p>)/g, "<p>$1</p>");
                     }
                 }
-
                 product = await prisma.product.update({
                     where: { 
                         id: product.id 
@@ -565,7 +402,7 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                     }
                 });
             }
-
+            console.log("dsad");
             product = await prisma.product.update({
                 where: { 
                     id: product.id 
@@ -574,13 +411,17 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                     product_code: productCode ?? `SFY${adminId ? "A" : ""}_` + product.id.toString(36) 
                 }
             });
-            
+            console.log("product dsad",product);//여기까지 문제없음 
+
+            console.log("res",res);
             if (res) { //옵션 있는 상품의 경우
                 const productOptionNames = await Promise.all(res!.map(async function (v) {
                         const name = translateData?.optionName.find(v2 => v2.taobaoPid === v.taobaoPid)?.name ?? v.name;
                         const urlInfo = taobaoData.prop_imgs.prop_img.find(v2 => v2.properties.split(":")[0] === v.taobaoPid);
 
-                        return await prisma.productOptionName.create({ data: { taobao_pid : v.taobaoPid , order : v.order , has_image: !!urlInfo, product_id: product!.id, name } });
+                        const productOptionName =await prisma.productOptionName.create({ data: { taobao_pid : v.taobaoPid , order : v.order , has_image: !!urlInfo, product_id: product!.id, name } });
+                        console.log("productOptionName",productOptionName);//문제없고 
+                        return productOptionName;
                     }));
 
                 //productOptionValue 분석
@@ -617,7 +458,7 @@ export const saveTaobaoItemToUser = async <T extends IFeeInfo>(prisma: PrismaCli
                     image = image !== null ? image.replace(/^https?:\/\/\/\//, "http://") : image;
 
                     var temp = i - propsLengthInfo.find(v => v.l === a[1])!.c + 1;
-
+                    console.log("temp = ",temp);//여기까지문제없다 
                     if (taobaoData.shop_id === 'vvic' && image) {
                         let image_resp = await axios.get(image, {responseType: 'arraybuffer'});
                         let image_raw = Buffer.from(image_resp.data).toString('base64');

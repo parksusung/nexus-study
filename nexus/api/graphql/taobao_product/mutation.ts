@@ -417,7 +417,7 @@ export const mutation_taobao_product = extendType({
                         const originalData = JSON.stringify(item);//객체를 string으로 변환했고 다시 
                         // console.log("originalData",originalData); //원본 데이터 
                         let price = parseFloat(item.price);//json의 item.price를 소수점인 float type으로 변환. 이유 object에 value는 현재 다 string value이므로 
-                        console.log("price = ",price);
+                        //console.log("price = ",price);
                         if (isNaN(price)) price = 0;
 
                         var uniqueId = null;
@@ -451,7 +451,7 @@ export const mutation_taobao_product = extendType({
                                 }
                             }
                         }
-                        console.log("dsadsad",item.video);
+                        //console.log("dsadsad",item.video);
                         try {
                             let updatedProduct = await ctx.prisma.taobaoProduct.create({
                                 data: {
@@ -464,11 +464,11 @@ export const mutation_taobao_product = extendType({
                                     taobao_brand_id: item.brandId?.toString() ?? null,
                                     taobao_category_id: item.rootCatId,
                                     name: item.title,
-                                    video_url: item.video ?? null//이부분에러남 
+                                    video_url: item.video === "" || null ? null : item.video // 이부분 배열때문에 이슈가있엇음 
                                 }
                             });
                             if(!updatedProduct) return throwError(errors.etc("updatedProduct"),ctx);
-                            console.log("updatedProduct = ",updatedProduct);
+                            //console.log("updatedProduct = ",updatedProduct);
                             taobaoProducts.push({ ...updatedProduct, itemData: item, translateDataObject: translatedData });
 
                         }
@@ -477,11 +477,11 @@ export const mutation_taobao_product = extendType({
                         }
 
                         const option = { isRestricted: false, isAdmin: !!ctx.token!.adminId };//isResricted:false 와 isAdmin : boolean 초기값생성 
-                        console.log("option = ",option);
+                        //console.log("option = ",option);
                         if (!ctx.token?.adminId && (!ctx.token?.level || ctx.token.level.level < 2)) {
                             option.isRestricted = true;
                         }
-                        console.log("level",ctx.token?.level?.level);
+                        //console.log("level",ctx.token?.level?.level);
                         console.log("option LEVEL = ",option);
 
                         // 마진율 붙여서 본인 상품 만들기
@@ -493,7 +493,8 @@ export const mutation_taobao_product = extendType({
                         
                         const cnyRate = parseFloat(cnyRateSetting.value);
                         const userInfo = await ctx.prisma.userInfo.findUnique({ where: { user_id: ctx.token!.userId ?? 0 } });
-
+                        //console.log("cnyRate = ",cnyRate);
+                        //console.log("userInfo = ",userInfo);
                         let info: IFeeInfo = {
                             marginRate: 0,
                             marginUnitType: "PERCENT",
@@ -504,14 +505,15 @@ export const mutation_taobao_product = extendType({
 
                         if (userInfo) {
                             const productCount = await ctx.prisma.product.count({ where: { user_id: ctx.token!.userId! } });
-
+                            //console.log("productCount = ",productCount);
                             info.marginRate = userInfo.margin_rate;
                             info.marginUnitType = userInfo.margin_unit_type ?? "PERCENT";
                             info.cnyRate = userInfo.cny_rate;
                             info.defaultShippingFee = userInfo.default_shipping_fee;
                             info.extraShippingFee = userInfo.extra_shipping_fee;
+                            //console.log("info = ",info);
 
-                            if (!option.isAdmin && option.isRestricted) {
+                            if (!option.isAdmin && option.isRestricted) {//user중에 level이 낮아서 이용하지 못한경우 무료유저는 100개까지 제한 
                                 const result = await ctx.prisma.setting.findUnique({ where: { name: "FREE_USER_PRODUCT_LIMIT" } });
                                 
                                 if (!result) {
@@ -527,11 +529,10 @@ export const mutation_taobao_product = extendType({
 
                                     return throwError(errors.etc("이용 가능한 상품 수집 횟수를 초과하였습니다."), ctx);
                                 }
-
                                 taobaoProducts = taobaoProducts.slice(0, freeUserProductLimit - productCount);
                             }
 
-                            if (userInfo.max_product_limit) {
+                            if (userInfo.max_product_limit) {//null이 아니면 무제한이면 null을 넣어줌 
                                 if (productCount >= userInfo.max_product_limit) {
                                     if (ctx.token?.userId) {
                                         publishUserLogData(ctx, { type: "getTaobaoItem", title: `이용 가능한 상품 관리 개수를 초과하였습니다.` });
@@ -539,11 +540,11 @@ export const mutation_taobao_product = extendType({
 
                                     return throwError(errors.etc("이용 가능한 상품 관리 개수를 초과하였습니다."), ctx);
                                 }
-    
                                 taobaoProducts = taobaoProducts.slice(0, userInfo.max_product_limit - productCount);
                                 
                             }
 
+                            // 만약 수집완료시 product 수집 갯수 증가 
                             await ctx.prisma.userInfo.update({ where: { user_id: userInfo.user_id }, data: { product_collect_count: { increment: taobaoProducts.length } } });
                         }
 
@@ -554,6 +555,7 @@ export const mutation_taobao_product = extendType({
                         }
 
                         const userId = ctx.token?.userId ?? null
+                        //return type IFeeInfo ,/ args type : prisma , productCode, taobaoProduct(IOBItem,ITranslateData)[],userid,userInfo,categorycode,sillcode,admin 
                         const products = await saveTaobaoItemToUser(ctx.prisma, undefined, taobaoProducts, userId, info, category, null, ctx.token?.adminId ?? undefined);
                         const resultProducts = products.filter((v): v is Product => v !== null);
 
