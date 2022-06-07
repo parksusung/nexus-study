@@ -9,10 +9,16 @@ export * from './user'
 export * from './admin'
 export * from './product'
 export * from './purchase'
+export * from './category'
+export * from './taobao_product'
+export * from './product_store'
+export * from './word'
+
 
 export * from './auth'
 export * from './enum'
 export * from './external_api'
+export * from './sill'
 
 export const t_token = objectType({
     name: "SignInType",
@@ -21,6 +27,16 @@ export const t_token = objectType({
         t.nonNull.string("refreshToken");
     }
 })
+//graphql에서 formdata를 보낼때 upload가 안되는경우 이렇게 scalar를 정의해두어서 에러 해결함.
+export const Upload = decorateType(GraphQLUpload, {
+    sourceType: "FileUpload",
+    asNexusMethod: "upload",
+});
+
+export const DateTime = decorateType(DateTimeResolver, {
+    sourceType: "Date",
+    asNexusMethod: "date",
+});
 
 
 export const query_etc = extendType({
@@ -32,7 +48,6 @@ export const query_etc = extendType({
                 try {
                     // if (!isDev()) return throwError(errors.notAuthenticated, ctx);
                     if (isDev()) return getModifierString(ctx.token);
-
                     if (ctx.token?.userId) return `User`;
                     else if (ctx.token?.adminId) return `Admin`;
                     else return "Unknown";
@@ -44,12 +59,3 @@ export const query_etc = extendType({
     }
 });
 
-
-export const Upload = decorateType(GraphQLUpload, {
-    sourceType: "FileUpload",
-    asNexusMethod: "upload",
-});
-export const DateTime = decorateType(DateTimeResolver, {
-    sourceType: "Date",
-    asNexusMethod: "date",
-});

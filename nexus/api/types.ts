@@ -4,6 +4,7 @@ import { S3 } from 'aws-sdk'
 import { Request, Response } from 'express'
 import { RedisPubSub } from 'graphql-redis-subscriptions'
 import { IncomingMessage } from 'http'
+import { closestIndexTo } from 'date-fns'
 
 export { FileUpload } from "graphql-upload";
 
