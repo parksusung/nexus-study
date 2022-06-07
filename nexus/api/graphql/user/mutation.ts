@@ -1,11 +1,10 @@
 import { hashSync, compareSync } from "bcryptjs";
-import { prisma, PrismaClient } from '@prisma/client'
 import { isBefore } from "date-fns";
  import { getPurchaseInfo } from ".";
 import { APP_REFRESH_SECRET, APP_SECRET, regexPattern } from "../utils/constants";
  import { throwError, errors } from "../utils/error";
  import { uploadToS3 } from "../utils/file_manage";
- import { generateToken, generateUserToken } from "../utils/helpers";
+ import { generateToken, generateUserToken, validateStringLength } from "../utils/helpers";
 import { verify } from 'jsonwebtoken';
 import { arg, booleanArg, extendType, floatArg, intArg, nonNull, stringArg } from "nexus";
 import { Token } from '../../types';
@@ -314,95 +313,195 @@ export const mutation_user = extendType({
                 }
             }
         });
-        // t.field("updateMyDataByUser", {
-        //     type: nonNull("Boolean"),
-        //     args: {
-        //         marginRate: floatArg(),
-        //         defaultShippingFee: intArg(),
-        //         refundAccountInfoData: arg({ type: "AccountInfoInput" }),
-        //         fixImageTop: arg({ type: "Upload" }),
-        //         fixImageBottom: arg({ type: "Upload" }),
-        //         isPersonal: booleanArg(),
-        //         companyInfo: arg({ type: "UserCompanyInfoInput" }),
-        //         companyFile: arg({ type: "Upload" }),
-        //         cnyRate: floatArg(),
-        //         additionalShippingFeeJeju: intArg(),
-        //         asTel: stringArg(),
-        //         asInformation: stringArg(),
-        //         refundShippingFee: intArg(),
-        //         exchangeShippingFee: intArg(),
-        //     },
-        //     resolve: async (src, args, ctx, info) => {
-        //         try {
-        //             if ((args.marginRate ?? 1) < 0) return throwError(errors.etc("마진율은 음수일 수 없습니다."), ctx);
-        //             if ((args.defaultShippingFee ?? 1) < 0) return throwError(errors.etc("기본 해외배송비는 음수일 수 없습니다."), ctx);
-        //             args.marginRate = args.marginRate ?? undefined;
-        //             args.defaultShippingFee = args.defaultShippingFee ?? undefined;
-        //             args.refundAccountInfoData = args.refundAccountInfoData ?? undefined;
-        //             args.cnyRate = args.cnyRate ?? undefined;
-        //             let fixImageTop: string | null | undefined = args.fixImageTop ? "" : args.fixImageTop;
-        //             let fixImageBottom: string | null | undefined = args.fixImageBottom ? "" : args.fixImageBottom;
-        //             if (args.fixImageTop) {
-        //                 fixImageTop = (await uploadToS3(args.fixImageTop, ["user", ctx.token!.userId!, "info"],)).url;
-        //             }
-        //             if (args.fixImageBottom) {
-        //                 fixImageBottom = (await uploadToS3(args.fixImageBottom, ["user", ctx.token!.userId!, "info"])).url;
-        //             }
+        t.field("updateMyImageByUser", {
+            type: nonNull("Boolean"),
+            args: {
+                fixImageTop: stringArg(),
+                fixImageBottom: stringArg(),
+            },
+            resolve: async (src, args, ctx, info) => {
+                try {
+                    console.log("fixImageTop",args.fixImageTop);
+                    await ctx.prisma.userInfo.update({
+                        where: { user_id: ctx.token!.userId! },
+                        data: {
+                            fix_image_top: args.fixImageTop && /^https?:/.test(args.fixImageTop) ? args.fixImageTop : undefined,//ReqExp test() method는 문자열이 일치하면 true 아니면 false반환하는 함수 
+                            fix_image_bottom: args.fixImageBottom && /^https?:/.test(args.fixImageBottom) ? args.fixImageBottom : undefined,//즉 https로 시작하는지 여부를 보는거같다.
+                        }
+                    });
 
-        //             let companyFile: string | undefined = undefined;
-        //             if (args.companyFile) {
-        //                 companyFile = (await uploadToS3(args.companyFile, ["cert", ctx.token!.userId!])).url;
-        //             }
-        //             const asTel = args.asTel ? args.asTel.trim() : undefined;
-        //             const asInformation = args.asInformation ? args.asInformation.trim() : undefined;
+                    return true;
+                } catch (e) {
+                    return throwError(e, ctx);
+                }
+            }
+        });
+        t.field("updateMyDataByUser", {//todo error
+            type: nonNull("Boolean"),
+            args: {
+                marginRate: floatArg(),
+                defaultShippingFee: intArg(),
+                fixImageTop: arg({ type: "Upload" }),
+                fixImageBottom: arg({ type: "Upload" }),
+                cnyRate: floatArg(),
+                additionalShippingFeeJeju: intArg(),
+                asTel: stringArg(),
+                asInformation: stringArg(),
+                refundShippingFee: intArg(),
+                exchangeShippingFee: intArg(),
+                naverOriginCode: stringArg(),
+                naverOrigin: stringArg(),
+                naverStoreUrl: stringArg(),
+                naverStoreOnly: stringArg(),
+                naverFee: floatArg(),
+                coupangOutboundShippingTimeDay: intArg(),
+                coupangUnionDeliveryType: stringArg(),
+                coupangMaximumBuyForPerson: intArg(),
+                coupangLoginId: stringArg(),
+                coupangVendorId: stringArg(),
+                coupangAccessKey: stringArg(),
+                coupangSecretKey: stringArg(),
+                coupangImageOpt: stringArg(),
+                coupangFee: floatArg(),
+                coupangDefaultOutbound: stringArg(),
+                coupangDefaultInbound: stringArg(),
+                streetApiKey: stringArg(),
+                streetSellerType: intArg(),
+                streetFee: floatArg(),
+                streetNormalApiKey: stringArg(),
+                streetDefaultOutbound: stringArg(),
+                streetDefaultInbound: stringArg(),
+                streetNormalOutbound: stringArg(),
+                streetNormalInbound: stringArg(),
+                streetNormalFee: floatArg(),
+                interparkCertKey: stringArg(),
+                interparkSecretKey: stringArg(),
+                interparkFee: floatArg(),
+                esmplusMasterId: stringArg(),
+                esmplusAuctionId: stringArg(),
+                esmplusGmarketId: stringArg(),
+                gmarketFee: floatArg(),
+                auctionFee: floatArg(),
+                lotteonVendorId: stringArg(),
+                lotteonApiKey: stringArg(),
+                lotteonFee: floatArg(),
+                lotteonNormalFee: floatArg(),
+                wemakepriceId: stringArg(),
+                wemakepriceFee: floatArg(),
+                tmonId: stringArg(),
+                tmonFee: floatArg(),
+                optionAlignTop: stringArg(),
+                optionTwoWays: stringArg(),
+                optionIndexType: intArg(),
+                discountAmount: intArg(),
+                discountUnitType: stringArg(),
+                descriptionShowTitle: stringArg(),
+                collectTimeout: intArg(),
+                collectStock: intArg(),
+                marginUnitType: stringArg(),
+                extraShippingFee: intArg(),
+            },
+            resolve: async (src, args, ctx, info) => {
+                try {
+                    if ((args.marginRate ?? 1) < 0) return throwError(errors.etc("마진율은 음수일 수 없습니다."), ctx);
+                    if ((args.defaultShippingFee ?? 1) < 0) return throwError(errors.etc("기본 해외배송비는 음수일 수 없습니다."), ctx);
+                    
+                    args.marginRate = args.marginRate ?? undefined;
+                    args.defaultShippingFee = args.defaultShippingFee ?? undefined;
+                    args.cnyRate = args.cnyRate ?? undefined;
+                    console.log("topImage",args.fixImageTop);
 
-        //             asTel && validateStringLength(ctx, asTel, 20, "A/S 전화번호");
-        //             asInformation && validateStringLength(ctx, asInformation, 1000, "A/S 안내내용");
+                    let fixImageTop: string | null | undefined = args.fixImageTop ? "" : args.fixImageTop;
+                    let fixImageBottom: string | null | undefined = args.fixImageBottom ? "" : args.fixImageBottom;
 
-        //             if (args.isPersonal === true) {
-        //                 const companyInfo = await ctx.prisma.user_company_info.findUnique({ where: { userId: ctx.token!.userId! } });
-        //                 if (companyInfo) await ctx.prisma.user_company_info.delete({ where: { userId: ctx.token!.userId! } });
-        //             }
-        //             else if (args.isPersonal === false) {
-        //                 if (!args.companyInfo) return throwError(errors.etc("법인 정보를 입력하세요."), ctx);
-        //                 await ctx.prisma.user_company_info.upsert({
-        //                     where: { userId: ctx.token!.userId! },
-        //                     create: {
-        //                         code: args.companyInfo.code,
-        //                         name: args.companyInfo.name,
-        //                         ownerName: args.companyInfo.ownerName,
-        //                         userId: ctx.token!.userId!
-        //                     },
-        //                     update: {
-        //                         code: args.companyInfo.code,
-        //                         name: args.companyInfo.name,
-        //                         ownerName: args.companyInfo.ownerName,
-        //                     },
-        //                 });
-        //             }
-        //             await ctx.prisma.userInfo.update({
-        //                 where: { user_id: ctx.token!.userId! },
-        //                 data: {
-        //                     margin_rate: args.marginRate,
-        //                     default_shipping_fee: args.defaultShippingFee,
-        //                     fix_image_top,
-        //                     fix_image_bottom,
-        //                     refund_account_info_data: JSON.stringify(args.refundAccountInfoData),
-        //                     cny_rate: args.cnyRate,
-        //                     code_file: companyFile,
-        //                     as_tel,
-        //                     as_information,
-        //                     additional_shipping_fee_jeju: args.additionalShippingFeeJeju ?? undefined,
-        //                     refund_shipping_fee: args.refundShippingFee ?? undefined,
-        //                     exchange_shipping_fee: args.exchangeShippingFee ?? undefined,
-        //                 }
-        //             });
-        //             return true;
-        //         } catch (e) {
-        //             return throwError(e, ctx);
-        //         }
-        //     }
-        // });
+                    if (args.fixImageTop) {
+                        fixImageTop = (await uploadToS3(args.fixImageTop, ["user", ctx.token!.userId!, "info"])).url;//db에 user/유저아디(352)/info/top.jpg
+                    }
+
+
+
+                    if (args.fixImageBottom) {
+                        fixImageBottom = (await uploadToS3(args.fixImageBottom, ["user", ctx.token!.userId!, "info"])).url;
+                    }
+
+                    const asTel = args.asTel ? args.asTel.trim() : undefined;
+                    const asInformation = args.asInformation ? args.asInformation.trim() : undefined;
+
+                    asTel && validateStringLength(ctx, asTel, 20, "A/S 전화번호");
+                    asInformation && validateStringLength(ctx, asInformation, 1000, "A/S 안내내용");
+
+                    await ctx.prisma.userInfo.update({
+                        where: { user_id: ctx.token!.userId! },
+                        data: {
+                            margin_rate: args.marginRate,
+                            default_shipping_fee: args.defaultShippingFee,
+                            fix_image_top : fixImageTop,
+                            fix_image_bottom : fixImageBottom,
+                            cny_rate :  args.cnyRate,
+                            additional_shipping_fee_jeju: args.additionalShippingFeeJeju ?? undefined,
+                            as_tel : asTel,
+                            as_information : asInformation,
+                            refund_shipping_fee: args.refundShippingFee ?? undefined,
+                            exchange_shipping_fee: args.exchangeShippingFee ?? undefined,
+                            naver_origin_code: args.naverOriginCode ?? undefined,
+                            naver_origin: args.naverOrigin ?? undefined,
+                            naver_store_url: args.naverStoreUrl ?? undefined,
+                            naver_store_only: args.naverStoreOnly ?? undefined,
+                            naver_fee: args.naverFee ?? undefined,
+                            coupang_outbound_shipping_time_day: args.coupangOutboundShippingTimeDay ?? undefined,
+                            coupang_union_delivery_type: args.coupangUnionDeliveryType ?? undefined,
+                            coupang_maximum_buy_for_person: args.coupangMaximumBuyForPerson ?? undefined,
+                            coupang_login_id: args.coupangLoginId ?? undefined,
+                            coupang_vendor_id: args.coupangVendorId ?? undefined,
+                            coupang_access_key: args.coupangAccessKey ?? undefined,
+                            coupang_secret_key: args.coupangSecretKey ?? undefined,
+                            coupang_image_opt: args.coupangImageOpt ?? undefined,
+                            coupang_default_outbound: args.coupangDefaultOutbound ?? undefined,
+                            coupang_default_inbound: args.coupangDefaultInbound ?? undefined,
+                            coupang_fee: args.coupangFee ?? undefined,
+                            street_api_key: args.streetApiKey ?? undefined,
+                            street_seller_type: args.streetSellerType ?? undefined,
+                            street_fee: args.streetFee ?? undefined,
+                            street_normal_api_key: args.streetNormalApiKey ?? undefined,
+                            street_default_outbound: args.streetDefaultOutbound ?? undefined,
+                            street_default_inbound: args.streetDefaultInbound ?? undefined,
+                            street_normal_outbound: args.streetNormalOutbound ?? undefined,
+                            street_normal_inbound: args.streetNormalInbound ?? undefined,
+                            street_normal_fee: args.streetNormalFee ?? undefined,
+                            interpark_cert_key: args.interparkCertKey ?? undefined,
+                            interpark_secret_key: args.interparkSecretKey ?? undefined,
+                            interpark_fee: args.interparkFee ?? undefined,
+                            esmplus_master_id: args.esmplusMasterId ?? undefined,
+                            esmplus_auction_id: args.esmplusAuctionId ?? undefined,
+                            esmplus_gmarket_id: args.esmplusGmarketId ?? undefined,
+                            gmarket_fee: args.gmarketFee ?? undefined,
+                            auction_fee: args.auctionFee ?? undefined,
+                            lotteon_vendor_id: args.lotteonVendorId ?? undefined,
+                            lotteon_api_key: args.lotteonApiKey ?? undefined,
+                            lotteon_fee: args.lotteonFee ?? undefined,
+                            lotteon_normal_fee: args.lotteonNormalFee ?? undefined,
+                            wemakeprice_id: args.wemakepriceId ?? undefined,
+                            wemakeprice_fee: args.wemakepriceFee ?? undefined,
+                            tmon_id: args.tmonId ?? undefined,
+                            tmon_fee: args.tmonFee ?? undefined,
+                            option_align_top: args.optionAlignTop ?? undefined,
+                            option_twoways: args.optionTwoWays ?? undefined,
+                            option_index_type: args.optionIndexType ?? undefined,
+                            discount_amount: args.discountAmount ?? undefined,
+                            discount_unit_type: args.discountUnitType ?? undefined,
+                            description_show_title: args.descriptionShowTitle ?? undefined,
+                            collect_timeout: args.collectTimeout ?? undefined,
+                            collect_stock: args.collectStock ?? undefined,
+                            margin_unit_type: args.marginUnitType ?? undefined,
+                            extra_shipping_fee: args.extraShippingFee ?? undefined
+                        }
+                    });
+                    return true;
+                } catch (e) {
+                    return throwError(e, ctx);
+                }
+            }
+        });
         t.field("changePasswordByUser", {
             type: nonNull("Boolean"),
             args: {

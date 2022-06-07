@@ -13,17 +13,17 @@ interface IPublishUserLogDataContext {
 export const publishUserLogData = async (ctx: IPublishUserLogDataContext, payload: UserLogPayload, isNeedLogging: boolean = true) => {
     const log: UserLog = isNeedLogging ? await ctx.prisma.userLog.create({
         data: {
-            userId: ctx.token!.userId!,
+            user_id: ctx.token!.userId!,
             title: payload.title,
-            payloadData: JSON.stringify(payload)
+            payload_data: JSON.stringify(payload)
         }
     }) : {
-        userId: ctx.token!.userId!,
+        user_id: ctx.token!.userId!,
         title: payload.title,
-        payloadData: JSON.stringify(payload),
-        createdAt: new Date(),
+        payload_data: JSON.stringify(payload),
+        created_at: new Date(),
         id: -1,
-        isRead: false
+        is_read: false
     }
     await ctx.pubsub.publish<UserLog>(`user_${ctx.token!.userId!}`, log);
 }

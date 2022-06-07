@@ -50,6 +50,45 @@ input BoolFilter {
   not: NestedBoolFilter
 }
 
+type Category {
+  a077_code: String!
+  b378_code: Int!
+  c1: String!
+  c1_name: String!
+  c2: String!
+  c2_name: String!
+  c3: String!
+  c3_name: String!
+  c4: String!
+  c4_name: String!
+  code: String!
+  id: Int!
+  siil_code: String!
+}
+
+type CategoryInformationType {
+  code: String!
+  code_a001: String
+  code_a006: String
+  code_a027: String
+  code_a077: String
+  code_a112: String
+  code_a113: String
+  code_a524: String
+  code_a525: String
+  code_b378: String
+  code_b719: String
+  code_b956: String
+  depth1: String!
+  depth2: String!
+  depth3: String!
+  depth4: String!
+  depth5: String!
+  depth6: String!
+  id: String!
+  name: String!
+}
+
 input CategoryOrderByWithRelationInput {
   a077_code: SortOrder
   a112_code: SortOrder
@@ -66,6 +105,35 @@ input CategoryOrderByWithRelationInput {
   id: SortOrder
   product: ProductOrderByRelationAggregateInput
   siil_code: SortOrder
+}
+
+type CategorySelectType {
+  code: String!
+  name: String!
+}
+
+type CategoryStore {
+  acode: String!
+  cate_state_cdate: DateTime
+  cate_state_pdate: DateTime
+  ccode: String!
+  dc1: String!
+  dc1_name: String!
+  dc2: String!
+  dc2_name: String!
+  dc3: String!
+  dc3_name: String!
+  dc4: String!
+  dc4_name: String!
+  id: Int!
+  pcode: String!
+  state: CategoryStoreState!
+}
+
+enum CategoryStoreState {
+  CHANGE
+  DELETE
+  NORMAL
 }
 
 input CategoryWhereInput {
@@ -87,6 +155,12 @@ input CategoryWhereInput {
   id: IntFilter
   product: ProductListRelationFilter
   siil_code: StringFilter
+}
+
+input CategoryWhereUniqueInput {
+  a077_code: String
+  code: String
+  id: Int
 }
 
 """
@@ -128,6 +202,13 @@ input EnumProductStateFilter {
   in: [ProductState!]
   not: NestedEnumProductStateFilter
   notIn: [ProductState!]
+}
+
+input EnumProductStoreLogUploadStateFilter {
+  equals: ProductStoreLogUploadState
+  in: [ProductStoreLogUploadState!]
+  not: NestedEnumProductStoreLogUploadStateFilter
+  notIn: [ProductStoreLogUploadState!]
 }
 
 input EnumPurchaseLogStateFilter {
@@ -185,15 +266,51 @@ input IntNullableFilter {
 }
 
 type Mutation {
+  cancelPurchasePlanByUser(merchantUid: String!): Boolean!
   changeMyPasswordByAdmin(currentPassword: String!, newPassword: String!): Boolean!
   changePasswordByUser(currentPassword: String!, newPassword: String!): Boolean!
   connectSocialIdByUser(socialId: String!, userType: UserSocialType!): User!
+  deleteProductByAdmin(productId: Int!): Boolean!
+  deleteProductByUser(productId: Int!): Boolean!
+  disableUserOption(id: Int!): Boolean!
+  endProductSellStateByAdmin(productIds: [Int!]!): Int!
+  endProductSellStateByUser(productIds: [Int!]!): Int!
+
+  """상품 ID/URL로 상품 가져오기"""
+  getTaobaoItemUsingExcelFileByAdmin(categoryCode: String, data: Upload!, siilCode: String, userId: Int): Int!
+
+  """상품 ID/URL로 상품 가져오기"""
+  getTaobaoItemUsingExcelFileByUser(categoryCode: String, data: Upload!, siilCode: String): Int!
+  getTaobaoItemUsingExtensionByUser(data: String!): String!
+
+  """상품 ID/URL로 상품 가져오기"""
+  getTaobaoItemUsingNumIidsByAdmin(categoryCode: String, siilCode: String, taobaoIds: [String!]!, userId: Int): Int!
+
+  """상품 ID/URL로 상품 가져오기"""
+  getTaobaoItemUsingNumIidsByUser(categoryCode: String, siilCode: String, taobaoIds: [String!]!): Int!
+
+  """키워드 검색으로 상품 가져오기"""
+  getTaobaoItemsByAdmin(categoryCode: String, endPrice: Float, orderBy: TaobaoItemOrderBy!, page: Int = 1, pageCount: Int = 1, query: String!, siilCode: String, startPrice: Float, userId: Int): Boolean!
+
+  """키워드 검색으로 상품 가져오기"""
+  getTaobaoItemsByUser(categoryCode: String, endPrice: Float, orderBy: TaobaoItemOrderBy!, page: Int = 1, pageCount: Int = 1, query: String!, siilCode: String, startPrice: Float): Boolean!
+  initProductImageByUser(productId: Int!): String
+  invalidatePurchaseInfoByAdmin(purchaseLogId: Int!): Boolean!
+  purchasePlanByUser(merchantUid: String!, planInfoId: Int!): Int!
   requestPhoneVerificationByEveryone(phoneNumber: String!): Boolean!
   setMaxProductLimitByAdmin(
     """미설정시 무제한"""
     productLimit: Int
     userId: Int!
   ): Boolean!
+  setPurchaseInfoByAdmin(planInfoId: Int!, userId: Int!): Boolean!
+  setVisibleStateToProductOptionValueBySomeone(isActive: Boolean!, productOptionValueId: Int!): Boolean!
+  signInAdminByEveryone(
+    id: String!
+
+    """소셜의 경우 그냥 빈 문자열"""
+    password: String!
+  ): SignInType!
   signInUserByEveryone(
     email: String!
 
@@ -204,10 +321,52 @@ type Mutation {
   signOutUserByEveryone(accessToken: String!): String!
   signUpAdminByAdmin(id: String!, password: String!): Boolean!
   signUpUserByEveryone(email: String!, password: String!, phone: String!, verificationId: Int! = 0): SignInType!
-  silentRefreshToken(accessToken: String!, refreshToken: String!): SignInType
+  silentRefreshToken(refreshToken: String!): SignInType
+  transferProductsToUserByAdmin(productIds: [Int!]!, targetUserId: Int!): String!
   translateProductTextByUser(id: Int!, type: TranslateTargetEnumType!): String!
   translateProductsTextByUser(ids: [Int!]!, type: TranslateTargetEnumType!): String!
+  updateManyProductCategoryByAdmin(categoryA001: String, categoryA001Name: String, categoryA006: String, categoryA006Name: String, categoryA027: String, categoryA027Name: String, categoryA077: String, categoryA077Name: String, categoryA112: String, categoryA112Name: String, categoryB378: String, categoryB378Name: String, productIds: [Int!]!): Int!
+  updateManyProductCategoryByUser(categoryA001: String, categoryA001Name: String, categoryA006: String, categoryA006Name: String, categoryA027: String, categoryA027Name: String, categoryA077: String, categoryA077Name: String, categoryA112: String, categoryA112Name: String, categoryA113: String, categoryA113Name: String, categoryA524: String, categoryA524Name: String, categoryA525: String, categoryA525Name: String, categoryB378: String, categoryB378Name: String, categoryB719: String, categoryB719Name: String, categoryB956: String, categoryB956Name: String, productIds: [Int!]!): Int!
+  updateManyProductNameByUser(body: String, head: String, productIds: [Int!]!, tail: String): String!
+  updateManyProductSiilInfoByAdmin(productIds: [Int!]!, siilCode: String!): Int!
+  updateManyProductSiilInfoByUser(productIds: [Int!]!, siilCode: String!): Int!
+  updateManyProductTagByUser(productIds: [Int!]!, searchTags: String!): String!
+  updateMyDataByUser(additionalShippingFeeJeju: Int, asInformation: String, asTel: String, auctionFee: Float, cnyRate: Float, collectStock: Int, collectTimeout: Int, coupangAccessKey: String, coupangDefaultInbound: String, coupangDefaultOutbound: String, coupangFee: Float, coupangImageOpt: String, coupangLoginId: String, coupangMaximumBuyForPerson: Int, coupangOutboundShippingTimeDay: Int, coupangSecretKey: String, coupangUnionDeliveryType: String, coupangVendorId: String, defaultShippingFee: Int, descriptionShowTitle: String, discountAmount: Int, discountUnitType: String, esmplusAuctionId: String, esmplusGmarketId: String, esmplusMasterId: String, exchangeShippingFee: Int, extraShippingFee: Int, fixImageBottom: Upload, fixImageTop: Upload, gmarketFee: Float, interparkCertKey: String, interparkFee: Float, interparkSecretKey: String, lotteonApiKey: String, lotteonFee: Float, lotteonNormalFee: Float, lotteonVendorId: String, marginRate: Float, marginUnitType: String, naverFee: Float, naverOrigin: String, naverOriginCode: String, naverStoreOnly: String, naverStoreUrl: String, optionAlignTop: String, optionIndexType: Int, optionTwoWays: String, refundShippingFee: Int, streetApiKey: String, streetDefaultInbound: String, streetDefaultOutbound: String, streetFee: Float, streetNormalApiKey: String, streetNormalFee: Float, streetNormalInbound: String, streetNormalOutbound: String, streetSellerType: Int, tmonFee: Float, tmonId: String, wemakepriceFee: Float, wemakepriceId: String): Boolean!
+  updateMyImageByUser(fixImageBottom: String, fixImageTop: String): Boolean!
   updatePhoneByUser(phone: String!, verificationId: Int!): Boolean!
+  updatePlanInfoByAdmin(description: String, isActive: Boolean, name: String, planId: Int!, price: Int): PlanInfo!
+  updateProductByAdmin(categoryCode: String, description: String, localShippingFee: Int, name: String, optionNames: [ProductOptionNameUpdateInput!]!, optionValues: [ProductOptionValueUpdateInput!]!, options: [ProductOptionUpdateInput!]!, price: Int, productId: Int!, shippingFee: Int, siilCode: String, siilData: [SiilInput!], thumbnails: [ProductThumbnailUpdateInput!]): Product!
+  updateProductByUser(categoryA001: String, categoryA001Name: String, categoryA006: String, categoryA006Name: String, categoryA027: String, categoryA027Name: String, categoryA077: String, categoryA077Name: String, categoryA112: String, categoryA112Name: String, categoryA113: String, categoryA113Name: String, categoryA524: String, categoryA524Name: String, categoryA525: String, categoryA525Name: String, categoryB378: String, categoryB378Name: String, categoryB719: String, categoryB719Name: String, categoryB956: String, categoryB956Name: String, categoryCode: String, description: String, localShippingCode: Int, localShippingFee: Int, name: String, optionNames: [ProductOptionNameUpdateInput!]!, optionValues: [ProductOptionValueUpdateInput!]!, options: [ProductOptionUpdateInput!]!, price: Int, productId: Int!, searchTags: String, shippingFee: Int, siilCode: String, siilData: [SiilInput!], thumbnails: [ProductThumbnailUpdateInput!]): Product!
+  updateProductImageBySomeone(description: String, optionValues: [ProductOptionValueImageUpdateInput!]!, productId: Int!, thumbnails: [ProductThumbnailImageUpdateInput!]): Product!
+  updateProductNameByAdmin(name: String!, productId: Int!): Product!
+  updateProductNameByUser(name: String!, productId: Int!): Product!
+  updateProductPriceByAdmin(
+    cnyRate: Float!
+    localShippingCode: Int
+
+    """해외배송비(배대지배송비)"""
+    localShippingFee: Int!
+    marginRate: Float!
+    marginUnitType: String!
+    productIds: [Int!]!
+
+    """유료배송비"""
+    shippingFee: Int!
+  ): Int!
+  updateProductPriceByUser(
+    cnyRate: Float!
+    localShippingCode: Int
+
+    """해외배송비(배대지배송비)"""
+    localShippingFee: Int!
+    marginRate: Float!
+    marginUnitType: String!
+    productIds: [Int!]!
+
+    """유료배송비"""
+    shippingFee: Int!
+  ): Int!
+  updateProductStoreUrlInfoBySomeone(etcVendorItemId: String!, productStoreId: Int!): String!
   verifyPhoneByEveryone(phoneNumber: String!, verificationNumber: String!): Int!
 }
 
@@ -250,6 +409,13 @@ input NestedEnumProductStateFilter {
   in: [ProductState!]
   not: NestedEnumProductStateFilter
   notIn: [ProductState!]
+}
+
+input NestedEnumProductStoreLogUploadStateFilter {
+  equals: ProductStoreLogUploadState
+  in: [ProductStoreLogUploadState!]
+  not: NestedEnumProductStoreLogUploadStateFilter
+  notIn: [ProductStoreLogUploadState!]
 }
 
 input NestedEnumPurchaseLogStateFilter {
@@ -352,9 +518,64 @@ type PlanInfo {
   price: Int!
 }
 
+input PlanInfoOrderByWithRelationInput {
+  description: SortOrder
+  external_feature_variable_id: SortOrder
+  id: SortOrder
+  is_active: SortOrder
+  month: SortOrder
+  name: SortOrder
+  plan_level: SortOrder
+  price: SortOrder
+}
+
+input PlanInfoWhereInput {
+  AND: [PlanInfoWhereInput!]
+  NOT: [PlanInfoWhereInput!]
+  OR: [PlanInfoWhereInput!]
+  description: StringFilter
+  external_feature_variable_id: StringNullableFilter
+  id: IntFilter
+  is_active: BoolFilter
+  month: IntFilter
+  name: StringFilter
+  plan_level: IntNullableFilter
+  price: IntFilter
+}
+
+input PlanInfoWhereUniqueInput {
+  id: Int
+}
+
 type Product {
+  activeProductStore: [ProductStore!]!
+  admin: Admin
   admin_id: Int
+  category: Category
+  category_a001: String
+  category_a001_name: String
+  category_a006: String
+  category_a006_name: String
+  category_a027: String
+  category_a027_name: String
+  category_a077: String
+  category_a077_name: String
+  category_a112: String
+  category_a112_name: String
+  category_a113: String
+  category_a113_name: String
+  category_a524: String
+  category_a524_name: String
+  category_a525: String
+  category_a525_name: String
+  category_b378: String
+  category_b378_name: String
+  category_b719: String
+  category_b719_name: String
+  category_b956: String
+  category_b956_name: String
   category_code: String
+  cny_rate: Float!
   created_at: DateTime!
   description: String!
   id: Int!
@@ -362,15 +583,26 @@ type Product {
   image_thumbnail_data: String!
   is_image_translated: Boolean!
   is_name_translated: Boolean!
+  local_shipping_code: Int
   local_shipping_fee: Int!
+  margin_rate: Float!
+  margin_unit_type: String
   modified_at: DateTime!
   name: String!
+  optionInfoHtml: String!
   price: Int!
   product_code: String!
+  product_option(cursor: ProductOptionWhereUniqueInput, orderBy: [ProductOptionOrderByWithRelationInput!], skip: Int, take: Int, where: ProductOptionWhereInput): [ProductOption!]!
+  product_option_name(cursor: ProductOptionNameWhereUniqueInput, orderBy: [ProductOptionNameOrderByWithRelationInput!], skip: Int, take: Int, where: ProductOptionNameWhereInput): [ProductOptionName!]!
+  product_store(cursor: ProductStoreWhereUniqueInput, orderBy: [ProductStoreOrderByWithRelationInput!], skip: Int, take: Int, where: ProductStoreWhereInput): [ProductStore!]!
+  search_tags: String
+  shipping_fee: Int!
+  siilInfo: SiilSavedData
   siil_code: String
   siil_data: String
   state: ProductState!
   stock_updated_at: DateTime!
+  taobao_product: TaobaoProduct!
   taobao_product_id: Int!
   user: User
   user_id: Int
@@ -382,10 +614,40 @@ input ProductListRelationFilter {
   some: ProductWhereInput
 }
 
+type ProductOption {
+  id: Int!
+  is_active: Boolean!
+  name: String!
+  option_string: String!
+  option_value1_id: Int!
+  option_value2_id: Int
+  option_value3_id: Int
+  price: Int!
+  price_cny: Float!
+  product: Product!
+  product_id: Int!
+  product_option1: ProductOptionValue!
+  product_option2: ProductOptionValue
+  product_option3: ProductOptionValue
+  stock: Int
+  taobao_sku_id: String!
+}
+
 input ProductOptionListRelationFilter {
   every: ProductOptionWhereInput
   none: ProductOptionWhereInput
   some: ProductOptionWhereInput
+}
+
+type ProductOptionName {
+  id: Int!
+  is_name_translated: Boolean!
+  name: String!
+  order: Int!
+  product: Product!
+  product_id: Int!
+  product_option_value(cursor: ProductOptionValueWhereUniqueInput, orderBy: [ProductOptionValueOrderByWithRelationInput!], skip: Int, take: Int, where: ProductOptionValueWhereInput): [ProductOptionValue!]!
+  taobao_pid: String!
 }
 
 input ProductOptionNameListRelationFilter {
@@ -397,6 +659,23 @@ input ProductOptionNameListRelationFilter {
 input ProductOptionNameOrderByRelationAggregateInput {
   _count: SortOrder
   count: SortOrder
+}
+
+input ProductOptionNameOrderByWithRelationInput {
+  has_image: SortOrder
+  id: SortOrder
+  is_name_translated: SortOrder
+  name: SortOrder
+  order: SortOrder
+  product: ProductOrderByWithRelationInput
+  product_id: SortOrder
+  product_option_value: ProductOptionValueOrderByRelationAggregateInput
+  taobao_pid: SortOrder
+}
+
+input ProductOptionNameUpdateInput {
+  id: Int!
+  name: String!
 }
 
 input ProductOptionNameWhereInput {
@@ -414,15 +693,107 @@ input ProductOptionNameWhereInput {
   taobao_pid: StringFilter
 }
 
+input ProductOptionNameWhereUniqueInput {
+  id: Int
+}
+
 input ProductOptionOrderByRelationAggregateInput {
   _count: SortOrder
   count: SortOrder
+}
+
+input ProductOptionOrderByWithRelationInput {
+  id: SortOrder
+  is_active: SortOrder
+  option_string: SortOrder
+  option_value1_id: SortOrder
+  option_value2_id: SortOrder
+  option_value3_id: SortOrder
+  price: SortOrder
+  price_cny: SortOrder
+  product: ProductOrderByWithRelationInput
+  product_id: SortOrder
+  product_option1: ProductOptionValueOrderByWithRelationInput
+  product_option2: ProductOptionValueOrderByWithRelationInput
+  product_option3: ProductOptionValueOrderByWithRelationInput
+  stock: SortOrder
+  taobao_sku_id: SortOrder
+}
+
+input ProductOptionUQ_product_id_sku_idCompoundUniqueInput {
+  product_id: Int!
+  taobao_sku_id: String!
+}
+
+input ProductOptionUQ_product_optionCompoundUniqueInput {
+  option_value1_id: Int!
+  option_value2_id: Int!
+  option_value3_id: Int!
+}
+
+input ProductOptionUpdateInput {
+  id: Int!
+  isActive: Boolean!
+  price: Int!
+  stock: Int!
+}
+
+type ProductOptionValue {
+  id: Int!
+  image: String
+  is_active: Boolean!
+  is_name_translated: Boolean!
+  name: String!
+  number: Int!
+  option_name_order: Int!
+  option_value1(cursor: ProductOptionWhereUniqueInput, orderBy: [ProductOptionOrderByWithRelationInput!], skip: Int, take: Int, where: ProductOptionWhereInput): [ProductOption!]!
+  option_value2(cursor: ProductOptionWhereUniqueInput, orderBy: [ProductOptionOrderByWithRelationInput!], skip: Int, take: Int, where: ProductOptionWhereInput): [ProductOption!]!
+  option_value3(cursor: ProductOptionWhereUniqueInput, orderBy: [ProductOptionOrderByWithRelationInput!], skip: Int, take: Int, where: ProductOptionWhereInput): [ProductOption!]!
+  productOption(cursor: ProductOptionWhereUniqueInput, orderBy: [ProductOptionOrderByWithRelationInput], skip: Int, take: Int, where: ProductOptionWhereInput): [ProductOption!]!
+  product_option_name: ProductOptionName!
+  taobao_vid: String!
+}
+
+input ProductOptionValueImageUpdateInput {
+  id: Int!
+  image: String
+  newImageBase64: String
 }
 
 input ProductOptionValueListRelationFilter {
   every: ProductOptionValueWhereInput
   none: ProductOptionValueWhereInput
   some: ProductOptionValueWhereInput
+}
+
+input ProductOptionValueOrderByRelationAggregateInput {
+  _count: SortOrder
+  count: SortOrder
+}
+
+input ProductOptionValueOrderByWithRelationInput {
+  id: SortOrder
+  image: SortOrder
+  is_active: SortOrder
+  is_name_translated: SortOrder
+  name: SortOrder
+  number: SortOrder
+  option_name_order: SortOrder
+  option_value1: ProductOptionOrderByRelationAggregateInput
+  option_value2: ProductOptionOrderByRelationAggregateInput
+  option_value3: ProductOptionOrderByRelationAggregateInput
+  product_option_name: ProductOptionNameOrderByWithRelationInput
+  product_option_name_id: SortOrder
+  taobao_vid: SortOrder
+}
+
+input ProductOptionValueUpdateInput {
+  id: Int!
+  image: String
+  isActive: Boolean
+  name: String!
+  newImage: Upload
+  newImageBase64: String
 }
 
 input ProductOptionValueWhereInput {
@@ -444,6 +815,10 @@ input ProductOptionValueWhereInput {
   taobao_vid: StringFilter
 }
 
+input ProductOptionValueWhereUniqueInput {
+  id: Int
+}
+
 input ProductOptionWhereInput {
   AND: [ProductOptionWhereInput!]
   NOT: [ProductOptionWhereInput!]
@@ -463,6 +838,12 @@ input ProductOptionWhereInput {
   product_option3: ProductOptionValueWhereInput
   stock: IntNullableFilter
   taobao_sku_id: StringFilter
+}
+
+input ProductOptionWhereUniqueInput {
+  UQ_product_id_sku_id: ProductOptionUQ_product_id_sku_idCompoundUniqueInput
+  UQ_product_option: ProductOptionUQ_product_optionCompoundUniqueInput
+  id: Int
 }
 
 input ProductOrderByRelationAggregateInput {
@@ -515,6 +896,7 @@ input ProductOrderByWithRelationInput {
   product_code: SortOrder
   product_option: ProductOptionOrderByRelationAggregateInput
   product_option_name: ProductOptionNameOrderByRelationAggregateInput
+  product_store: ProductStoreOrderByRelationAggregateInput
   search_tags: SortOrder
   shipping_fee: SortOrder
   siil_code: SortOrder
@@ -533,6 +915,172 @@ enum ProductState {
   SELL_DONE
   UPLOAD_FAILED
   UPLOAD_WAITING
+}
+
+type ProductStore {
+  connected_at: DateTime!
+  etc_vendor_item_id: String
+  id: Int!
+  product: Product!
+  product_id: Int!
+  product_store_log(cursor: ProductStoreLogWhereUniqueInput, orderBy: [ProductStoreLogOrderByWithRelationInput!], skip: Int, take: Int, where: ProductStoreLogWhereInput): [ProductStoreLog!]!
+  product_store_state: ProductStoreState!
+  site_code: String!
+  state: Int!
+  store_product_id: String
+  store_url: String
+  user: User!
+  user_id: Int!
+}
+
+input ProductStoreListRelationFilter {
+  every: ProductStoreWhereInput
+  none: ProductStoreWhereInput
+  some: ProductStoreWhereInput
+}
+
+type ProductStoreLog {
+  created_at: DateTime!
+  dest_state: Int!
+  error_message: String!
+  id: Int!
+  job_id: String!
+  modified_at: DateTime!
+  product_store: ProductStore!
+  product_store_id: Int!
+  product_store_state: ProductStoreState!
+  upload_state: ProductStoreLogUploadState!
+}
+
+input ProductStoreLogListRelationFilter {
+  every: ProductStoreLogWhereInput
+  none: ProductStoreLogWhereInput
+  some: ProductStoreLogWhereInput
+}
+
+input ProductStoreLogOrderByRelationAggregateInput {
+  _count: SortOrder
+  count: SortOrder
+}
+
+input ProductStoreLogOrderByWithRelationInput {
+  created_at: SortOrder
+  dest_state: SortOrder
+  error_message: SortOrder
+  id: SortOrder
+  job_id: SortOrder
+  modified_at: SortOrder
+  product_store: ProductStoreOrderByWithRelationInput
+  product_store_id: SortOrder
+  product_store_state: ProductStoreStateOrderByWithRelationInput
+  upload_state: SortOrder
+}
+
+enum ProductStoreLogUploadState {
+  CANCEL
+  FAIL
+  ON_PROGRESS
+  SUCCESS
+  WAIT
+}
+
+input ProductStoreLogWhereInput {
+  AND: [ProductStoreLogWhereInput!]
+  NOT: [ProductStoreLogWhereInput!]
+  OR: [ProductStoreLogWhereInput!]
+  created_at: DateTimeFilter
+  dest_state: IntFilter
+  error_message: StringFilter
+  id: IntFilter
+  job_id: StringFilter
+  modified_at: DateTimeFilter
+  product_store: ProductStoreWhereInput
+  product_store_id: IntFilter
+  product_store_state: ProductStoreStateWhereInput
+  upload_state: EnumProductStoreLogUploadStateFilter
+}
+
+input ProductStoreLogWhereUniqueInput {
+  id: Int
+}
+
+input ProductStoreOrderByRelationAggregateInput {
+  _count: SortOrder
+  count: SortOrder
+}
+
+input ProductStoreOrderByWithRelationInput {
+  connected_at: SortOrder
+  etc_vendor_item_id: SortOrder
+  id: SortOrder
+  product: ProductOrderByWithRelationInput
+  product_id: SortOrder
+  product_store_log: ProductStoreLogOrderByRelationAggregateInput
+  product_store_state: ProductStoreStateOrderByWithRelationInput
+  site_code: SortOrder
+  state: SortOrder
+  store_product_id: SortOrder
+  store_url: SortOrder
+  user: UserOrderByWithRelationInput
+  user_id: SortOrder
+}
+
+type ProductStoreState {
+  description: String!
+  id: Int!
+  name: String!
+}
+
+input ProductStoreStateOrderByWithRelationInput {
+  description: SortOrder
+  id: SortOrder
+  name: SortOrder
+  product_store: ProductStoreOrderByRelationAggregateInput
+  product_store_log: ProductStoreLogOrderByRelationAggregateInput
+}
+
+input ProductStoreStateWhereInput {
+  AND: [ProductStoreStateWhereInput!]
+  NOT: [ProductStoreStateWhereInput!]
+  OR: [ProductStoreStateWhereInput!]
+  description: StringFilter
+  id: IntFilter
+  name: StringFilter
+  product_store: ProductStoreListRelationFilter
+  product_store_log: ProductStoreLogListRelationFilter
+}
+
+input ProductStoreWhereInput {
+  AND: [ProductStoreWhereInput!]
+  NOT: [ProductStoreWhereInput!]
+  OR: [ProductStoreWhereInput!]
+  connected_at: DateTimeFilter
+  etc_vendor_item_id: StringNullableFilter
+  id: IntFilter
+  product: ProductWhereInput
+  product_id: IntFilter
+  product_store_log: ProductStoreLogListRelationFilter
+  product_store_state: ProductStoreStateWhereInput
+  site_code: StringFilter
+  state: IntFilter
+  store_product_id: StringNullableFilter
+  store_url: StringNullableFilter
+  user: UserWhereInput
+  user_id: IntFilter
+}
+
+input ProductStoreWhereUniqueInput {
+  id: Int
+}
+
+input ProductThumbnailImageUpdateInput {
+  defaultImage: String!
+  uploadImageBase64: String
+}
+
+input ProductThumbnailUpdateInput {
+  defaultImage: String!
+  uploadImage: Upload
 }
 
 input ProductUQ_user_id_taobao_product_idCompoundUniqueInput {
@@ -588,6 +1136,7 @@ input ProductWhereInput {
   product_code: StringFilter
   product_option: ProductOptionListRelationFilter
   product_option_name: ProductOptionNameListRelationFilter
+  product_store: ProductStoreListRelationFilter
   search_tags: StringNullableFilter
   shipping_fee: IntFilter
   siil_code: StringNullableFilter
@@ -660,7 +1209,30 @@ input PurchaseLogWhereInput {
 }
 
 type Query {
+  searchCategoriesByA077Code(a077Code: [String!]!): [Category!]!
+  searchCategoriesBySomeone(keyword: String!): [Category!]!
+  searchCategoryInfoA001BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA006BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA027BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA077BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA112BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA113BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA524BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoA525BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoB378BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoB719BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  searchCategoryInfoB956BySomeone(code: String, keyword: String): [CategoryInformationType!]!
+  selectCategoriesByHierarchicalBySomeone(code: String): [CategorySelectType!]!
+  selectCategoriesBySomeone(cursor: CategoryWhereUniqueInput, orderBy: [CategoryOrderByWithRelationInput!], skip: Int, take: Int, where: CategoryWhereInput): [Category!]!
   selectMyInfoByUser: User!
+  selectMyProductByUser(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
+  selectMyProductsCountByUser(where: ProductWhereInput): Int!
+  selectPlanInfosForEveryone(cursor: PlanInfoWhereUniqueInput, orderBy: [PlanInfoOrderByWithRelationInput!], skip: Int, take: Int, where: PlanInfoWhereInput): [PlanInfo!]!
+  selectProductsByAdmin(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
+  selectProductsBySomeone(cursor: ProductWhereUniqueInput, orderBy: [ProductOrderByWithRelationInput!], skip: Int, take: Int, where: ProductWhereInput): [Product!]!
+  selectProductsCountByAdmin(where: ProductWhereInput): Int
+  selectProductsCountBySomeone(where: ProductWhereInput): Int
+  selectSiilInfoBySomeone(code: String!): [SiilItems!]!
   selectUsersByAdmin(cursor: UserWhereUniqueInput, orderBy: [UserOrderByWithRelationInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
   selectUsersCountByAdmin(where: UserWhereInput): Int!
   translateText(engine: TranslateEngineEnumType! = PAPAGO, text: String!): String!
@@ -670,6 +1242,39 @@ type Query {
 type SignInType {
   accessToken: String!
   refreshToken: String!
+}
+
+input SiilInput {
+  code: String!
+  value: String!
+}
+
+type SiilItem {
+  code: String!
+  inputType: SiilItemTypeEnum!
+  name: String!
+  options: [String!]
+}
+
+enum SiilItemTypeEnum {
+  INPUT
+  SELECT
+  YESNO
+}
+
+type SiilItems {
+  data: [SiilItem!]!
+  description: String!
+}
+
+type SiilSavedData {
+  code: String!
+  data: [SiilSavedItem!]!
+}
+
+type SiilSavedItem {
+  code: String!
+  value: String!
 }
 
 enum SortOrder {
@@ -711,6 +1316,44 @@ enum TaobaoItemOrderBy {
 
   """판매량순"""
   SALE
+}
+
+type TaobaoProduct {
+  brand: String!
+  created_at: DateTime!
+  id: Int!
+  image_thumbnail: String!
+  modified_at: DateTime!
+  name: String!
+  original_data: String!
+  price: Float!
+  product(cursor: ProductWhereUniqueInput, skip: Int, take: Int): [Product!]!
+  taobao_brand_id: String
+  taobao_category_id: String!
+  taobao_num_iid: String!
+  video_url: String
+}
+
+type TaobaoProductOption {
+  name: String!
+  taobaoSkuId: String!
+}
+
+type TaobaoProductOptionInfo {
+  option: [TaobaoProductOption!]!
+  optionName: [TaobaoProductOptionName!]!
+  optionValue: [TaobaoProductOptionValue!]!
+}
+
+type TaobaoProductOptionName {
+  name: String!
+  taobaoPid: String!
+}
+
+type TaobaoProductOptionValue {
+  image: String
+  name: String!
+  taobaoVid: String!
 }
 
 input TaobaoProductOrderByWithRelationInput {
@@ -788,6 +1431,7 @@ type User {
   productCount: Int!
   purchaseInfo: UserPurchaseInfo!
   state: UserState!
+  token: String
   user_info: UserInfo
   user_log(cursor: UserLogWhereUniqueInput, orderBy: [UserLogOrderByWithRelationInput!], skip: Int, take: Int, where: UserLogWhereInput): [UserLog!]!
 }
@@ -1066,11 +1710,14 @@ input UserOrderByWithRelationInput {
   naver_id: SortOrder
   password: SortOrder
   product: ProductOrderByRelationAggregateInput
+  product_store: ProductStoreOrderByRelationAggregateInput
   purchase_log: PurchaseLogOrderByRelationAggregateInput
   state: SortOrder
   token: SortOrder
   user_info: UserInfoOrderByWithRelationInput
   user_log: UserLogOrderByRelationAggregateInput
+  user_question: UserQuestionOrderByRelationAggregateInput
+  word_table: WordTableOrderByRelationAggregateInput
 }
 
 type UserPurchaseAdditionalInfo {
@@ -1087,6 +1734,33 @@ type UserPurchaseInfo {
   additionalInfo: [UserPurchaseAdditionalInfo!]!
   level: Int!
   levelExpiredAt: DateTime!
+}
+
+input UserQuestionListRelationFilter {
+  every: UserQuestionWhereInput
+  none: UserQuestionWhereInput
+  some: UserQuestionWhereInput
+}
+
+input UserQuestionOrderByRelationAggregateInput {
+  _count: SortOrder
+  count: SortOrder
+}
+
+input UserQuestionWhereInput {
+  AND: [UserQuestionWhereInput!]
+  NOT: [UserQuestionWhereInput!]
+  OR: [UserQuestionWhereInput!]
+  answer: StringNullableFilter
+  answered_at: DateTimeNullableFilter
+  attachment_file: StringNullableFilter
+  content: StringFilter
+  created_at: DateTimeFilter
+  id: IntFilter
+  is_active: BoolFilter
+  title: StringFilter
+  user: UserWhereInput
+  user_id: IntFilter
 }
 
 enum UserSocialType {
@@ -1112,11 +1786,14 @@ input UserWhereInput {
   naver_id: StringNullableFilter
   password: StringFilter
   product: ProductListRelationFilter
+  product_store: ProductStoreListRelationFilter
   purchase_log: PurchaseLogListRelationFilter
   state: EnumUserStateFilter
   token: StringNullableFilter
   user_info: UserInfoWhereInput
   user_log: UserLogListRelationFilter
+  user_question: UserQuestionListRelationFilter
+  word_table: WordTableListRelationFilter
 }
 
 input UserWhereUniqueInput {
@@ -1124,4 +1801,35 @@ input UserWhereUniqueInput {
   id: Int
   kakao_id: String
   naver_id: String
+  token: String
+}
+
+type WordTable {
+  find_word: String!
+  id: Int!
+  replace_word: String
+  user: User!
+  user_id: Int!
+}
+
+input WordTableListRelationFilter {
+  every: WordTableWhereInput
+  none: WordTableWhereInput
+  some: WordTableWhereInput
+}
+
+input WordTableOrderByRelationAggregateInput {
+  _count: SortOrder
+  count: SortOrder
+}
+
+input WordTableWhereInput {
+  AND: [WordTableWhereInput!]
+  NOT: [WordTableWhereInput!]
+  OR: [WordTableWhereInput!]
+  find_word: StringFilter
+  id: IntFilter
+  replace_word: StringNullableFilter
+  user: UserWhereInput
+  user_id: IntFilter
 }
