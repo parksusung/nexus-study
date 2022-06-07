@@ -23,23 +23,37 @@ export const mutation_admin = extendType({
                 }
             }
         });
-        // t.field("signInAdminByEveryone", {
-        //     type: nonNull("SignInType"),
-        //     args: {
-        //         id: nonNull(stringArg()),
-        //         password: nonNull(stringArg({ description: "소셜의 경우 그냥 빈 문자열" })),
-        //     },
-        //     resolve: async (src, args, ctx, info) => {
-        //         try {
-        //             const admin = await ctx.prisma.admin.findUnique({ where: { login_id: args.id } });
-        //             if (!admin) return throwError(errors.invalidUser, ctx);
-        //             if (!compareSync(args.password, admin.password)) return throwError(errors.invalidUser, ctx);
-        //             return { accessToken: generateToken(admin.id, "adminId", false), refreshToken: generateToken(admin.id, "adminId", true) };
-        //         } catch (e) {
-        //             return throwError(e, ctx);
-        //         }
-        //     }
-        // });
+        t.field("signInAdminByEveryone", {
+            type: nonNull("SignInType"),
+            args: {
+                id: nonNull(stringArg()),
+                password: nonNull(stringArg({ description: "소셜의 경우 그냥 빈 문자열" })),
+            },
+            resolve: async (src, args, ctx, info) => {
+                try {
+                    const admin = await ctx.prisma.admin.findUnique({ where: { login_id: args.id } });
+                    if (!admin) return throwError(errors.invalidUser, ctx);
+                    if (!compareSync(args.password, admin.password)) return throwError(errors.invalidUser, ctx);
+                    const accessToken = generateToken(admin.id, "adminId", false);
+                    const refreshToken = generateToken(admin.id, "adminId", true);
+                    
+                    const update = await ctx.prisma.admin.update({
+                        where : {
+                            id : admin.id
+                        },
+                        data : {
+                            token : refreshToken,
+                            created_token : new Date()
+                        }
+                    }) 
+                    if(!update) return throwError(errors.etc("token 삽입에 실패하였습니다."),ctx);
+
+                    return { accessToken, refreshToken };
+                } catch (e) {
+                    return throwError(e, ctx);
+                }
+            }
+        });
         t.field("changeMyPasswordByAdmin", {
             type: nonNull("Boolean"),
             args: {

@@ -69,137 +69,140 @@ export const rules = {
 
 export const permissions = shield({
     Query: {
-        selectMyShopDataByUser: rules.isAuthenticatedUser(0),
-        selectMySetDataByUser: rules.isAuthenticatedUser(0),
+        // selectMyShopDataByUser: rules.isAuthenticatedUser(0),
+        // selectMySetDataByUser: rules.isAuthenticatedUser(0),
         selectMyInfoByUser: rules.isAuthenticatedUser(0),
-        getUserSetObjectByUser: rules.isAuthenticatedUser(0),
+        // getUserSetObjectByUser: rules.isAuthenticatedUser(0),
         // refreshPurchaseStateForUser: rules.isAuthenticatedUser(0),
 
         // 1단계
-        selectMyProductByUser: rules.isAuthenticatedUser(1),
-        selectMyProductsCountByUser: rules.isAuthenticatedUser(1),
+        // selectMyProductByUser: rules.isAuthenticatedUser(1),
+        // selectMyProductsCountByUser: rules.isAuthenticatedUser(1),
         getRegisterProductsDataByUser: rules.isAuthenticatedUser(1),
 
         // 2단계
-        selectOrdersByUser: rules.isAuthenticatedUser(2),
+        // selectOrdersByUser: rules.isAuthenticatedUser(2),
 
-        selectCategoriesBySomeone: rules.isAuthenticatedSomeone,
-        selectSiilInfoBySomeone: rules.isAuthenticatedSomeone,
-        translateText: rules.isAuthenticatedSomeone,
-        getExcelSampleUrlBySomeone: rules.isAuthenticatedSomeone,
-        selectWordTablesBySomeone: rules.isAuthenticatedSomeone,
-        selectUserQuestionBySomeone: rules.isAuthenticatedSomeone,
-        selectProductsCountBySomeone: rules.isAuthenticatedSomeone,
-        selectProductsBySomeone: rules.isAuthenticatedSomeone,
+        // selectCategoriesBySomeone: rules.isAuthenticatedSomeone,
+        // selectSiilInfoBySomeone: rules.isAuthenticatedSomeone,
+        // translateText: rules.isAuthenticatedSomeone,
+        // getExcelSampleUrlBySomeone: rules.isAuthenticatedSomeone,
+        // selectWordTablesBySomeone: rules.isAuthenticatedSomeone,
+        // selectUserQuestionBySomeone: rules.isAuthenticatedSomeone,
+        // selectProductsCountBySomeone: rules.isAuthenticatedSomeone,
+        // selectProductsBySomeone: rules.isAuthenticatedSomeone,
 
-        selectProductsByAdmin: rules.isAuthenticatedAdmin,
-        selectTaobaoProductsByAdmin: rules.isAuthenticatedAdmin,
-        selectShopDataByAdmin: rules.isAuthenticatedAdmin,
-        selectSetDataByAdmin: rules.isAuthenticatedAdmin,
-        selectProductsCountByAdmin: rules.isAuthenticatedAdmin,
-        selectTaobaoProductsCountByAdmin: rules.isAuthenticatedAdmin,
-        selectShopDataCountByAdmin: rules.isAuthenticatedAdmin,
-        selectSetDataCountByAdmin: rules.isAuthenticatedAdmin,
-        selectUsersByAdmin: rules.isAuthenticatedAdmin,
-        selectUsersCountByAdmin: rules.isAuthenticatedAdmin,
+        // selectProductsByAdmin: rules.isAuthenticatedAdmin,
+        // selectTaobaoProductsByAdmin: rules.isAuthenticatedAdmin,
+        // selectShopDataByAdmin: rules.isAuthenticatedAdmin,
+        // selectSetDataByAdmin: rules.isAuthenticatedAdmin,
+        // selectProductsCountByAdmin: rules.isAuthenticatedAdmin,
+        // selectTaobaoProductsCountByAdmin: rules.isAuthenticatedAdmin,
+        // selectShopDataCountByAdmin: rules.isAuthenticatedAdmin,
+        // selectSetDataCountByAdmin: rules.isAuthenticatedAdmin,
+        // selectUsersByAdmin: rules.isAuthenticatedAdmin,
+        // selectUsersCountByAdmin: rules.isAuthenticatedAdmin,
         // selectRemainingTaobaoOrderQueueCountByAdmin: rules.isAuthenticatedAdmin,
         // selectTaobaoOrderQueuesByAdmin: rules.isAuthenticatedAdmin,
 
     },
     Mutation: {
-        connectSocialIdByUser: rules.isAuthenticatedUser(0),
-        createShopDataByUser: rules.isAuthenticatedUser(0),
-        updateShopDataByUser: rules.isAuthenticatedUser(0),
-        updateMyDataByUser: rules.isAuthenticatedUser(0),
-        changePasswordByUser: rules.isAuthenticatedUser(0),
-        addSetDataByUser: rules.isAuthenticatedUser(0),
-        updatePhoneByUser: rules.isAuthenticatedUser(0),
-        purchasePlanByUser: rules.isAuthenticatedUser(0),
-        cancelPurchasePlanByUser: rules.isAuthenticatedUser(0),
-        withdrawByUser: rules.isAuthenticatedUser(0),
-        addWordByUser: rules.isAuthenticatedUser(0),
-        modifyWordByUser: rules.isAuthenticatedUser(0),
-        deleteWordByUser: rules.isAuthenticatedUser(0),
-        addWordByExcelByUser: rules.isAuthenticatedUser(0),
-        createUserQuestionByUser: rules.isAuthenticatedUser(0),
+        // connectSocialIdByUser: rules.isAuthenticatedUser(0),
+        // createShopDataByUser: rules.isAuthenticatedUser(0),
+        // updateShopDataByUser: rules.isAuthenticatedUser(0),
+        // updateMyDataByUser: rules.isAuthenticatedUser(0),
+        // changePasswordByUser: rules.isAuthenticatedUser(0),
+        // addSetDataByUser: rules.isAuthenticatedUser(0),
+        // updatePhoneByUser: rules.isAuthenticatedUser(0),
+        // purchasePlanByUser: rules.isAuthenticatedUser(0),
+        // cancelPurchasePlanByUser: rules.isAuthenticatedUser(0),
+        // withdrawByUser: rules.isAuthenticatedUser(0),
+        // addWordByUser: rules.isAuthenticatedUser(0),
+        // modifyWordByUser: rules.isAuthenticatedUser(0),
+        // deleteWordByUser: rules.isAuthenticatedUser(0),
+        // addWordByExcelByUser: rules.isAuthenticatedUser(0),
+        // createUserQuestionByUser: rules.isAuthenticatedUser(0),
 
-        // 1단계
-        getTaobaoItemsByUser: rules.isAuthenticatedUser(1),
-        getTaobaoItemUsingNumIidsByUser: rules.isAuthenticatedUser(1),
-        getTaobaoItemUsingExcelFileByUser: rules.isAuthenticatedUser(1),
-        getTaobaoItemUsingExtensionByUser: rules.isAuthenticatedUser(1),
-        updateManyProductSiilInfoByUser: rules.isAuthenticatedUser(1),
-        updateManyProductCategoryByUser: rules.isAuthenticatedUser(1),
-        updateProductByUser: rules.isAuthenticatedUser(1),
-        updateProductNameByUser: rules.isAuthenticatedUser(1),
-        registerProductByUser: rules.isAuthenticatedUser(1),
-        translateProductTextByUser: rules.isAuthenticatedUser(1),
-        translateProductsTextByUser: rules.isAuthenticatedUser(1),
-        endProductSellStateByUser: rules.isAuthenticatedUser(1),
+        // // 1단계
+        // getTaobaoItemsByUser: rules.isAuthenticatedUser(1),
+        // getTaobaoItemUsingNumIidsByUser: rules.isAuthenticatedUser(1),
+        // getTaobaoItemUsingExcelFileByUser: rules.isAuthenticatedUser(1),
+        // getTaobaoItemUsingExtensionByUser: rules.isAuthenticatedUser(1),
+        // updateManyProductSiilInfoByUser: rules.isAuthenticatedUser(1),
+        // updateManyProductCategoryByUser: rules.isAuthenticatedUser(1),
+        // updateProductByUser: rules.isAuthenticatedUser(1),
+        // updateProductNameByUser: rules.isAuthenticatedUser(1),
+        // registerProductByUser: rules.isAuthenticatedUser(1),
+        // translateProductTextByUser: rules.isAuthenticatedUser(1),
+        // translateProductsTextByUser: rules.isAuthenticatedUser(1),
+        // endProductSellStateByUser: rules.isAuthenticatedUser(1),
 
-        // 2단계
-        scrapOrderByUser: rules.isAuthenticatedUser(2),
-        changeOrderStateByUser: rules.isAuthenticatedUser(2),
+        // // 2단계
+        // scrapOrderByUser: rules.isAuthenticatedUser(2),
+        // changeOrderStateByUser: rules.isAuthenticatedUser(2),
 
 
         // 이미지 번역
-        updateProductImageBySomeone: or(rules.isAuthenticatedUser(0, "IMAGE_TRANSLATE"), rules.isAuthenticatedAdmin),
+        // updateProductImageBySomeone: or(rules.isAuthenticatedUser(0, "IMAGE_TRANSLATE"), rules.isAuthenticatedAdmin),
 
 
-        updateCnyRateByAdmin: rules.isAuthenticatedAdmin,
-        updateTaobaoRefreshDayByAdmin: rules.isAuthenticatedAdmin,
-        updateCategoryStoreDataByAdmin: rules.isAuthenticatedAdmin,
-        signUpAdminByAdmin: rules.isAuthenticatedAdmin,
-        changeMyPasswordByAdmin: rules.isAuthenticatedAdmin,
-        createNoticeByAdmin: rules.isAuthenticatedAdmin,
-        updateNoticeByAdmin: rules.isAuthenticatedAdmin,
-        deleteNoticeByAdmin: rules.isAuthenticatedAdmin,
-        createFaqCategoryByAdmin: rules.isAuthenticatedAdmin,
-        modifyFaqCategoryByAdmin: rules.isAuthenticatedAdmin,
-        sortFaqCategoryByAdmin: rules.isAuthenticatedAdmin,
-        deleteFaqCategoryByAdmin: rules.isAuthenticatedAdmin,
-        createFaqByAdmin: rules.isAuthenticatedAdmin,
-        updateFaqByAdmin: rules.isAuthenticatedAdmin,
-        deleteFaqByAdmin: rules.isAuthenticatedAdmin,
-        updateUserQuestionByAdmin: rules.isAuthenticatedAdmin,
-        setPurchaseInfoByAdmin: rules.isAuthenticatedAdmin,
-        invalidatePurchaseInfoByAdmin: rules.isAuthenticatedAdmin,
-        getTaobaoItemsByAdmin: rules.isAuthenticatedAdmin,
-        getTaobaoItemUsingNumIidsByAdmin: rules.isAuthenticatedAdmin,
-        getTaobaoItemUsingExcelFileByAdmin: rules.isAuthenticatedAdmin,
-        updateProductByAdmin: rules.isAuthenticatedAdmin,
-        updateProductNameByAdmin: rules.isAuthenticatedAdmin,
-        updateManyProductCategoryByAdmin: rules.isAuthenticatedAdmin,
-        updateManyProductSiilInfoByAdmin: rules.isAuthenticatedAdmin,
-        deleteProductByAdmin: rules.isAuthenticatedAdmin,
-        updateProductPriceByAdmin: rules.isAuthenticatedAdmin,
-        endProductSellStateByAdmin: rules.isAuthenticatedAdmin,
-        registerProductsByAdmin: rules.isAuthenticatedAdmin,
-        transferProductsToUserByAdmin: rules.isAuthenticatedAdmin,
-        setMaxProductLimitByAdmin: rules.isAuthenticatedAdmin,
+        // updateCnyRateByAdmin: rules.isAuthenticatedAdmin,
+        // updateTaobaoRefreshDayByAdmin: rules.isAuthenticatedAdmin,
+        // updateCategoryStoreDataByAdmin: rules.isAuthenticatedAdmin,
+        // signUpAdminByAdmin: rules.isAuthenticatedAdmin,
+        // changeMyPasswordByAdmin: rules.isAuthenticatedAdmin,
+        // createNoticeByAdmin: rules.isAuthenticatedAdmin,
+        // updateNoticeByAdmin: rules.isAuthenticatedAdmin,
+        // deleteNoticeByAdmin: rules.isAuthenticatedAdmin,
+        // createFaqCategoryByAdmin: rules.isAuthenticatedAdmin,
+        // modifyFaqCategoryByAdmin: rules.isAuthenticatedAdmin,
+        // sortFaqCategoryByAdmin: rules.isAuthenticatedAdmin,
+        // deleteFaqCategoryByAdmin: rules.isAuthenticatedAdmin,
+        // createFaqByAdmin: rules.isAuthenticatedAdmin,
+        // updateFaqByAdmin: rules.isAuthenticatedAdmin,
+        // deleteFaqByAdmin: rules.isAuthenticatedAdmin,
+        // updateUserQuestionByAdmin: rules.isAuthenticatedAdmin,
+        // setPurchaseInfoByAdmin: rules.isAuthenticatedAdmin,
+        // invalidatePurchaseInfoByAdmin: rules.isAuthenticatedAdmin,
+        // getTaobaoItemsByAdmin: rules.isAuthenticatedAdmin,
+        // getTaobaoItemUsingNumIidsByAdmin: rules.isAuthenticatedAdmin,
+        // getTaobaoItemUsingExcelFileByAdmin: rules.isAuthenticatedAdmin,
+        // updateProductByAdmin: rules.isAuthenticatedAdmin,
+        // updateProductNameByAdmin: rules.isAuthenticatedAdmin,
+        // updateManyProductCategoryByAdmin: rules.isAuthenticatedAdmin,
+        // updateManyProductSiilInfoByAdmin: rules.isAuthenticatedAdmin,
+        // deleteProductByAdmin: rules.isAuthenticatedAdmin,
+        // updateProductPriceByAdmin: rules.isAuthenticatedAdmin,
+        // endProductSellStateByAdmin: rules.isAuthenticatedAdmin,
+        // registerProductsByAdmin: rules.isAuthenticatedAdmin,
+        // transferProductsToUserByAdmin: rules.isAuthenticatedAdmin,
+        // setMaxProductLimitByAdmin: rules.isAuthenticatedAdmin,
     },
     Subscription: {
-        subscribeUserEvent: rules.isAuthenticatedUser(0),
+        // subscribeUserEvent: rules.isAuthenticatedUser(0),
 
-        subscribeTaobaoOrderQueueEventByAdmin: rules.isAuthenticatedAdmin,
+        // subscribeTaobaoOrderQueueEventByAdmin: rules.isAuthenticatedAdmin,
     }
-}, {
-    fallbackError: async (thrownThing: null, parent: undefined, args: any, context: unknown, info: any) => {
-        const ctx = context as unknown as Context;
-        if (thrownThing instanceof ApolloError) {
-            console.log(thrownThing);
-            return thrownThing
-        } else if (thrownThing instanceof Error) {
-            console.error(thrownThing, getDebugInfo(ctx))
-            return new ApolloError('Internal server error', 'ERR_INTERNAL_SERVER')
-        } else {
-            if ((thrownThing !== null || parent !== undefined) && ctx.token !== null) {
-                console.warn('The resolver threw something that is not an error.')
-                console.warn(thrownThing, parent, args, getDebugInfo(ctx))
-            }
-            return errors.notAuthenticated;
-        }
-    },
-    allowExternalErrors: isDev(),
-    debug: isDev(),
-})
+}
+// , 
+// {
+//     fallbackError: async (thrownThing: null, parent: undefined, args: any, context: unknown, info: any) => {
+//         const ctx = context as unknown as Context;
+//         if (thrownThing instanceof ApolloError) {
+//             console.log(thrownThing);
+//             return thrownThing
+//         } else if (thrownThing instanceof Error) {
+//             console.error(thrownThing, getDebugInfo(ctx))
+//             return new ApolloError('Internal server error', 'ERR_INTERNAL_SERVER')
+//         } else {
+//             if ((thrownThing !== null || parent !== undefined) && ctx.token !== null) {
+//                 console.warn('The resolver threw something that is not an error.')
+//                 console.warn(thrownThing, parent, args, getDebugInfo(ctx))
+//             }
+//             return errors.notAuthenticated;
+//         }
+//     },
+//     allowExternalErrors: isDev(),
+//     debug: isDev(),
+// }
+)

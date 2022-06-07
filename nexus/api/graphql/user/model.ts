@@ -8,12 +8,12 @@ export const getPurchaseInfo = async (prisma: PrismaClient, userId: number): Pro
   if (!userId) return { level: 0, levelExpiredAt: new Date(9990, 11, 31), additionalInfo: [] };
   const purchaseInfos = await prisma.purchaseLog.findMany({ where: { user_id : userId, state: "ACTIVE", expired_at: { gte: new Date() } } });
   const processedInfos = purchaseInfos.map(v => ({ ...v, planInfo: JSON.parse(v.plan_info) as PurchaseLogPlanInfoType }))
-      .sort((a, b) => (b.planInfo.planLevel ?? 0) - (a.planInfo.planLevel ?? 0));
+      .sort((a, b) => (b.planInfo.plan_level ?? 0) - (a.planInfo.plan_level ?? 0));
   
       
   const additionalInfo: NexusGenAllTypes["UserPurchaseAdditionalInfo"][] = [];
-  const imageTranslate = processedInfos.find(v => v.planInfo.externalFeatureVariableId === 'IMAGE_TRANSLATE');
-  const stock = processedInfos.find(v => v.planInfo.externalFeatureVariableId === 'STOCK');
+  const imageTranslate = processedInfos.find(v => v.planInfo.external_feature_variable_id === 'IMAGE_TRANSLATE');
+  const stock = processedInfos.find(v => v.planInfo.external_feature_variable_id === 'STOCK');
   if (imageTranslate) {
       additionalInfo.push({ type: "IMAGE_TRANSLATE", expiredAt: imageTranslate.expired_at });
   }
@@ -21,14 +21,16 @@ export const getPurchaseInfo = async (prisma: PrismaClient, userId: number): Pro
       additionalInfo.push({ type: "STOCK", expiredAt: stock.expired_at });
   }
   //결제 플랜 계산
-  const levelInfo = processedInfos.find(v => v.planInfo.planLevel);
+  const levelInfo = processedInfos.find(v => v.planInfo.plan_level);
   if (!levelInfo) return { level: 0, levelExpiredAt: new Date(9990, 11, 31), additionalInfo };
-  return { level: levelInfo.planInfo.planLevel!, levelExpiredAt: levelInfo.expired_at, additionalInfo };
+  return { level: levelInfo.planInfo.plan_level!, levelExpiredAt: levelInfo.expired_at, additionalInfo };
 }
 
 export const t_User = objectType({
   name: "User",
   definition(t) {
+    t.model.token();
+    t.model.created_token();
     t.model.id();
     t.model.email();
     t.field("password", {

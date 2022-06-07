@@ -8,7 +8,7 @@ Table Admin {
   password String [not null]
   state AdminState [not null]
   created_at DateTime [default: `now()`, not null]
-  token String
+  token String [unique]
   created_token DateTime
   product Product [not null]
 }
@@ -86,6 +86,7 @@ Table Product {
   user User
   product_option ProductOption [not null]
   product_option_name ProductOptionName [not null]
+  product_store ProductStore [not null]
 
   indexes {
     (user_id, taobao_product_id) [unique]
@@ -168,12 +169,15 @@ Table User {
   naver_id String [unique]
   kakao_id String [unique]
   created_at DateTime [default: `now()`, not null]
-  token String
+  token String [unique]
   created_token DateTime
   product Product [not null]
+  product_store ProductStore [not null]
   purchase_log PurchaseLog [not null]
   user_info UserInfo
   user_log UserLog [not null]
+  user_question UserQuestion [not null]
+  word_table WordTable [not null]
 }
 
 Table UserInfo {
@@ -286,6 +290,271 @@ Table PurchaseLog {
   user User [not null]
 }
 
+Table CategoryInfoA001 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+}
+
+Table CategoryInfoA006 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+}
+
+Table CategoryInfoA027 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+}
+
+Table CategoryInfoA077 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+  code_b378 String [not null]
+  code_a112 String [not null]
+  code_a113 String [not null]
+  code_a027 String [not null]
+  code_a006 String [not null]
+  code_a001 String [not null]
+  code_b719 String [not null]
+  code_b956 String [not null]
+  code_a524 String [not null]
+  code_a525 String [not null]
+}
+
+Table CategoryInfoA112 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+}
+
+Table CategoryInfoA113 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+}
+
+Table CategoryInfoA524 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+}
+
+Table CategoryInfoA525 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+}
+
+Table CategoryInfoB378 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+  code_a077 String [not null]
+}
+
+Table CategoryInfoB719 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+}
+
+Table CategoryInfoB956 {
+  id Int [pk, increment]
+  code String [unique, not null]
+  depth1 String [not null]
+  depth2 String [not null]
+  depth3 String [not null]
+  depth4 String [not null]
+  depth5 String [not null]
+  depth6 String [not null]
+  name String [not null]
+}
+
+Table CategoryMameMatch {
+  code String [pk]
+  depth Int [not null]
+  number Int [not null]
+  name String [not null]
+}
+
+Table CategoryStore {
+  id Int [pk, increment]
+  number Int [unique, not null]
+  acode String [not null]
+  pcode String [not null]
+  ccode String [not null]
+  dc1 String [not null]
+  dc2 String [not null]
+  dc3 String [not null]
+  dc4 String [not null]
+  dc1_name String [not null]
+  dc2_name String [not null]
+  dc3_name String [not null]
+  dc4_name String [not null]
+  state CategoryStoreState [not null]
+  cate_state_pdate DateTime
+  cate_state_cdate DateTime
+}
+
+Table ProductStore {
+  id Int [pk, increment]
+  user_id Int [not null]
+  product_id Int [not null]
+  state Int [not null]
+  store_product_id String
+  etc_vendor_item_id String
+  site_code String [not null]
+  store_url String
+  connected_at DateTime [default: `now()`, not null]
+  product Product [not null]
+  product_store_state ProductStoreState [not null]
+  user User [not null]
+  product_store_log ProductStoreLog [not null]
+}
+
+Table ProductStoreLog {
+  id Int [pk, increment]
+  product_store_id Int [not null]
+  job_id String [not null]
+  dest_state Int [not null]
+  upload_state ProductStoreLogUploadState [not null, default: 'WAIT']
+  error_message String [not null]
+  created_at DateTime [default: `now()`, not null]
+  modified_at DateTime [default: `now()`, not null]
+  product_store_state ProductStoreState [not null]
+  product_store ProductStore [not null]
+}
+
+Table ProductStoreState {
+  id Int [pk]
+  name String [unique, not null]
+  description String [unique, not null]
+  product_store ProductStore [not null]
+  product_store_log ProductStoreLog [not null]
+}
+
+Table TaobaoProductTranslateRequest {
+  id Int [pk, increment]
+  user_id Int
+  admin_id Int
+  taobao_iid_array String [not null]
+  category_code String
+  siil_code String
+  created_at DateTime [default: `now()`, not null]
+  is_done Boolean [not null, default: false]
+}
+
+Table UserQuestion {
+  id Int [pk, increment]
+  user_id Int [not null]
+  title String [not null]
+  content String [not null]
+  attachment_file String
+  answer String
+  is_active Boolean [not null, default: true]
+  answered_at DateTime
+  created_at DateTime [default: `now()`, not null]
+  user User [not null]
+}
+
+Table WordTable {
+  id Int [pk, increment]
+  user_id Int [not null]
+  find_word String [not null]
+  replace_word String
+  user User [not null]
+
+  indexes {
+    (user_id, find_word) [unique]
+  }
+}
+
+Table notice {
+  id Int [pk, increment]
+  title String [not null]
+  content String [not null]
+  attachment_file String
+  is_visible Boolean [not null, default: true]
+  view_count Int [not null, default: 0]
+  created_at DateTime [default: `now()`, not null]
+}
+
+Table setting {
+  name String [pk]
+  value String [not null]
+}
+
+Table withdraw {
+  id Int [pk, increment]
+  email String [not null]
+  naver_id String
+  kakao_id String
+  withdraw_at DateTime [default: `now()`, not null]
+}
+
 Enum AdminState {
   ACTIVE
   DELETED
@@ -318,6 +587,20 @@ Enum PurchaseLogType {
   STOCK
 }
 
+Enum CategoryStoreState {
+  NORMAL
+  DELETE
+  CHANGE
+}
+
+Enum ProductStoreLogUploadState {
+  WAIT
+  SUCCESS
+  FAIL
+  CANCEL
+  ON_PROGRESS
+}
+
 Ref: Product.admin_id > Admin.id
 
 Ref: Product.category_code > Category.code
@@ -343,3 +626,17 @@ Ref: UserInfo.user_id - User.id
 Ref: UserLog.user_id > User.id
 
 Ref: PurchaseLog.user_id > User.id
+
+Ref: ProductStore.product_id > Product.id
+
+Ref: ProductStore.state > ProductStoreState.id
+
+Ref: ProductStore.user_id > User.id
+
+Ref: ProductStoreLog.dest_state > ProductStoreState.id
+
+Ref: ProductStoreLog.product_store_id > ProductStore.id
+
+Ref: UserQuestion.user_id > User.id
+
+Ref: WordTable.user_id > User.id
